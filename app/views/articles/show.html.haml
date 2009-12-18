@@ -1,0 +1,91 @@
+- content_for(:meta_title) { concat h(@article.title) }
+- content_for(:meta_description) { concat h(@article.description) }
+- content_for :head do
+  :javascript
+    jQuery(document).ready(function() {
+    if (jQuery(".newcomment").is(":visible")){
+    jQuery(".newcomment").animate({opacity: 1},2000).slideUp("slow");
+    };
+    });
+= render :partial => "sidebar"
+
+%h1= link_to yield(:meta_title), @article, :class => "no_underline"
+
+= error_messages_for "comment", :header_message => "Your comment could not be posted!", :message => nil
+
+= render :partial => "/articles/article_stats", :locals => { :article => @article }
+
+
+=# render :partial => "/shared/image_box", :locals => { :owner => @article } unless @article.images.empty?
+
+    
+.article_body
+  = ninja_parse(@article.body.strip)
+
+- if @article.assets_count > 0
+  .article_attachments
+    %h3 Attachment(s)
+    %ul
+    -for asset in @article.assets
+      %li 
+        = link_to asset.name, asset.file.url
+        &mdash;
+        = asset.file_file_name
+= render :partial => "/shared/sharethis"
+
+= clear
+
+- unless @article.comments.empty?
+  %h2#comments_list Comments
+  #comments
+    - for comment in @article.comments
+      -if @article.comments.last == comment and flash[:newcomment]
+        .newcomment{:id => "newcomment", :style => "background:#18DF0D;"}
+          =flash[:newcomment]
+      %div[comment]{ :class => comment.user ? "comment_from_admin" : cycle('odd','even') }
+        %span.comment_info.gray
+          %span.comment_created_at.hmenu
+            - if comment.created_at < 1.week.ago
+              = comment.created_at.strftime('%b %d, %Y')
+            - else
+              == #{time_ago_in_words(comment.created_at)} ago
+          = icon "Arrow1 Down", "#comment_form"
+          = link_to "Reply", "#comment_form", :onclick => "#comment_form", :onclick => "comment_reply('#{h(comment.name)}');"
+        .comment_author
+          %span.comment_name.hmenu
+            - if comment.email.blank?
+              = h(comment.name)
+            - else
+              = mail_to comment.email, h(comment.name), :encode => :javascript
+        .comment_comment= auto_link(simple_format(h(comment.comment.strip)))
+
+%h2
+  %a{:name => "comment_form"}
+  Post a comment
+
+#comment_form
+  - form_for @comment, :url => "#{comment_article_path(@article)}\#comment_form", :html => { :onsubmit => "form_submitted('Posting your comment...')" } do |f|
+    = f.error_messages :header_message => "Your comment could not be posted!", :message => nil
+    - if logged_in? and @comment.new_record?
+      Name
+      %br
+      %strong= current_user.name
+      = f.hidden_field :name, :value => current_user.name
+    - else
+      = f.label :name
+      %br
+      = f.text_field :name
+    %br
+    = f.label :email 
+    %br
+    = f.text_field :email
+    %span.gray not published; be notified if you are mentioned
+    %br
+    = f.label :comment
+    %br
+    = f.text_area :comment, :size => "60x10", :style => "width: 550px;"
+    %br
+    = text_field_tag  "lastname", nil, :id => "comment_lastname", :size => "1" ,:value => "" # anti-bot spam tag, hidden with CSS
+    = hidden_field_tag  "article_id", @article.id, :id => "article_id"
+    - fancy_submit do
+      = f.submit "Save comment"

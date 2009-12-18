@@ -1,0 +1,38 @@
+- content_for :meta_title do
+  = @cms_config['site_settings']['blog_title'] + " Categories"
+
+%h1= large_icon('Folder2') + ' ' + yield(:meta_title).strip
+
+%div.box
+  %span.hmenu
+    = icon "Plus", new_admin_article_category_path
+    = link_to "Make a new category", new_admin_article_category_path
+  = clear
+
+%br
+
+%table{ :cellspacing => "0" }
+  %thead
+    %tr
+      %th Name
+      %th= @cms_config['site_settings']['article_title'].pluralize
+      %th.center Options
+  %tbody
+    - for article_category in @article_categories do
+      %tr[article_category]{ :class => cycle('odd','even') }
+        %td= link_to h(article_category.name), edit_admin_article_category_path(article_category)
+        %td= number_with_delimiter(article_category.articles.count)
+        %td.center
+          = icon "Write", edit_admin_article_category_path(article_category)
+          = trash_icon(article_category, admin_article_category_path(article_category), "the #{article_category.name} category")
+
+%br
+
+%p
+  %strong Note about deleting categories:
+  If you delete a category, articles will no longer be assigned to it. They will
+  still be able to be viewed, but not browsed by category until they are re-assigned to
+  a new category. The
+  = link_to "#{@cms_config['site_settings']['article_title']} list", admin_articles_path
+  will notify you of articles that do not have a category assignment.
+

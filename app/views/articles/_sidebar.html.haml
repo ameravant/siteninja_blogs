@@ -1,0 +1,9 @@
+-if @page.permalink == "home" and @settings.articles_cat_right
+  = render :partial => "/articles/categories_for_sidebar" 
+  -elsif @settings.show_categories_in_sidebar and @page.permalink !="home"
+    = render :partial => "/articles/categories_for_sidebar" 
+= render :partial => "/articles/archive_for_sidebar" if @settings.show_archive_in_sidebar
+= render :partial => "/articles/authors_for_sidebar" if @settings.show_authors_in_sidebar
+= render :partial => "/articles/tags_for_sidebar" if @settings.show_tags_in_sidebar
+- content_for :side_column do
+  %p= link_to("#{icon("Rss 1")} RSS Feed", "/#{path_safe(@cms_config['site_settings']['article_title'])}.rss")

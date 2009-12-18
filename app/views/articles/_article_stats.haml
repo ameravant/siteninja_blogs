@@ -1,0 +1,9 @@
+.article_posted_info
+  %span.hmenu
+    == By #{link_to h(article.user.name), articles_path(:author => article.user.id)}
+    == #{article.published_at.strftime("%b %d, %Y")}
+    - unless article.article_categories.reject { |c| !c.active }.empty?
+      == in #{article.article_categories.reject { |c| !c.active }.map { |c| link_to(h(c.name), c) }.join(", ")}
+  - if article.comments_count > 0
+    = article.comments_count == 1 ? icon("Bubble 1") : icon("Discuss")
+    = link_to pluralize(article.comments_count, 'comment'), article_path(article) << '#comments_list'

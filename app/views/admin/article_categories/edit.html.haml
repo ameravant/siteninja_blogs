@@ -1,0 +1,7 @@
+- content_for :meta_title do
+  Edit category
+
+%h1= yield(:meta_title).strip
+
+- form_for [:admin, @article_category], :html => { :onsubmit => "form_submitted()" } do |f|
+  = render :partial => 'form', :locals => { :f => f }

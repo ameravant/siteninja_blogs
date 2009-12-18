@@ -1,0 +1,13 @@
+- content_for :meta_title do
+  Edit
+  =@cms_config['site_settings']['article_title']
+  \:
+  = h @article.title
+
+
+%h1
+  Edit
+  =@cms_config['site_settings']['article_title']
+- form_for [:admin, @article], :html => { :onsubmit => "form_submitted('')", :method => :put } do |f|
+  = render :partial => 'form', :locals => { :f => f }
+

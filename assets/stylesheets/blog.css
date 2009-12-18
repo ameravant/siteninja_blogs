@@ -1,0 +1,91 @@
+/* ShareThis */
+a.stbutton:hover {
+  color: #000 !important;
+}
+
+#comment_lastname {
+  display: none;
+  visibility: hidden;
+}
+
+#comments_list {
+  margin-top: 50px;
+}
+
+.comment {
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.comment_name {
+  font-size: 1.25em;
+}
+
+.comment_info {
+  float: right;
+}
+
+.odd {
+  background-color: #e9e9e9;
+}
+
+.article_for_list {
+  margin-bottom: 40px;
+}
+
+.recent_articles li { margin-bottom: 20px; }
+
+.article_posted_info { margin-top: -10px; }
+.comment_from_admin {
+  background-color: #ffffeb;
+  border: 2px solid #ddb;
+}
+
+.article_body {
+  font-size: 1em;
+  line-height: 1.4em;
+}
+
+
+.sidebar h1 {
+  font-size: 1.65em;
+}
+.sidebar h2 a {
+  font-size: 65%;
+  margin-bottom: -20px;
+}
+
+.sidebar li p {
+  font-size: .9em;
+  padding: 0;
+  margin: 0;
+  clear: both;
+}
+
+
+div.scrollable { 
+    position:relative; 
+    overflow:hidden; 
+    width: 200px; 
+    height:36px; 
+    margin: 2px 0;
+} 
+ 
+div.scrollable div.items { 
+    /* this cannot be too large */ 
+    width:20000em; 
+    position:absolute; 
+} 
+div.scrollable div.items div { 
+    float:left; 
+    margin: 0 3px 0 0;
+} 
+div.items div.active { 
+    border:1px inset #ccc; 
+    background-color:#fff; 
+}
+
+.images { width: 200px; padding: 10px; float: right; margin: 20px 0 20px 20px; overflow: hidden; border: #E6E6E6 1px solid; }
+.images img { }
+.caption { color: #666; font-size: .7em; }
+.article_attachments{} 

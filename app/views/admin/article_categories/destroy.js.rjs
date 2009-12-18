@@ -1,0 +1,1 @@
+page.visual_effect :fade, dom_id(@article_category), :duration => 1

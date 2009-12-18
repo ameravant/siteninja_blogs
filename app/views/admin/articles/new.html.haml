@@ -1,0 +1,9 @@
+- content_for :meta_title do
+  New
+  =@cms_config['site_settings']['article_title']
+
+%h1= yield(:meta_title).strip
+
+- form_for [:admin, @article], :html => { :onsubmit => "form_submitted('')" } do |f|
+  = render :partial => "form", :locals => { :f => f }
+

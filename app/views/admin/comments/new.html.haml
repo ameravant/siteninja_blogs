@@ -1,0 +1,7 @@
+- content_for :meta_title do
+  == New comment for "#{@article.title}"
+
+%h1= yield(:meta_title).strip
+
+- form_for [:admin, @article, @comment], :html => { :onsubmit => "form_submitted()" } do |f|
+  = render :partial => 'form', :locals => { :f => f }

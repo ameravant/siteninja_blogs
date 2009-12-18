@@ -1,0 +1,73 @@
+= f.error_messages
+
+- content_for :head do
+  %script{:type => "text/javascript"}
+    function addtext(text) {
+    = "document.getElementById('article_body').value += ' ' + text + ' ';"
+    }
+  %style{:type => "text/css"}
+    div#fancy_div { background: #fff; }
+    div#fancy_div ul { margin: 0; padding: 0; height: 350px; overflow: auto; }
+    div#fancy_div ul li { float: left; margin: 0 5px 5px 0; font-size: .8em; padding: 5px; border: 1px solid #ccc; text-align: center; height: 115px }
+    div#fancy_div h2 { margin: 0 0 4px; font-family: tahoma, arial, sans-serif; font-size: 1em; color: #000; font-weight: normal; color: #999; }
+    div#fancy_div a { color: #336699; text-decoration: none; }
+    div#fancy_div a:hover { background: #336699; color: #fff; }
+%table{:cellspacing => "0"}
+  %tr{:class => "form-option #{cycle('even', 'odd')}"}
+    %td.big= f.label :title
+    %td= f.text_field :title, :class => "big", :size => 40
+  - if @editor
+    %tr{:class => "form-option #{cycle('even', 'odd')}"}
+      %td.big= f.label :person_id, "Author"
+      %td
+        = f.select :person_id, User.all.sort_by(&:name).collect {|p| [p.name, p.person.id]}
+  %tr{:class => "form-option top #{cycle('even', 'odd')}"}
+    %td{:class => (!@article.new_record? and @article.article_categories.active.count == 0 ? "bold red" : nil)}= f.label :article_category_ids, "Category"
+    %td
+      - for article_category in @article_categories
+        %span.article_category_checkbox
+          = check_box_tag "article[article_category_ids][]", article_category.id, @article.article_categories.include?(article_category), :id => dom_id(article_category)
+          = label_tag dom_id(article_category), "#{article_category.name}"
+      = clear
+  %tr{:class => "form-option #{cycle('even', 'odd')}"}
+    %td= f.label :description, "Short Description"
+    %td
+      = f.text_field :description, :size => 60
+      %br
+      %span{:class => "small gray"} Displays under Title in right column
+  %tr{:class => "form-option #{cycle('even', 'odd')}"}
+    %td= f.label :tag_list, "Tags"
+    %td
+      = f.text_field :tag_list, :size => 60
+      %br
+      %span{:class => "small gray"} Separate words or phrases with a comma
+
+%h2= f.label :blurb
+%span{:class => "small gray"}Displayed on Blog Summary page, under Title
+= f.text_area :blurb, :size => "80x10", :class => "full_width"
+
+%h2= f.label :body
+.options
+  - unless @article.images.empty?
+    = render :partial => "admin/shared/image_options", :locals => {:images => @article.images}
+
+= f.text_area :body, :size => "80x30", :class => "mceEditor"
+
+%p
+  = f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])
+  = f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"
+  = f.label :published_at, "on"
+  = f.date_select :published_at, :order => [ :month, :day, :year ]
+
+%p
+  = f.check_box :social_share
+  = f.label :social_share, "Show ShareThis link"
+
+%p
+  = f.check_box :notify_author_of_comments
+  = f.label :notify_author_of_comments, "Notify me when comments are posted for this #{@cms_config['site_settings']['article_title']}"
+
+= clear
+- fancy_submit admin_articles_path do
+  = f.submit "Save #{@cms_config['site_settings']['article_title']}"
+

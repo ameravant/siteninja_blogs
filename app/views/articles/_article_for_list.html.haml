@@ -1,0 +1,13 @@
+%h2= link_to h(article_for_list.title), article_for_list 
+
+.article_for_list
+  = render :partial => "/articles/article_stats", :locals => { :article => article_for_list }
+  - unless article_for_list.images.empty?
+    .images 
+      - image = article_for_list.images.sort_by(&:position).first
+      = link_to image_tag(image.image.url(:medium)), article_for_list, :title => h(image.caption)
+      = clear
+  .article_body
+    = ninja_parse(simple_format(article_for_list.blurb.strip))
+    = link_to 'Read more...', article_for_list
+  = clear # in case of floating images in blurb

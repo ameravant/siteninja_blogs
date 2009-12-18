@@ -1,0 +1,77 @@
+- content_for :meta_title do
+  =@cms_config['site_settings']['article_title'].pluralize
+
+%h1= large_icon('Write') + ' ' + yield(:meta_title).strip
+
+%div.box
+  .float-right= render :partial => "/shared/search"
+  %span.hmenu
+    = icon "Plus", new_admin_article_path(@article)
+    = link_to "Write a new #{@cms_config['site_settings']['article_title']}", new_admin_article_path(@article)
+    %span.gray== as #{current_user.name}
+  - if current_user.has_role(["Admin", "Editor"])
+    %span.hmenu
+      = icon "Folder2", admin_article_categories_path
+      = link_to "Manage categories", admin_article_categories_path
+  = clear
+%br
+
+- unless params[:q].blank?
+  %h2== Found #{pluralize @all_articles.size, "article"}.
+
+%table.full_width{ :cellspacing => "0" }
+  %thead
+    %tr
+      %th Title
+      %th Status
+      %th Images
+      %th Files
+      %th Comments
+      %th.center{ :style => "width: 65px;"} Options
+  - if @articles.total_pages > 1
+    %tfoot
+      %tr
+        %td{ :colspan => "3" }= will_paginate @articles
+  %tbody
+    - for article in @articles do
+      %tr[article]{ :class => cycle('odd','even') }
+        %td
+          %span.hmenu
+            = link_to h(article.title), edit_admin_article_path(article)
+            %span.small.gray== by #{article.user.name}
+          - if article.article_categories.active.count == 0
+            %span.small.red= link_to("no category", edit_admin_article_path(article), :class => "red")
+        %td
+          - if article.published_date_in_past? and article.published?
+            = link_to "Published", article, :class => "green"
+            %span.small.gray= article.published_at.strftime('%b %d, %Y')
+          - elsif article.to_be_published?
+            Published
+            %span.small.gray== for #{article.published_at.strftime('%a, %b %d')}
+          - elsif article.deactivated?
+            %span.gray Deactivated
+          - else
+            = link_to "Draft", edit_admin_article_path(article), :class => "gray"
+        %td
+          = icon "Picture", [:admin, article, :images]
+          = link_to article.images_count, [:admin, article, :images]
+        %td
+          = icon "Document", [:new, :admin, article, :asset]
+          = link_to article.assets_count, [:new, :admin, article, :asset]
+        %td
+          = icon("Discuss", [:admin, article, :comments])
+          = link_to number_with_delimiter(article.comments_count), [:admin, article, :comments]
+        %td.right
+          - if current_user.has_role(["Admin", "Editor"])
+            - if article.images_count > 0
+              - if article.features_count > 0
+                = defeature_icon(article, "/admin/articles/#{article.to_param}/features/1", article.title, "inline")
+                = feature_icon(article, [:admin, article, :features], article.title, "none")
+              -else
+                = feature_icon(article, [:admin, article, :features], article.title, "inline")
+                = defeature_icon(article, "/admin/articles/#{article.to_param}/features/1", article.title, "none")
+            -else
+              = disabled_feature_icon(article, [:new, :admin, article, :feature], article.title)
+          = icon "Write", edit_admin_article_path(article)
+          = trash_icon(article, admin_article_path(article), "#{article.title}") if current_user.has_role(["Admin", "Editor", "Author"])
+
