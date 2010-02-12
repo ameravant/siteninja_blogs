@@ -1,7 +1,0 @@
-A comment was posted in response to your article "<%= h @article.title %>"
-
-<%= article_url(@article) << "\#comment_#{@comment.id}" %>
-
-<%= h @comment.name %><%= " (#{h @comment.email})" unless @comment.email.blank? %> wrote:
-
-<%= h @comment.comment %>
