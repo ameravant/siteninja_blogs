@@ -7,8 +7,9 @@ class ArticleCategoriesController < ApplicationController
 
   def show
     begin
-      @page = Page.find_by_permalink!('blog')
       @article_category = ArticleCategory.active.find(params[:id])
+      @page = Page.find_by_permalink!('blog') if @article_category.menus.empty?
+      @article_category.menus.empty? ? @menu = @page.menus.first : @menu = @article_category.menus.first
       @articles = @article_category.articles.published.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
       add_breadcrumb @article_category.name
     rescue ActiveRecord::RecordNotFound
@@ -24,7 +25,7 @@ class ArticleCategoriesController < ApplicationController
 
   def find_page
     @footer_pages = Page.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
-    @page = Page.find_by_permalink!('blog')
+    #@page = Page.find_by_permalink!('blog')
   end
 
   def find_articles_for_sidebar

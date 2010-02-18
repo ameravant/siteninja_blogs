@@ -1,6 +1,6 @@
--if @page.permalink == "home" and @settings.articles_cat_right
+-if @menu.navigatable.permalink == "home" and @settings.articles_cat_right
   = render :partial => "/articles/categories_for_sidebar" 
-  -elsif @settings.show_categories_in_sidebar and @page.permalink !="home"
+  -elsif @settings.show_categories_in_sidebar and @menu.navigatable.permalink !="home"
     = render :partial => "/articles/categories_for_sidebar" 
 = render :partial => "/articles/archive_for_sidebar" if @settings.show_archive_in_sidebar
 = render :partial => "/articles/authors_for_sidebar" if @settings.show_authors_in_sidebar
