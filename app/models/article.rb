@@ -3,7 +3,7 @@ class Article < ActiveRecord::Base
   acts_as_taggable
   has_and_belongs_to_many :article_categories
   belongs_to :person, :counter_cache => true
-  has_many :comments
+  has_many :comments, :as => :commentable
   has_many :images, :as => :viewable, :dependent => :destroy
   has_many :features, :as => :featurable, :dependent => :destroy
   has_many :assets, :as => :attachable, :dependent => :destroy
