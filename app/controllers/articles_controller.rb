@@ -40,24 +40,6 @@ class ArticlesController < ApplicationController
     add_breadcrumb @article.title
   end
 
-  # def comment
-  #   if params[:lastname] == ""
-  #     @comment = @article.comments.new(params[:comment])
-  #     @comment.user_id = current_user.id if logged_in?
-  #     add_breadcrumb @cms_config['site_settings']['blog_title'], 'blog_path'
-  #     add_breadcrumb @article.title
-  #     if @comment.save
-  #       flash[:newcomment] = "Thanks for posting a comment!"
-  #       redirect_to article_path(@article, :anchor => "newcomment")
-  #     else
-  #       render :action => "show"
-  #     end
-  #   else
-  #     redirect_to @article
-  #   end
-  # end
-
-
   private
 
   def find_article
