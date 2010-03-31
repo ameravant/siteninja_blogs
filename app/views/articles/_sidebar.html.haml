@@ -6,4 +6,7 @@
 = render :partial => "/articles/authors_for_sidebar" if @settings.show_authors_in_sidebar
 = render :partial => "/articles/tags_for_sidebar" if @settings.show_tags_in_sidebar
 - content_for :side_column do
-  %p= link_to("#{icon("Rss 1")} RSS Feed", "/#{path_safe(@cms_config['site_settings']['article_title'])}.rss")
+  -if @article_category
+    %p= link_to("#{icon("Rss 1")} RSS Feed", article_category_url(@article_category, :format => :rss))
+  -else
+    %p= link_to("#{icon("Rss 1")} RSS Feed", "/#{path_safe(@cms_config['site_settings']['article_title'])}.rss")
