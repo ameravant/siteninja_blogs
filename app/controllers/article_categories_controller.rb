@@ -15,6 +15,11 @@ class ArticleCategoriesController < ApplicationController
     rescue ActiveRecord::RecordNotFound
       redirect_to '/404.html'
     end
+    respond_to do |wants|
+      wants.html # index.html.erb
+      wants.xml { render :xml => @articles.to_xml }
+      wants.rss { render :layout => false } # uses index.rss.builder
+    end
   end
 
   private
