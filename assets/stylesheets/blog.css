@@ -85,7 +85,7 @@ div.items div.active {
     background-color:#fff; 
 }
 
-.images { width: 200px; padding: 10px; float: right; margin: 20px 0 20px 20px; overflow: hidden; border: #E6E6E6 1px solid; }
+.images { width: 200px; padding: 10px; float: right; margin: 10px 0 10px 20px; overflow: hidden; border: #E6E6E6 1px solid; }
 .images img { }
-.caption { color: #666; font-size: .7em; }
+.caption { color: #666; font-size: .7em; line-height: 1.5em; }
 .article_attachments{} 
