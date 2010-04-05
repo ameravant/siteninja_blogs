@@ -89,3 +89,5 @@ div.items div.active {
 .images img { }
 .caption { color: #666; font-size: .7em; line-height: 1.5em; }
 .article_attachments{} 
+.rss-icon { float: left; margin: 3px 5px 0 0; }
+.rss-icon-selected { float: left; margin: 0 5px 0 0;}
