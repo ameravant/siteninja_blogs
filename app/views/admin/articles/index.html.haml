@@ -38,7 +38,7 @@
         %td
           %span.hmenu
             = link_to h(article.title), edit_admin_article_path(article)
-            %span.small.gray== by #{article.user.name}
+            %span.small.gray== by #{article.person.name}
           - if article.article_categories.active.count == 0
             %span.small.red= link_to("no category", edit_admin_article_path(article), :class => "red")
         %td
