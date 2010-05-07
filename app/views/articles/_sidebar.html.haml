@@ -1,10 +1,10 @@
 -if @menu.navigatable.permalink == "home" and @settings.articles_cat_right
-  = render :partial => "/articles/categories_for_sidebar" 
+  = render :partial => "/article_categories/article_categories_for_side_column" 
   -elsif @settings.show_categories_in_sidebar and @menu.navigatable.permalink !="home"
-    = render :partial => "/articles/categories_for_sidebar" 
-= render :partial => "/articles/archive_for_sidebar" if @settings.show_archive_in_sidebar
-= render :partial => "/articles/authors_for_sidebar" if @settings.show_authors_in_sidebar
-= render :partial => "/articles/tags_for_sidebar" if @settings.show_tags_in_sidebar
+    = render :partial => "/article_categories/article_categories_for_side_column" 
+= render :partial => "/articles/archive_for_side_column" if @settings.show_archive_in_sidebar
+= render :partial => "/articles/authors_for_side_column" if @settings.show_authors_in_sidebar
+= render :partial => "/articles/tags_for_side_column" if @settings.show_tags_in_sidebar
 - content_for :side_column do
   -if @article_category
     %p= link_to("#{icon("Rss 1")} RSS Feed", article_category_url(@article_category, :format => :rss))

@@ -1,9 +1,0 @@
-- unless @article_tags.empty?
-  - content_for :side_column do
-    %h2 Tags
-    %ul.article_tags.list_of_links
-      - for tag in @article_tags
-        - if params[:tag] == tag.name
-          %li.sidebar_link_active= h(tag.name)
-        - else
-          %li[tag]= link_to h(tag.name), articles_path(:tag => tag.name)
