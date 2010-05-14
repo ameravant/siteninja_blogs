@@ -10,7 +10,7 @@
 = render :partial => "sidebar"
 
 %h1= link_to yield(:meta_title), @article, :class => "no_underline"
-
+#article-description= @article.description if @article.show_description?
 = error_messages_for "comment", :header_message => "Your comment could not be posted!", :message => nil
 
 = render :partial => "/articles/article_stats", :locals => { :article => @article }

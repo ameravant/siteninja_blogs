@@ -30,13 +30,14 @@
           = label_tag dom_id(article_category), "#{article_category.name}"
       = clear
   %tr{:class => "form-option #{cycle('even', 'odd')}"}
-    %td= f.label :description, "Short Description"
+    %td.top= f.label :description, "Short Description"
     %td
-      = f.text_field :description, :size => 60
+      = f.text_area :description, :size => "50x5"
       %br
-      %span{:class => "small gray"} Displays under Title in right column
+      = f.check_box :show_description
+      = f.label :show_description, "Show Description under Title on Article"
   %tr{:class => "form-option #{cycle('even', 'odd')}"}
-    %td= f.label :tag_list, "Tags"
+    %td.top= f.label :tag_list, "Tags"
     %td
       = f.text_field :tag_list, :size => 60
       %br
