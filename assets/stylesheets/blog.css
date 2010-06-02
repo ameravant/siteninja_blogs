@@ -35,7 +35,7 @@ a.stbutton:hover {
 
 .recent_articles li { margin-bottom: 20px; }
 
-.article_posted_info { margin-top: -10px; }
+.article_posted_info { margin-top: 0; }
 .comment_from_admin {
   background-color: #ffffeb;
   border: 2px solid #ddb;
@@ -85,7 +85,8 @@ div.items div.active {
     background-color:#fff; 
 }
 
-.images { width: 200px; padding: 10px; float: right; margin: 20px 0 20px 20px; overflow: hidden; border: #E6E6E6 1px solid; }
 .images img { }
-.caption { color: #666; font-size: .7em; }
+.caption { color: #666; font-size: .7em; line-height: 1.5em; }
 .article_attachments{} 
+.rss-icon { float: left; margin: 3px 5px 0 0; }
+.rss-icon-selected { float: left; margin: 0 5px 0 0;}

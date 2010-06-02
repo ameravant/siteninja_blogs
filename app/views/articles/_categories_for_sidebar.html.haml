@@ -1,9 +1,0 @@
-- unless @article_categories.empty?
-  - content_for :side_column do
-    %h2.top-headline Categories
-    %ul.article_categories.list_of_links
-      - for category in @article_categories
-        - if @article_category and @article_category == category
-          %li.sidebar_link_active= h(category.name)
-        - else
-          %li= link_to h(category.name), category 

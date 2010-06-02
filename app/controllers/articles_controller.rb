@@ -53,6 +53,7 @@ class ArticlesController < ApplicationController
 
   def find_page
     @page = Page.find_by_permalink!('blog')
+    @menu = @page.menus.first
   end
 
   def find_articles_for_sidebar

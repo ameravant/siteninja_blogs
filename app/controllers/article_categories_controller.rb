@@ -7,12 +7,18 @@ class ArticleCategoriesController < ApplicationController
 
   def show
     begin
-      @page = Page.find_by_permalink!('blog')
       @article_category = ArticleCategory.active.find(params[:id])
+      @page = Page.find_by_permalink!('blog') if @article_category.menus.empty?
+      @article_category.menus.empty? ? @menu = @page.menus.first : @menu = @article_category.menus.first
       @articles = @article_category.articles.published.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
       add_breadcrumb @article_category.name
     rescue ActiveRecord::RecordNotFound
       redirect_to '/404.html'
+    end
+    respond_to do |wants|
+      wants.html # index.html.erb
+      wants.xml { render :xml => @articles.to_xml }
+      wants.rss { render :layout => false } # uses index.rss.builder
     end
   end
 
@@ -24,7 +30,7 @@ class ArticleCategoriesController < ApplicationController
 
   def find_page
     @footer_pages = Page.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
-    @page = Page.find_by_permalink!('blog')
+    #@page = Page.find_by_permalink!('blog')
   end
 
   def find_articles_for_sidebar
