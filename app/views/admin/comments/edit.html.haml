@@ -1,7 +1,0 @@
-- content_for :meta_title do
-  == Comments for #{@article.title}
-
-%h1
-  Edit comment:
-- form_for [:admin, @article, @comment], :html => { :onsubmit => "form_submitted('')" } do |f|
-  = render :partial => 'form', :locals => { :f => f }
