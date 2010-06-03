@@ -1,6 +1,6 @@
 - unless @article_archive.empty?
   - content_for :side_column do
-    %h2 Archives
+    %h1 Archives
     %ul.article_months.list_of_links
       - @article_archive.each do |month_year, articles|
         - if params[:month].to_i == month_year.first and params[:year].to_i == month_year.last
