@@ -9,8 +9,10 @@ a.stbutton:hover {
 }
 
 #comments_list {
-  margin-top: 50px;
+  margin-top: 10px;
 }
+
+#sharethis { margin: 20px 0; }
 
 .comment {
   padding: 15px;
