@@ -3,7 +3,7 @@ class Admin::ArticlesController < AdminController
   before_filter :authorization
   before_filter :find_article, :only => [ :edit, :update, :destroy, :reorder, :show ]
   before_filter :find_article_categories_and_check_roles, :only => [ :new, :create, :edit, :update ]
-
+  
   def index
     add_breadcrumb @cms_config['site_settings']['blog_title']
     if current_user.has_role(["Admin", "Editor", "Moderator"]) # Show all articles regardless of author

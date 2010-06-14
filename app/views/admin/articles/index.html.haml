@@ -34,6 +34,7 @@
         %td{ :colspan => "3" }= will_paginate @articles
   %tbody
     - for article in @articles do
+
       %tr[article]{ :class => cycle('odd','even') }
         %td
           %span.hmenu
@@ -62,16 +63,7 @@
           = icon("Discuss", [:admin, article, :comments])
           = link_to number_with_delimiter(article.comments_count), [:admin, article, :comments]
         %td.right
-          - if current_user.has_role(["Admin", "Editor"])
-            - if article.images_count > 0
-              - if article.features_count > 0
-                = defeature_icon(article, "/admin/articles/#{article.to_param}/features/1", article.title, "inline")
-                = feature_icon(article, [:admin, article, :features], article.title, "none")
-              -else
-                = feature_icon(article, [:admin, article, :features], article.title, "inline")
-                = defeature_icon(article, "/admin/articles/#{article.to_param}/features/1", article.title, "none")
-            -else
-              = disabled_feature_icon(article, [:new, :admin, article, :feature], article.title)
+          - if current_user.has_role(["Admin", "Editor"]) and !article.deactivated?
+            = feature_icon_select(article, article.title)
           = icon "Write", edit_admin_article_path(article)
           = trash_icon(article, admin_article_path(article), "#{article.title}") if current_user.has_role(["Admin", "Editor", "Author"])
-
