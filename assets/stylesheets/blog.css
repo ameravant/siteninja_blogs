@@ -35,7 +35,7 @@ a.stbutton:hover {
   margin-bottom: 40px;
 }
 
-.recent_articles li { margin-bottom: 20px; }
+.recent_articles li { margin-bottom: 10px; }
 
 .article_posted_info { margin-top: 0; }
 .comment_from_admin {
