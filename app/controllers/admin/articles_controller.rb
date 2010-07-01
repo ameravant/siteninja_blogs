@@ -53,6 +53,11 @@ class Admin::ArticlesController < AdminController
 
   def update
     if @article.update_attributes(params[:article])
+      #This is to remove product from categories if there are none selected
+      if !params[:article].has_key?("article_category_ids")
+        @article.article_categories = []
+        @article.save
+      end
       flash[:notice] = "Article \"#{@article.title}\" updated."
       redirect_to admin_articles_path
     else
