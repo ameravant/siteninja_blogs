@@ -3,6 +3,7 @@ class Admin::ArticlesController < AdminController
   before_filter :authorization
   before_filter :find_article, :only => [ :edit, :update, :destroy, :reorder, :show ]
   before_filter :find_article_categories_and_check_roles, :only => [ :new, :create, :edit, :update ]
+  before_filter :authorize_to_update, :only => [:edit, :update, :destroy]
   
   def index
     add_breadcrumb @cms_config['site_settings']['blog_title']
@@ -89,6 +90,8 @@ class Admin::ArticlesController < AdminController
   def authorization
     authorize(@permissions['articles'], "Articles")
   end
-
+  def authorize_to_update
+    authorize(@permissions['comments'], "Articles") if @article.published 
+  end
 end
 
