@@ -58,7 +58,7 @@
   = f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])
   = f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"
   = f.label :published_at, "on"
-  = f.date_select :published_at, :order => [ :month, :day, :year ]
+  = f.datetime_select :published_at, :order => [ :month, :day, :year, :hour ]
 
 %p
   = f.check_box :social_share
