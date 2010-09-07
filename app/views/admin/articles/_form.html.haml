@@ -15,14 +15,17 @@
 %table{:cellspacing => "0"}
   %tr{:class => "form-option #{cycle('even', 'odd')}"}
     %td.big= f.label :title
-    %td= f.text_field :title, :class => "big", :size => 40
+    %td= f.text_field :title, :class => "big", :size => 140
   - if @editor
     %tr{:class => "form-option #{cycle('even', 'odd')}"}
       %td.big= f.label :person_id, "Author"
       %td
-        = f.select :person_id, User.all.sort_by(&:name).collect {|p| [p.name, p.person.id]}, :selected => current_user.id
+        = f.select :person_id, User.all.sort_by(&:name).collect {|p| [p.name, p.person.id]}, :selected => @article.article_category_id
+  %tr{:class => "form-option #{cycle('even', 'odd')}"}
+    %td.big= f.label :article_category_id, "Primary Category"
+    %td= f.select :article_category_id, ArticleCategory.all.sort_by(&:title).collect {|ac| [ac.title, ac.id]}, {:include_blank => "Select a main category"}, :selected => current_user.id
   %tr{:class => "form-option top #{cycle('even', 'odd')}"}
-    %td{:class => (!@article.new_record? and @article.article_categories.active.count == 0 ? "bold red" : nil)}= f.label :article_category_ids, "Category"
+    %td{:class => (!@article.new_record? and @article.article_categories.active.count == 0 ? "bold red" : nil)}= f.label :article_category_ids, "Secondary Categories"
     %td
       - for article_category in @article_categories
         %span.article_category_checkbox
@@ -32,14 +35,14 @@
   %tr{:class => "form-option #{cycle('even', 'odd')}"}
     %td.top= f.label :description, "Short Description"
     %td
-      = f.text_area :description, :size => "50x5"
+      = f.text_area :description, :size => "100x5"
       %br
       = f.check_box :show_description
       = f.label :show_description, "Show Description under Title on Article"
   %tr{:class => "form-option #{cycle('even', 'odd')}"}
     %td.top= f.label :tag_list, "Tags"
     %td
-      = f.text_field :tag_list, :size => 60
+      = f.text_field :tag_list, :size => 140
       %br
       %span{:class => "small gray"} Separate words or phrases with a comma
 

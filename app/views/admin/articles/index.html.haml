@@ -61,7 +61,7 @@
           = link_to article.assets_count, [:new, :admin, article, :asset]
         %td
           = icon("Discuss", [:admin, article, :comments])
-          = link_to number_with_delimiter(article.comments_count), [:admin, article, :comments]
+          = link_to article.comments_count, [:admin, article, :comments]
         %td.right
           - if current_user.has_role(["Admin", "Editor"]) and !article.deactivated?
             = feature_icon_select(article, article.title)

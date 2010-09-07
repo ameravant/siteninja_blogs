@@ -1,8 +1,10 @@
 class Article < ActiveRecord::Base
   has_permalink :title
   acts_as_taggable
+  belongs_to :article_category
   has_and_belongs_to_many :article_categories
   belongs_to :person, :counter_cache => true
+  belongs_to :column
   has_many :comments, :as => :commentable
   has_many :images, :as => :viewable, :dependent => :destroy
   has_many :features, :as => :featurable, :dependent => :destroy
