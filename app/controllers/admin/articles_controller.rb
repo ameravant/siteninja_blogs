@@ -91,7 +91,7 @@ class Admin::ArticlesController < AdminController
     authorize(@permissions['articles'], "Articles")
   end
   def authorize_to_update
-    authorize(@permissions['comments'], "Articles") if @article.published 
+    authorize(@permissions['comments'], "Published Articles") if @article.published 
   end
 end
 
