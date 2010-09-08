@@ -15,12 +15,13 @@
 %table{:cellspacing => "0"}
   %tr{:class => "form-option #{cycle('even', 'odd')}"}
     %td.big= f.label :title
+
     %td= f.text_field :title, :class => "big", :size => 140
   - if @editor
     %tr{:class => "form-option #{cycle('even', 'odd')}"}
       %td.big= f.label :person_id, "Author"
       %td
-        = f.select :person_id, User.all.sort_by(&:name).collect {|p| [p.name, p.person.id]}, :selected => @article.article_category_id
+        = f.select :person_id, User.all.sort_by(&:name).collect {|p| [p.name, p.person.id]}, :selected => (@article.new_record? ? current_user.id : @article.user.id)
   %tr{:class => "form-option #{cycle('even', 'odd')}"}
     %td.big= f.label :article_category_id, "Primary Category"
     %td= f.select :article_category_id, ArticleCategory.all.sort_by(&:title).collect {|ac| [ac.title, ac.id]}, {:include_blank => "Select a main category"}, :selected => current_user.id
@@ -61,7 +62,7 @@
   = f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])
   = f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"
   = f.label :published_at, "on"
-  = f.date_select :published_at, :order => [ :month, :day, :year ]
+  = f.datetime_select :published_at, :order => [ :month, :day, :year, :hour ]
 
 %p
   = f.check_box :social_share

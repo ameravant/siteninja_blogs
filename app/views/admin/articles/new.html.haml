@@ -3,7 +3,8 @@
   =@cms_config['site_settings']['article_title']
 
 %h1= yield(:meta_title).strip
-
+-unless @settings.article_posting_instructions.blank?
+  = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "How to post an Article", :tip_text => @settings.article_posting_instructions}
 - form_for [:admin, @article], :html => { :onsubmit => "form_submitted('')" } do |f|
   = render :partial => "form", :locals => { :f => f }
 
