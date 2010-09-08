@@ -15,7 +15,7 @@
 %table{:cellspacing => "0"}
   %tr{:class => "form-option #{cycle('even', 'odd')}"}
     %td.big= f.label :title
-    %td= f.text_field :title, :class => "big", :size => 152
+    %td= f.text_field :title, :class => "big", :size => 120
   - if @editor
     %tr{:class => "form-option #{cycle('even', 'odd')}"}
       %td.big= f.label :person_id, "Author"
