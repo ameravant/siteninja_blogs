@@ -4,6 +4,7 @@
   %tr
     %td= f.label :name
     %td= f.text_field :name
-
+  %tr
+    %td= collection_select(:article_category, :column_id, Column.all, :id, :title, :style => "width: 200px; margin: 0 0 0 0;")
 - fancy_submit admin_article_categories_path do
   = f.submit "Save category"

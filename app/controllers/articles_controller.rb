@@ -27,6 +27,7 @@ class ArticlesController < ApplicationController
       found_articles = Article.published
     end
     @articles = found_articles.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
+    @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
     respond_to do |wants|
       wants.html # index.html.erb
       wants.xml { render :xml => @articles.to_xml }
@@ -35,8 +36,10 @@ class ArticlesController < ApplicationController
   end
 
   def show
+    @article.article_category_id.blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => @article.article_category.column_id, :visible => true})
     @images = @article.images
     add_breadcrumb @cms_config['site_settings']['blog_title'], 'blog_path'
+    add_breadcrumb @article.article_category.title, @article.article_category unless @article.article_category.blank?
     add_breadcrumb @article.title
   end
 

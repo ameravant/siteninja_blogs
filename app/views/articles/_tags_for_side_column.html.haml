@@ -1,3 +1,4 @@
+- @article_tags = Article.published.tag_counts.sort_by(&:name)
 - unless @article_tags.empty?
   - content_for :side_column do
     .side-column-section

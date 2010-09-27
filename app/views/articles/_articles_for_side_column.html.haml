@@ -1,3 +1,7 @@
+- ops = "person_id = #{@page.author_id}" if @page.author_id
+- articles = @page.article_category_id.nil? ? Article.published.find(:all, :conditions => ops) : @page.article_category.articles.published.find(:all, :conditions => ops)
+- @recent_articles = articles
+
 - content_for :side_column do
   .side-column-section
     - unless @recent_articles.empty?

@@ -15,7 +15,7 @@
 %table{:cellspacing => "0"}
   %tr{:class => "form-option #{cycle('even', 'odd')}"}
     %td.big= f.label :title
-    %td= f.text_field :title, :class => "big", :size => 140
+    %td= f.text_field :title, :class => "big", :size => 120
   - if @editor && !current_user.is_contributor_only
     %tr{:class => "form-option #{cycle('even', 'odd')}"}
       %td.big= f.label :person_id, "Author"
@@ -36,26 +36,28 @@
     %tr{:class => "form-option #{cycle('even', 'odd')}"}
       %td.top= f.label :description, "Short Description"
       %td
-        = f.text_area :description, :size => "100x5"
+        = f.text_area :description, :size => "90x5"
         %br
         = f.check_box :show_description
         = f.label :show_description, "Show Description under Title on Article"
     %tr{:class => "form-option #{cycle('even', 'odd')}"}
       %td.top= f.label :tag_list, "Tags"
       %td
-        = f.text_field :tag_list, :size => 140
-        %br
-        %span{:class => "small gray"} Separate words or phrases with a comma
+        = f.text_field :tag_list, :size => 120
+        .small.gray Separate words or phrases with a comma
 - unless current_user.is_contributor_only
+  %br
   %h2= f.label :blurb
-  %span{:class => "small gray"}Displayed on Blog Summary page, under Title
-  = f.text_area :blurb, :size => "80x10", :class => "full_width"
+  .small.gray Displayed on Blog Summary page, under Title
+  = f.text_area :blurb, :size => "80x20"
+%br
+%br
 %h2= f.label :body
 .options
   - unless @article.images.empty?
     = render :partial => "admin/shared/image_options", :locals => {:images => @article.images}
 
-= f.text_area :body, :size => "80x30", :class => "mceEditor"
+= f.text_area :body, :size => "85x50", :class => "mceEditor"
 
 %p
   = f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])

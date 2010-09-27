@@ -1,3 +1,4 @@
+- @article_authors = Person.active.find(:all, :conditions => "articles_count > 0")
 - unless @article_authors.empty?
   - content_for :side_column do
     .side-column-section

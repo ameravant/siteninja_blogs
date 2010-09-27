@@ -1,3 +1,4 @@
+- @article_archive = Article.published.group_by { |a| [a.published_at.month, a.published_at.year] }
 - unless @article_archive.empty?
   - content_for :side_column do
     .side-column-section

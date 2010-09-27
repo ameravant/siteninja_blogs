@@ -14,7 +14,7 @@
 - content_for :head do
   = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"#{@cms_config['website']['name']}\" href=\"/#{path_safe(@cms_config['site_settings']['article_title'])}.rss\" />"
 
-= render :partial => "sidebar"
+= render :partial => "shared/side_column"
 
 %h1= yield(:meta_title)
 = render :partial => "article_for_list", :collection => @articles
