@@ -1,5 +1,6 @@
+- count = ColumnSectionType.find_by_partial_name("articles_for_side_column").default_count if count.blank?
 - ops = "person_id = #{@page.author_id}" if @page.author_id
-- articles = @page.article_category_id.nil? ? Article.published.find(:all, :conditions => ops) : @page.article_category.articles.published.find(:all, :conditions => ops)
+- articles = @page.article_category_id.nil? ? Article.published.find(:all, :conditions => ops, :limit => count) : @page.article_category.articles.published.find(:all, :conditions => ops, :limit => count)
 - @recent_articles = articles
 
 - content_for :side_column do
@@ -7,7 +8,7 @@
     - unless @recent_articles.empty?
       %h1= @cms_config['site_settings']['blog_title']
       %ul.recent_articles.list_of_links
-        - for article in @recent_articles[0..(count - 1)]
+        - for article in @recent_articles
           %li
             %h2= link_to article.title, article_path(article)
             %span.date= article.published_at.strftime("%a, %B %d, %Y")

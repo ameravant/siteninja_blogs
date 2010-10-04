@@ -40,7 +40,7 @@
           %span.hmenu
             = link_to h(article.title), edit_admin_article_path(article)
             %span.small.gray== by #{article.person.name}
-          - if article.article_categories.active.count == 0
+          - if article.article_categories.active.count == 0 and article.article_category.blank?
             %span.small.red= link_to("no category", edit_admin_article_path(article), :class => "red")
         %td
           - if article.published_date_in_past? and article.published?
