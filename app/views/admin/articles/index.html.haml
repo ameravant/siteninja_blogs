@@ -53,7 +53,7 @@
             %span.gray Deactivated
           - else
             = link_to "Draft", edit_admin_article_path(article), :class => "gray"
-        - if current_user.is_contributor_only? && article.deactivated?
+        - if (current_user.is_contributor_only? && article.published)
           %td
             = "%d images" % article.images_count
           %td
