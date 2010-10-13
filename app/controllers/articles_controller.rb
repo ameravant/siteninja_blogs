@@ -36,6 +36,7 @@ class ArticlesController < ApplicationController
   end
 
   def show
+    @article_category = @article.article_category || @article.article_categories.first
     @article.article_category_id.blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => @article.article_category.column_id, :visible => true})
     @images = @article.images
     add_breadcrumb @cms_config['site_settings']['blog_title'], 'blog_path'
