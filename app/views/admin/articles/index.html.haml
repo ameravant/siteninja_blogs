@@ -50,7 +50,7 @@
             Published
             %span.small.gray== for #{article.published_at.strftime('%a, %b %d')}
           - elsif article.deactivated?
-            %span.gray Deactivated
+            %span.gray Pending
           - else
             = link_to "Draft", edit_admin_article_path(article), :class => "gray"
         - if (current_user.is_contributor_only? && article.published)
