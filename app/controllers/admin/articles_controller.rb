@@ -37,6 +37,8 @@ class Admin::ArticlesController < AdminController
     # The following line allows an Editor or Administrator to save an article as a different person
     @editor ? (@article = Article.new(params[:article])) : (@article = current_user.person.articles.build(params[:article]))
     @article.published = false unless current_user.has_role(["Admin", "Editor", "Author"])
+    #this makes sure the main article category is also in the habtm relationship so it will scope correctly
+    params[:article][:article_category_ids] = params[:article][:article_category_ids] << @article.article_category_id unless @article.article_category_id.blank?
     if @article.save
       flash[:notice] = "Article \"#{@article.title}\" created."
       redirect_to admin_articles_path
@@ -53,6 +55,7 @@ class Admin::ArticlesController < AdminController
   end
 
   def update
+    params[:article][:article_category_ids] = params[:article][:article_category_ids] << @article.article_category_id unless @article.article_category_id.blank?
     if @article.update_attributes(params[:article])
       #This is to remove product from categories if there are none selected
       if !params[:article].has_key?("article_category_ids")
@@ -83,7 +86,7 @@ class Admin::ArticlesController < AdminController
   end
 
   def find_article_categories_and_check_roles
-    @article_categories = ArticleCategory.active
+    @article_categories = ArticleCategory.active.reject{|a| @article.article_category_id == a.id}
     @editor = true if current_user.has_role(["Admin", "Editor"])
   end
 
