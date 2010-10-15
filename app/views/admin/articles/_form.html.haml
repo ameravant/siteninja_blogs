@@ -58,7 +58,10 @@
     = render :partial => "admin/shared/image_options", :locals => {:images => @article.images}
 
 = f.text_area :body, :size => "85x50", :class => "mceEditor"
-
+- unless current_user.is_contributor_only?
+  %h2= f.label :notes
+  %span.note Will not be shown publicly. Use to save page content while editing.
+  = f.text_area :notes, :size => "30x50", :class => "mceEditor"
 %p
   = f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])
   = f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"
