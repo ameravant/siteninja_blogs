@@ -55,6 +55,7 @@ class Admin::ArticlesController < AdminController
   end
 
   def update
+    params[:article][:article_category_ids] ||= []
     params[:article][:article_category_ids] = params[:article][:article_category_ids] << @article.article_category_id unless @article.article_category_id.blank?
     if @article.update_attributes(params[:article])
       #This is to remove product from categories if there are none selected
