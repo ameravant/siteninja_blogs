@@ -2,6 +2,7 @@ class ArticleCategory < ActiveRecord::Base
   has_permalink :name
   belongs_to :column
   has_and_belongs_to_many :articles
+  has_many :articles
   has_many :pages
   has_many :features, :as => :featurable, :dependent => :destroy
   has_many :images, :as => :viewable, :dependent => :destroy
