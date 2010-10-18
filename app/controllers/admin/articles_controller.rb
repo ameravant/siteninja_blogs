@@ -86,12 +86,7 @@ class Admin::ArticlesController < AdminController
   end
 
   def find_article_categories_and_check_roles
-    @article_categories = ArticleCategory.active.reject{|a| @article.article_category_id == a.id}
-    @editor = true if current_user.has_role(["Admin", "Editor"])
-  end
-  
-  def find_article_categories_and_check_roles
-    @article_categories = ArticleCategory.active.reject{|a| @article.article_category_id == a.id}
+    @article_categories = @article ? ArticleCategory.active.reject{|a| @article.article_category_id == a.id} : ArticleCategory.active
     @editor = true if current_user.has_role(["Admin", "Editor"])
   end
 
