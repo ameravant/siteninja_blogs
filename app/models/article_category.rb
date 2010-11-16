@@ -9,7 +9,7 @@ class ArticleCategory < ActiveRecord::Base
   has_many :menus, :as => :navigatable, :dependent => :destroy
   validates_presence_of :name
   named_scope :active, :conditions => { :active => true }
-  default_scope :order => "name"
+  default_scope :conditions => { :active => true }, :order => "name"
   
   def to_param
     "#{self.id}-#{self.permalink}"
