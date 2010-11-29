@@ -11,7 +11,9 @@
         - for article in @recent_articles
           %li
             %h2= link_to article.title, article_path(article)
-            %span.date= article.published_at.strftime("%a, %B %d, %Y")
+            %span.date
+              = "by #{article.person.name} - " if show_author
+              = article.published_at.strftime("%a, %B %d, %Y")
             - if show_blurb
               %p= article.description.blank? ? truncate(h(article.blurb), :length => 100) : truncate(h(article.description), :length => 100)
             = clear
