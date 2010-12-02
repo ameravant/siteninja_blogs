@@ -4,7 +4,7 @@ class Admin::ArticlesController < AdminController
   before_filter :find_article, :only => [ :edit, :update, :destroy, :reorder, :show ]
   before_filter :find_article_categories_and_check_roles, :only => [ :new, :create, :edit, :update ]
   before_filter :authorize_to_update, :only => [:edit, :update, :destroy]
-  
+  before_filter :assign_authors, :only => [:edit, :new]
   def index
     add_breadcrumb @cms_config['site_settings']['blog_title']
     if current_user.has_role(["Admin", "Editor", "Moderator"]) # Show all articles regardless of author
@@ -96,6 +96,10 @@ class Admin::ArticlesController < AdminController
   end
   def authorize_to_update
     authorize(@permissions['comments'], "Published Articles") if @article.published 
+  end
+  def assign_authors
+    @possible_authors = PersonGroup.find_by_title('Author').people
+    @possible_authors = @possible_authors.concat(@article.person) if @article.is_not_by_author?
   end
 end
 

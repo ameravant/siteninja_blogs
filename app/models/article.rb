@@ -40,4 +40,8 @@ class Article < ActiveRecord::Base
   def user
     self.person.user
   end
+  
+  def is_not_by_author?
+    !person.user.has_role('Author')
+  end
 end

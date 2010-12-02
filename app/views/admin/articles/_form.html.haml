@@ -20,7 +20,7 @@
     %tr{:class => "form-option #{cycle('even', 'odd')}"}
       %td.big= f.label :person_id, "Author"
       %td
-        = f.select :person_id, User.all.sort_by(&:name).collect {|p| [p.name, p.person.id]}, :selected => (@article.new_record? ? current_user.person_id : @article.person_id)
+        = f.select :person_id, @possible_authors.collect {|p| [p.name, p.id]}, :selected => (@article.new_record? ? current_user.person_id : @article.person_id)
   %tr{:class => "form-option #{cycle('even', 'odd')}"}
     %td.big= f.label :article_category_id, "Primary Category"
     %td= f.select :article_category_id, ArticleCategory.all.sort_by(&:title).collect {|ac| [ac.title, ac.id]}, {:include_blank => "Select a main category"}, :selected => current_user.id
