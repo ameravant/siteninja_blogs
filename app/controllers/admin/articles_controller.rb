@@ -38,6 +38,7 @@ class Admin::ArticlesController < AdminController
     @editor ? (@article = Article.new(params[:article])) : (@article = current_user.person.articles.build(params[:article]))
     @article.published = false unless current_user.has_role(["Admin", "Editor", "Author"])
     #this makes sure the main article category is also in the habtm relationship so it will scope correctly
+    params[:article][:article_category_ids] ||= []
     params[:article][:article_category_ids] = params[:article][:article_category_ids] << @article.article_category_id unless @article.article_category_id.blank?
     if @article.save
       flash[:notice] = "Article \"#{@article.title}\" created."
