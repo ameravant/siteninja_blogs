@@ -31,6 +31,9 @@ class Admin::ArticlesController < AdminController
   def edit
     add_breadcrumb @cms_config['site_settings']['blog_title'], admin_articles_path
     add_breadcrumb "Edit"
+    if !@article.person.user.has_role('Author')
+      @possible_authors = @possible_authors.concat(@article.person)
+    end
   end
 
   def create
@@ -56,6 +59,9 @@ class Admin::ArticlesController < AdminController
   end
 
   def update
+    if !@article.person.user.has_role('Author')
+      @possible_authors = @possible_authors.concat(@article.person)
+    end
     params[:article][:article_category_ids] ||= []
     params[:article][:article_category_ids] = params[:article][:article_category_ids] << @article.article_category_id unless @article.article_category_id.blank?
     if @article.update_attributes(params[:article])
@@ -99,7 +105,7 @@ class Admin::ArticlesController < AdminController
     authorize(@permissions['comments'], "Published Articles") if @article.published 
   end
   def assign_authors
-    @possible_authors = PersonGroup.find_by_title('Author', :unique).people
+    @possible_authors = PersonGroup.find_by_title('Author').people
     if !current_user.has_role('Author')
       @possible_authors = @possible_authors.concat(current_user.person)
     end
