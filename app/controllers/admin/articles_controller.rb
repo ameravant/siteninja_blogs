@@ -1,7 +1,7 @@
 class Admin::ArticlesController < AdminController
   unloadable # http://dev.rubyonrails.org/ticket/6001
   before_filter :authorization
-  before_filter :assign_authors, :only => [:edit, :new]
+  before_filter :assign_authors, :only => [:edit, :new, :create, :update]
   before_filter :find_article, :only => [ :edit, :update, :destroy, :reorder, :show ]
   before_filter :find_article_categories_and_check_roles, :only => [ :new, :create, :edit, :update ]
   before_filter :authorize_to_update, :only => [:edit, :update, :destroy]
@@ -81,7 +81,6 @@ class Admin::ArticlesController < AdminController
   def find_article
     begin
       @article = Article.find(params[:id])
-      @possible_authors = @possible_authors.concat(@article.person) if @article.is_not_by_author?
     rescue
       flash[:error] = "Article not found."
       redirect_to admin_articles_path
@@ -100,7 +99,10 @@ class Admin::ArticlesController < AdminController
     authorize(@permissions['comments'], "Published Articles") if @article.published 
   end
   def assign_authors
-    @possible_authors = PersonGroup.find_by_title('Author').people
+    @possible_authors = PersonGroup.find_by_title('Author', :unique).people
+    if !current_user.has_role('Author')
+      @possible_authors = @possible_authors.concat(current_user.person)
+    end
   end
 end
 
