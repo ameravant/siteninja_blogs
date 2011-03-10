@@ -10,9 +10,9 @@
     == on #{article.published_at.strftime("%b %d, %Y")}
     == at #{article.published_at.strftime("%I:%M %p")}
     - acs = article.article_category_id.blank? ? article.article_categories.active : article.article_categories.active.reject { |c| c.id == article.article_category_id }
-    - if !article.article_category_id.blank? or !acs.empty?
+    - if !article.article_category.blank? or !acs.empty?
       in 
-      - if !article.article_category_id.blank?
+      - if !article.article_category.blank?
         = link_to(article.article_category.title, article.article_category) + (acs.empty? ? "" : ", ")
       == #{acs.map { |c| link_to(h(c.name), c) }.join(", ")}
     - if article.comments_count > 0
