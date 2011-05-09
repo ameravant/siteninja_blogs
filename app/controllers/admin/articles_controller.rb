@@ -107,7 +107,7 @@ class Admin::ArticlesController < AdminController
   def assign_authors
     @possible_authors = PersonGroup.find_by_title('Author').people.reject{|p| !p.user}
     if !current_user.has_role('Author')
-      @possible_authors = @possible_authors.concat(current_user.person)
+      @possible_authors << current_user.person
     end
   end
 end
