@@ -31,8 +31,8 @@ class Admin::ArticlesController < AdminController
   def edit
     add_breadcrumb @cms_config['site_settings']['blog_title'], admin_articles_path
     add_breadcrumb "Edit"
-    if !@article.person.user.has_role('Author')
-      @possible_authors = @possible_authors.concat(@article.person)
+    if !current_user.has_role('Author')
+      @possible_authors << current_user.person
     end
   end
 
