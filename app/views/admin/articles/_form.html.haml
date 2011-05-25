@@ -6,12 +6,25 @@
     = "document.getElementById('article_body').value += ' ' + text + ' ';"
     }
   %style{:type => "text/css"}
-    div#fancy_div { background: #fff; }
-    div#fancy_div ul { margin: 0; padding: 0; height: 350px; overflow: auto; }
-    div#fancy_div ul li { float: left; margin: 0 5px 5px 0; font-size: .8em; padding: 5px; border: 1px solid #ccc; text-align: center; height: 115px }
-    div#fancy_div h2 { margin: 0 0 4px; font-family: tahoma, arial, sans-serif; font-size: 1em; color: #000; font-weight: normal; color: #999; }
-    div#fancy_div a { color: #336699; text-decoration: none; }
-    div#fancy_div a:hover { background: #336699; color: #fff; }
+    a#preview-link {font-size: 16px; font-weight: bold; vertical-align: baseline; text-decoration: none; font-family: Tahoma; float: right; display: block; margin-right: 75px; line-height: 16px; }
+  %script{:type => "text/javascript"}
+    jQuery(document).ready(function() {
+    jQuery("a#preview-link").fancybox({ 
+    'zoomSpeedIn': 300,
+    'zoomSpeedOut': 300,
+    'overlayShow': true,
+    'hideOnContentClick': false,
+    'easingOut': 'easeOutQuad',
+    'easingIn': 'easeInQuad',
+    'type': 'iframe',
+    'width': '90%',
+    'height': '90%'
+    }); 
+    }); 
+    function setLink(){
+    ==document.getElementById('preview-link').href= '/admin/articles/preview?article_id=#{@article.id}&article_body=' + escape(tinyMCE.get('article_body').getContent()) + '&article_title=' + escape(document.getElementById('article_title').value) + '&article_person_id=' + escape(document.getElementById('article_person_id').value) + '&article_article_category_id=' + document.getElementById('article_article_category_id').value + '&article_description=' + escape(document.getElementById('article_description').value) + '&article_show_description=' + document.getElementById('article_show_description').value + '&article_tag_list=' + escape(document.getElementById('article_tag_list').value) + '&article_blurb=' + escape(document.getElementById('article_blurb').value)
+    }
+
 %table{:cellspacing => "0"}
   %tr{:class => "form-option #{cycle('even', 'odd')}"}
     %td.big= f.label :title
@@ -52,16 +65,29 @@
   = f.text_area :blurb, :size => "80x20"
 %br
 %br
-%h2= f.label :body
+
 .options
   - unless @article.images.empty? || (current_user.is_contributor_only? && !@article.published)
     = render :partial => "admin/shared/image_options", :locals => {:images => @article.images}
-
+%h2{:style => "width: 650px;"}
+  = f.label :body
+  =link_to("#{icon("Search")} Preview Article", "", :id => "preview-link", :class => "preview-link", :onclick => "setLink()")
 = f.text_area :body, :size => "85x50", :class => "mceEditor"
 - unless current_user.is_contributor_only?
-  %h2= f.label :notes
-  %span.note Will not be shown publicly. Use to save page content while editing.
-  = f.text_area :notes, :size => "30x50", :class => "mceEditor"
+  %p.display-notes=link_to("Display Note Field", "javascript:null(0)")
+  .notes
+    %h2= f.label :notes
+    %span.note Will not be shown publicly. Use to save page content while editing.
+    = f.text_area :notes, :size => "85x50", :class => "mceEditor"
+  - content_for :head do
+    :javascript
+      jQuery(document).ready(function() {
+      jQuery(".notes").hide();
+      jQuery(".display-notes").click(function()
+      {
+      jQuery(this).next(".notes").slideToggle(500);
+      });
+      });
 %p
   = f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])
   = f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"

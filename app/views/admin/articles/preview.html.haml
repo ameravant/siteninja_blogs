@@ -1,0 +1,37 @@
+- content_for(:meta_title) { concat h(@article.title) }
+- content_for(:meta_description) { concat h(@article.description) }
+- content_for :head do
+  :javascript
+    jQuery(document).ready(function() {
+    if (jQuery(".newcomment").is(":visible")){
+    jQuery(".newcomment").animate({opacity: 1},2000).slideUp("slow");
+    };
+    });
+= render :partial => "shared/side_column"
+%h1= link_to yield(:meta_title), @article, :class => "no_underline"
+#article-description= @article.description if @article.show_description?
+= error_messages_for "comment", :header_message => "Your comment could not be posted!", :message => nil
+
+= render :partial => "/articles/article_stats", :locals => { :article => @article }
+
+
+=# render :partial => "/shared/image_box", :locals => { :owner => @article } unless @article.images.empty?
+
+<object width="550" height="309"><param name="allowfullscreen" value="true" /><param name="wmode" value="transparent" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=8706167&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=8706167&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;wmode=transparent&amp;fullscreen=1" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" allowscriptaccess="always" width="550" height="309"></embed></object>    
+.article_body
+  = ninja_parse(@article.body.strip)
+
+- if @article.assets_count > 0
+  .article_attachments
+    %h3 Attachment(s)
+    %ul
+    -for asset in @article.assets
+      %li 
+        = link_to asset.name, asset.file.url
+        &mdash;
+        = asset.file_file_name
+= render :partial => "/shared/sharethis"
+
+= clear
+
+= render :partial => "shared/comment_form", :locals => { :owner => @owner}

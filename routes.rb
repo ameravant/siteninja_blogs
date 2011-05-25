@@ -6,7 +6,7 @@ namespace :admin do |admin|
     article_category.resources :menus
     article_category.resources :images, :member => { :reorder => :put }, :collection => { :reorder => :put }
   end
-  admin.resources :articles, :has_many => [ :comments, :features, :assets ], :member => { :reorder => :put } do |article|
+  admin.resources :articles, :has_many => [ :comments, :features, :assets ], :member => { :reorder => :put }, :collection => { :preview => :get } do |article|
     article.resources :images, :member => { :reorder => :put }, :collection => { :reorder => :put }
   end
 end

@@ -85,6 +85,26 @@ class Admin::ArticlesController < AdminController
     respond_to :js
   end
 
+  def preview
+    @page = Page.find_by_permalink!('blog')
+    @menu = @page.menus.first
+    @admin = false
+    @menus = Menu.all
+    @settings = Setting.first
+    @footer_menus = Menu.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
+    @hide_admin_menu = true
+    params[:article_id].blank? ? @article = Article.new : @article = Article.find(params[:article_id])
+    @images = @article.images
+    params[:article_article_category_id].blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => ArticleCategory.find(params[:article_article_category_id]).column_id, :visible => true})
+    @owner = @article
+    @article.body = params[:article_body]
+    @article.person = Person.find(params[:article_person_id])
+    @article.title = params[:article_title]
+    @article.description = params[:article_description]
+    @article.blurb = params[:article_blurb]
+    @article.published_at = Time.now if params[:article_id].blank?
+  end
+  
   private
 
   def find_article
