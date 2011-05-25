@@ -97,7 +97,7 @@ class Admin::ArticlesController < AdminController
     @images = @article.images
     params[:article_article_category_id].blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => ArticleCategory.find(params[:article_article_category_id]).column_id, :visible => true})
     @owner = @article
-    @article.body = params[:article_body]
+    #@article.body = params[:article_body]
     @article.person = Person.find(params[:article_person_id])
     @article.title = params[:article_title]
     @article.description = params[:article_description]
