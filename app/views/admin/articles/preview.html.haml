@@ -7,6 +7,14 @@
     jQuery(".newcomment").animate({opacity: 1},2000).slideUp("slow");
     };
     });
+    window.onload = check_reload();
+    function check_reload() {
+    if (document.cookie == "reload=true")
+    {
+    document.cookie= "reload=false";
+    window.location.reload();
+    };
+    };
 = render :partial => "shared/side_column"
 %h1= link_to yield(:meta_title), @article, :class => "no_underline"
 #article-description= @article.description if @article.show_description?
