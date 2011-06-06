@@ -18,7 +18,7 @@
 =# render :partial => "/shared/image_box", :locals => { :owner => @article } unless @article.images.empty?
 
 .article_body
-  = ninja_parse(@article.body.strip)
+  = ninja_parse(@cms_config['site_settings']['preview'])
 
 - if @article.assets_count > 0
   .article_attachments
