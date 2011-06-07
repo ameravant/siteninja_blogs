@@ -25,8 +25,7 @@
     =#=document.cookie = "article_body=" + escape(tinyMCE.get('article_body').getContent())+"; path=/admin/articles/; host=#{self.request.domain}";
     document.getElementById('post_preview_body').value = tinyMCE.get('article_body').getContent();
     document.getElementById('submit-preview').click();
-    document.cookie="reload=true; path=/";
-    ==document.getElementById('preview-link').href= '/admin/articles/preview?article_id=#{@article.id}&article_title=' + escape(document.getElementById('article_title').value) + '&article_person_id=' + escape(document.getElementById('article_person_id').value) + '&article_article_category_id=' + document.getElementById('article_article_category_id').value + '&article_description=' + escape(document.getElementById('article_description').value) + '&article_show_description=' + document.getElementById('article_show_description').value + '&article_tag_list=' + escape(document.getElementById('article_tag_list').value) + '&article_blurb=' + escape(document.getElementById('article_blurb').value)
+    ==document.getElementById('preview-link').href= '/admin/articles/preview?reload=true&article_id=#{@article.id}&article_title=' + escape(document.getElementById('article_title').value) + '&article_person_id=' + escape(document.getElementById('article_person_id').value) + '&article_article_category_id=' + document.getElementById('article_article_category_id').value + '&article_description=' + escape(document.getElementById('article_description').value) + '&article_show_description=' + document.getElementById('article_show_description').value + '&article_tag_list=' + escape(document.getElementById('article_tag_list').value) + '&article_blurb=' + escape(document.getElementById('article_blurb').value)
     }
 
 %table{:cellspacing => "0"}

@@ -7,13 +7,26 @@
     jQuery(".newcomment").animate({opacity: 1},2000).slideUp("slow");
     };
     });
-    window.onload = check_reload();
-    function check_reload() {
-    if (document.cookie == "reload=true")
+    
+    function getQueryVariable(variable)
     {
-    document.cookie= "reload=false";
-    window.location.reload();
-    };
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i=0;i<vars.length;i++)
+    {
+    var pair = vars[i].split("=");
+    if (pair[0] == variable)
+    {
+    return pair[1];
+    }
+    }
+    } 
+    
+    window.onload = function() {
+    if (getQueryVariable('reload') == "true")
+    {
+    window.location = ('/admin/articles/preview?reload=false&article_id=' + getQueryVariable('article_id') + '&article_title=' + getQueryVariable('article_title') + '&article_person_id=' + getQueryVariable('article_person_id') + '&article_article_category_id=' + getQueryVariable('article_article_category_id') + '&article_description=' + getQueryVariable('article_description') + '&article_show_description=' + getQueryVariable('article_show_description') + '&article_tag_list=' + getQueryVariable('article_tag_list') + '&article_blurb=' + getQueryVariable('article_blurb'));
+    }
     };
 = render :partial => "shared/side_column"
 %h1= link_to yield(:meta_title), @article, :class => "no_underline"
@@ -26,7 +39,7 @@
 =# render :partial => "/shared/image_box", :locals => { :owner => @article } unless @article.images.empty?
 
 .article_body
-  = ninja_parse(@cms_config['site_settings']['preview'])
+  = ninja_parse(@cms_config['site_settings']['preview']) if @cms_config['site_settings']['preview']
 
 - if @article.assets_count > 0
   .article_attachments
