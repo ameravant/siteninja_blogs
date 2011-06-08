@@ -10,7 +10,7 @@ namespace :admin do |admin|
     # member do
     #   get :post_preview
     # end
-    article.resources :images, :member => { :reorder => :put }, :collection => { :reorder => :put }
+    article.resources :images, :member => { :reorder => :put }, :collection => { :reorder => :put, :add_multiple => :get }
   end
 end
 
