@@ -1,5 +1,3 @@
-- content_for(:meta_title) { concat h(@article.title) }
-- content_for(:meta_description) { concat h(@article.description) }
 - content_for :head do
   :javascript
     jQuery(document).ready(function() {
@@ -28,30 +26,34 @@
     window.location = ('/admin/articles/preview?reload=false&article_id=' + getQueryVariable('article_id') + '&article_title=' + getQueryVariable('article_title') + '&article_person_id=' + getQueryVariable('article_person_id') + '&article_article_category_id=' + getQueryVariable('article_article_category_id') + '&article_description=' + getQueryVariable('article_description') + '&article_show_description=' + getQueryVariable('article_show_description') + '&article_tag_list=' + getQueryVariable('article_tag_list') + '&article_blurb=' + getQueryVariable('article_blurb'));
     }
     };
-= render :partial => "shared/side_column"
-%h1= link_to yield(:meta_title), @article, :class => "no_underline"
-#article-description= @article.description if @article.show_description?
-= error_messages_for "comment", :header_message => "Your comment could not be posted!", :message => nil
+- unless params[:reload]?
+  - content_for(:meta_title) { concat h(@article.title) }
+  - content_for(:meta_description) { concat h(@article.description) }
 
-= render :partial => "/articles/article_stats", :locals => { :article => @article }
+  = render :partial => "shared/side_column"
+  %h1= link_to yield(:meta_title), @article, :class => "no_underline"
+  #article-description= @article.description if @article.show_description?
+  = error_messages_for "comment", :header_message => "Your comment could not be posted!", :message => nil
+
+  = render :partial => "/articles/article_stats", :locals => { :article => @article }
 
 
-=# render :partial => "/shared/image_box", :locals => { :owner => @article } unless @article.images.empty?
+  =# render :partial => "/shared/image_box", :locals => { :owner => @article } unless @article.images.empty?
 
-.article_body
-  = ninja_parse(@cms_config['site_settings']['preview']) if @cms_config['site_settings']['preview']
+  .article_body
+    = ninja_parse(@cms_config['site_settings']['preview']) if @cms_config['site_settings']['preview']
 
-- if @article.assets_count > 0
-  .article_attachments
-    %h3 Attachment(s)
-    %ul
-    -for asset in @article.assets
-      %li 
-        = link_to asset.name, asset.file.url
-        &mdash;
-        = asset.file_file_name
-= render :partial => "/shared/sharethis"
+  - if @article.assets_count > 0
+    .article_attachments
+      %h3 Attachment(s)
+      %ul
+      -for asset in @article.assets
+        %li 
+          = link_to asset.name, asset.file.url
+          &mdash;
+          = asset.file_file_name
+  = render :partial => "/shared/sharethis"
 
-= clear
+  = clear
 
-= render :partial => "shared/comment_form", :locals => { :owner => @owner}
+  = render :partial => "shared/comment_form", :locals => { :owner => @owner}
