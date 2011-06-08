@@ -7,7 +7,7 @@ namespace :admin do |admin|
     article_category.resources :images, :member => { :reorder => :put }, :collection => { :reorder => :put }
   end
   admin.resources :articles, :has_many => [ :comments, :features, :assets ], :member => { :reorder => :put } do |article|
-    article.resources :images, :member => { :reorder => :put }, :collection => { :reorder => :put }
+    article.resources :images, :member => { :reorder => :put }, :collection => { :reorder => :put, :add_multiple => :get }
   end
 end
 
