@@ -31,8 +31,11 @@ class Admin::ArticlesController < AdminController
   def edit
     add_breadcrumb @cms_config['site_settings']['blog_title'], admin_articles_path
     add_breadcrumb "Edit"
-    if !@article.person.user.has_role('Author')
-      @possible_authors = @possible_authors.concat(@article.person)
+    if !@article.person.user.has_role('Author') and current_user != @article.user
+      @possible_authors << @article.person      
+    end
+    if !current_user.has_role('Author')
+      @possible_authors << current_user.person
     end
   end
 
@@ -82,6 +85,31 @@ class Admin::ArticlesController < AdminController
     respond_to :js
   end
 
+  def preview
+    @page = Page.find_by_permalink!('blog')
+    @menu = @page.menus.first
+    @admin = false
+    @menus = Menu.all
+    @settings = Setting.first
+    @footer_menus = Menu.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
+    @hide_admin_menu = true
+    params[:article_id].blank? ? @article = Article.new : @article = Article.find(params[:article_id])
+    @images = @article.images
+    params[:article_article_category_id].blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => ArticleCategory.find(params[:article_article_category_id]).column_id, :visible => true})
+    @owner = @article
+    #@article.body = params[:article_body]
+    @article.person = Person.find(params[:article_person_id])
+    @article.title = params[:article_title]
+    @article.description = params[:article_description]
+    @article.blurb = params[:article_blurb]
+    @article.published_at = Time.now if params[:article_id].blank?
+  end
+  
+  def post_preview
+    @cms_config['site_settings']['preview'] = params[:post_preview][:body]
+    File.open("#{RAILS_ROOT}/config/cms.yml", 'w') { |f| YAML.dump(@cms_config, f) }
+  end
+  
   private
 
   def find_article
@@ -105,9 +133,9 @@ class Admin::ArticlesController < AdminController
     authorize(@permissions['comments'], "Published Articles") if @article.published 
   end
   def assign_authors
-    @possible_authors = PersonGroup.find_by_title('Author').people
+    @possible_authors = PersonGroup.find_by_title('Author').people.reject{|p| !p.user}
     if !current_user.has_role('Author')
-      @possible_authors = @possible_authors.concat(current_user.person)
+      @possible_authors << current_user.person
     end
   end
 end
