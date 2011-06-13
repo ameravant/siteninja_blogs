@@ -63,7 +63,7 @@ class Admin::ArticlesController < AdminController
 
   def update
     if !@article.person.user.has_role('Author')
-      @possible_authors = @possible_authors.concat(@article.person)
+     @possible_authors << @article.person
     end
     params[:article][:article_category_ids] ||= []
     params[:article][:article_category_ids] = params[:article][:article_category_ids] << @article.article_category_id unless @article.article_category_id.blank?
