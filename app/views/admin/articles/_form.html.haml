@@ -6,7 +6,18 @@
     = "document.getElementById('article_body').value += ' ' + text + ' ';"
     }
   %style{:type => "text/css"}
-    a#preview-link {font-size: 16px; font-weight: bold; vertical-align: baseline; text-decoration: none; font-family: Tahoma; float: right; display: block; margin-right: 75px; line-height: 16px; }
+    ==#article_description { margin: 0; }
+    ==#secondary-categories { padding: 5px; border: 1px solid #ccc; background: #fff; color: #333; position: absolute; width: 200px; font-size: .9em; height: 200px; overflow: auto; -moz-box-shadow: 0 4px 10px rgba(0,0,0,.6); -webkit-box-shadow: 0 4px 10px rgba(0,0,0,.6); box-shadow: 0 4px 10px rgba(0,0,0,.6); }
+    ==#main-details { font-size: .85em; }
+    ==#main-details label { font-weight: bold; }
+    ==.note { color: #555; font-weight: normal !important; font-size: 11px; }
+    ==#article_description { font-size: .9em; margin-bottom: -4px; }
+    ==#article_title { font-size: 1.2em; width: 550px; }
+    ==#article_blurb { width: 550px; font-size: .8em; }
+    ==#article_show_description { margin: 0; }
+    ==h2.form-label { padding: 10px 0 0 0; margin: 0; }
+    ==.notes { margin: 0 0 20px; }
+    ==.notes h2 { margin: 0; padding: 0; }
   %script{:type => "text/javascript"}
     jQuery(document).ready(function() {
     jQuery("a#preview-link").fancybox({ 
@@ -27,84 +38,84 @@
     document.getElementById('submit-preview').click();
     ==document.getElementById('preview-link').href= '/admin/articles/preview?reload=true&article_id=#{@article.id}&article_title=' + escape(document.getElementById('article_title').value) + '&article_person_id=' + escape(document.getElementById('article_person_id').value) + '&article_article_category_id=' + document.getElementById('article_article_category_id').value + '&article_description=' + escape(document.getElementById('article_description').value) + '&article_show_description=' + document.getElementById('article_show_description').value + '&article_tag_list=' + escape(document.getElementById('article_tag_list').value) + '&article_blurb=' + escape(document.getElementById('article_blurb').value)
     }
-
-%table{:cellspacing => "0"}
-  %tr{:class => "form-option #{cycle('even', 'odd')}"}
-    %td.big= f.label :title
-    %td= f.text_field :title, :class => "big", :size => 120
+#main-details.options
+  %h3 Article Details
   - if @editor && !current_user.is_contributor_only?
-    %tr{:class => "form-option #{cycle('even', 'odd')}"}
-      %td.big= f.label :person_id, "Author"
-      %td
-        = f.select :person_id, @possible_authors.collect {|p| [p.name, p.id]}, :selected => (@article.new_record? ? current_user.person_id : @article.person_id)
-  %tr{:class => "form-option #{cycle('even', 'odd')}"}
-    %td.big= f.label :article_category_id, "Primary Category"
-    %td= f.select :article_category_id, ArticleCategory.all.sort_by(&:title).collect {|ac| [ac.title, ac.id]}, {:include_blank => "Select a main category"}, :selected => current_user.id
+    = f.label :person_id, "Author"
+    %br
+    = f.select :person_id, @possible_authors.collect {|p| [p.name, p.id]}, :selected => (@article.new_record? ? current_user.person_id : @article.person_id)
+    %br
+  = f.label :article_category_id, "Primary Category"
+  %br
+  = f.select :article_category_id, ArticleCategory.all.sort_by(&:title).collect {|ac| [ac.title, ac.id]}, {:include_blank => "Select a main category"}, :selected => current_user.id
   - unless current_user.is_contributor_only?
-    %tr{:class => "form-option top #{cycle('even', 'odd')}"}
-      %td{:class => (!@article.new_record? and @article.article_categories.active.count == 0 ? "bold red" : nil)}= f.label :article_category_ids, "Secondary Categories"
-      %td
-        - for article_category in @article_categories
-          %span.article_category_checkbox
-            = check_box_tag "article[article_category_ids][]", article_category.id, @article.article_categories.include?(article_category), :id => dom_id(article_category)
-            = label_tag dom_id(article_category), "#{article_category.name}"
-        = clear
-    %tr{:class => "form-option #{cycle('even', 'odd')}"}
-      %td.top= f.label :description, "Short Description"
-      %td
-        = f.text_area :description, :size => "90x5"
-        %br
-        = f.check_box :show_description
-        = f.label :show_description, "Show Description under Title on Article"
-    %tr{:class => "form-option #{cycle('even', 'odd')}"}
-      %td.top= f.label :tag_list, "Tags"
-      %td
-        = f.text_field :tag_list, :size => 120
-        .small.gray Separate words or phrases with a comma
+    %div{:class => (!@article.new_record? and @article.article_categories.active.count == 0 ? "bold red" : nil)}= f.label :article_category_ids, link_to("Secondary Categories", "javascript:void(0)", :id => "display-secondary-categories")
+    #secondary-categories
+      - for article_category in @article_categories
+        %span.article_category_checkbox
+          = check_box_tag "article[article_category_ids][]", article_category.id, @article.article_categories.include?(article_category), :id => dom_id(article_category)
+          = label_tag dom_id(article_category), "#{article_category.name}"
+          %br
+    = clear
+    = f.label :description, "Short Description"
+    = f.text_area :description, :size => "30x5"
+    %br
+    = f.check_box :show_description
+    = f.label :show_description, "Show Description under Title on Article", :class => "note"
+    %br
+    = f.label :tag_list, "Tags"
+    = f.text_field :tag_list, :size => 30
+    .note Separate words or phrases with a comma
+%h2.form-label= f.label :title
+= f.text_field :title, :class => "big", :size => 80
+
 - unless current_user.is_contributor_only?
   %br
-  %h2= f.label :blurb
-  .small.gray Displayed on Blog Summary page, under Title
-  = f.text_area :blurb, :size => "80x20"
-%br
-%br
+  %h2.form-label= f.label :blurb
+  .note Displayed on Blog Summary page, under Title
+  = f.text_area :blurb, :size => "70x10"
 
+%div{:style => "clear: both; height: 20px; "}
 .options
   - unless @article.images.empty? || (current_user.is_contributor_only? && !@article.published)
     = render :partial => "admin/shared/image_options", :locals => {:images => @article.images}
-%h2{:style => "width: 650px;"}
+%h2.form-label{:style => "width: 650px;"}
   = f.label :body
   =link_to("#{icon("Search")} Preview Article", "", :id => "preview-link", :class => "preview-link", :onclick => "setLink()")
-= f.text_area :body, :size => "85x50", :class => "mceEditor"
+= f.text_area :body, :size => "85x40", :class => "mceEditor"
 - unless current_user.is_contributor_only?
-  %p.display-notes=link_to("Display Note Field", "javascript:null(0)")
+  %p.display-notes=link_to("Display Note Field", "javascript:void(0)")
   .notes
     %h2= f.label :notes
     %span.note Will not be shown publicly. Use to save page content while editing.
-    = f.text_area :notes, :size => "85x50", :class => "mceEditor"
+    = f.text_area :notes, :size => "85x40", :class => "mceEditor"
   - content_for :head do
     :javascript
       jQuery(document).ready(function() {
       jQuery(".notes").hide();
       jQuery(".display-notes").click(function()
       {
-      jQuery(this).next(".notes").slideToggle(500);
+      jQuery(".notes").slideToggle(500);
+      });
+      jQuery("#secondary-categories").hide();
+      jQuery("#display-secondary-categories").click(function()
+      {
+      jQuery("#secondary-categories").slideToggle(500);
       });
       });
-%p
-  = f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])
-  = f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"
-  = f.label :published_at, "on"
-  = f.datetime_select :published_at, :order => [ :month, :day, :year, :hour ]
 
+= f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])
+= f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"
+= f.label :published_at, "on"
+= f.datetime_select :published_at, :order => [ :month, :day, :year, :hour ]
+%br
 - unless current_user.is_contributor_only?
-  %p
-    = f.check_box :social_share
-    = f.label :social_share, "Show ShareThis link"
-  
-%p
-  = f.check_box :notify_author_of_comments
-  = f.label :notify_author_of_comments, "Notify me when comments are posted for this #{@cms_config['site_settings']['article_title']}"
+  = f.check_box :social_share
+  = f.label :social_share, "Show ShareThis link"
+  %br
+
+= f.check_box :notify_author_of_comments
+= f.label :notify_author_of_comments, "Notify the author when comments are posted for this #{@cms_config['site_settings']['article_title']}"
 
 = clear
 - fancy_submit admin_articles_path do
