@@ -80,10 +80,13 @@
 .options
   - unless @article.images.empty? || (current_user.is_contributor_only? && !@article.published)
     = render :partial => "admin/shared/image_options", :locals => {:images => @article.images}
-%h2.form-label{:style => "width: 650px;"}
-  = f.label :body
-  =link_to("#{icon("Search")} Preview Article", "", :id => "preview-link", :class => "preview-link", :onclick => "setLink()")
-= f.text_area :body, :size => "85x40", :class => "mceEditor"
+%div{:style => "width: 560px;"}
+  %div{:style => "position: absolute; margin: 14px 0 0 555px;"}
+    = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the article will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
+  %h2.form-label
+    = f.label :body
+    =link_to("#{icon("Search")} Preview Article", "", :id => "preview-link", :class => "preview-link", :onclick => "setLink()")
+  = f.text_area :body, :size => "85x40", :class => "mceEditor"
 - unless current_user.is_contributor_only?
   %p.display-notes=link_to("Display Note Field", "javascript:void(0)")
   .notes
