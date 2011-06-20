@@ -1,6 +1,8 @@
 = f.error_messages
 #article-update-info= render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "Information on the new Article Form format.", :tip_text => "The Article Form has been revamped to make the process of writing and editing articles simpler. Now, the Title, Blurb, and Body fields are prominently displayed in the main column of the page, while ancillary details have been moved to the side column. Secondary Categories now appear as a drop down box, removing extra clutter from the page."}
 - content_for :head do
+  = stylesheet_link_tag "/plugin_assets/siteninja_core/stylesheets/jquery-ui-1.8.6.custom.css"
+  = javascript_include_tag "/plugin_assets/siteninja_core/javascripts/jquery-ui-timepicker-addon.js"
   %script{:type => "text/javascript"}
     function addtext(text) {
     = "document.getElementById('article_body').value += ' ' + text + ' ';"
@@ -18,7 +20,12 @@
     ==h2.form-label { padding: 10px 0 0 0; margin: 0; }
     ==.notes { margin: 0 0 20px; }
     ==.notes h2 { margin: 0; padding: 0; }
-    
+    ==.ui-timepicker-div .ui-widget-header{ margin-bottom: 8px; }
+    ==.ui-timepicker-div dl{ text-align: left; }
+    ==.ui-timepicker-div dl dt{ height: 25px; }
+    ==.ui-timepicker-div dl dd{ margin: -25px 0 10px 65px; }
+    ==.ui-timepicker-div td { font-size: 90%; }
+    ==.ui-widget { font-size: 11px !important; }
   %script{:type => "text/javascript"}
     jQuery(document).ready(function() {
     jQuery("a#preview-link").fancybox({ 
@@ -39,6 +46,10 @@
     document.getElementById('submit-preview').click();
     ==document.getElementById('preview-link').href= '/admin/articles/preview?reload=true&article_id=#{@article.id}&article_title=' + escape(document.getElementById('article_title').value) + '&article_person_id=' + escape(document.getElementById('article_person_id').value) + '&article_article_category_id=' + document.getElementById('article_article_category_id').value + '&article_description=' + escape(document.getElementById('article_description').value) + '&article_show_description=' + document.getElementById('article_show_description').value + '&article_tag_list=' + escape(document.getElementById('article_tag_list').value) + '&article_blurb=' + escape(document.getElementById('article_blurb').value)
     }
+    jQuery(document).ready(function($) {
+    $('#article_published_at').datetimepicker();
+    - @calendar_select = true
+    });
 #main-details.options
   %h3 Article Details
   - if @editor && !current_user.is_contributor_only?
@@ -111,7 +122,9 @@
 = f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])
 = f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"
 = f.label :published_at, "on"
-= f.datetime_select :published_at, :order => [ :month, :day, :year, :hour ]
+
+= f.text_field :published_at, :value => (@article.published_at.blank? ? Time.now.strftime("%m/%d/%Y %H:%M") : @article.published_at.strftime("%m/%d/%Y %H:%M"))
+
 %br
 - unless current_user.is_contributor_only?
   = f.check_box :social_share
