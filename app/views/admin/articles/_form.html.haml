@@ -12,7 +12,8 @@
     ==#secondary-categories { padding: 5px; border: 1px solid #ccc; background: #fff; color: #333; position: absolute; width: 200px; font-size: .9em; height: 200px; overflow: auto; -moz-box-shadow: 0 4px 10px rgba(0,0,0,.6); -webkit-box-shadow: 0 4px 10px rgba(0,0,0,.6); box-shadow: 0 4px 10px rgba(0,0,0,.6); }
     ==#main-details { font-size: .85em; }
     ==#main-details label { font-weight: bold; }
-    ==#article_description { font-size: .9em; margin-bottom: -4px; }
+    ==#article_description { font-size: .9em; margin-bottom: -4px; width: 260px; }
+    ==#article_tag_list { width: 220px; }
     ==#article_title { font-size: 1.2em; width: 550px; }
     ==#article_blurb { width: 550px; font-size: .8em; }
     ==#article_show_description { margin: 0; }
@@ -85,8 +86,8 @@
   = f.text_area :blurb, :size => "70x10"
 
 %div{:style => "clear: both; height: 20px; "}
-.options
-  - unless @article.images.empty? || (current_user.is_contributor_only? && !@article.published)
+- unless @article.images.empty? || (current_user.is_contributor_only? && !@article.published)
+  .options  
     = render :partial => "admin/shared/image_options", :locals => {:images => @article.images}
 %div{:style => "width: 560px;"}
   %div{:style => "position: absolute; margin: 17px 0 0 552px;"}
