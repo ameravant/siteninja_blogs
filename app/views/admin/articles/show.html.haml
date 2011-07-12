@@ -1,0 +1,7 @@
+- content_for :head do
+  = stylesheet_link_tag "http://trentrichardson.com/examples/timepicker/css/ui-lightness/jquery-ui-1.8.6.custom.css"
+  = javascript_include_tag "http://trentrichardson.com/examples/timepicker/js/jquery-ui-timepicker-addon.js"
+  :javascript
+    jQuery(document).ready(function($) {
+    $('#test').datetimepicker();  
+    });
