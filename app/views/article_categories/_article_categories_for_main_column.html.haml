@@ -1,0 +1,19 @@
+- if section.format == "show_thumbs_limited"
+  - @article_categories = ArticleCategory.all(:conditions => ["images_count > ?", 0])
+- else
+  - @article_categories = ArticleCategory.all
+- unless @article_categories.empty?
+  .main-column-section.article-categories
+    - unless section.title.blank?
+      %h2== #{@cms_config["site_settings"]["article_title"].titlecase} Categories
+    %ul.article_categories.list_of_links
+      - for category in @article_categories
+        %li
+          = link_to h(category.name), category, :class => "article-category-link"
+          - if section.format == "show_thumbs" || section.format == "show_thumbs_limited" 
+            - unless category.images.empty?
+              .thumbnail-wrapper
+                = link_to(image_tag(category.images.first.thumbnail, :alt => category.title), category)
+          - else
+            .placeholder
+        = cycle("","","<li class='clear-article-category-row'></li>")
