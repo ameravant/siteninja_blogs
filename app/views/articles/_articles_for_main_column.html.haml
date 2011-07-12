@@ -4,14 +4,15 @@
 - @recent_articles = articles
 
 - unless @recent_articles.empty?
-  %h1= title
-  %ul.recent_articles.list_of_links
-    - for article in @recent_articles
-      %li
-        %h2= link_to article.title, article_path(article)
-        %span.date
-          = "by #{article.person.name} - " if show_author
-          = article.published_at.strftime("%a, %b %d, %Y")
-        - if show_blurb
-          %p= article.description.blank? ? truncate(h(article.blurb), :length => 100) : truncate(h(article.description), :length => 100)
-        = clear
+  .articles-for-main-column
+    %h1= title
+    %ul.recent_articles.list_of_links
+      - for article in @recent_articles
+        %li
+          %h2= link_to article.title, article_path(article)
+          %span.date
+            = "by #{article.person.name} - " if show_author
+            = article.published_at.strftime("%a, %b %d, %Y")
+          - if show_blurb
+            %p= article.description.blank? ? truncate(h(article.blurb), :length => 100) : truncate(h(article.description), :length => 100)
+          = clear
