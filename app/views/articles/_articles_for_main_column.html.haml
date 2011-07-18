@@ -3,7 +3,7 @@
 - articles = @page.article_category_id.nil? ? Article.published.find(:all, :conditions => ops, :limit => count) : @page.article_category.articles.published.find(:all, :conditions => ops, :limit => count)
 - recent_articles = articles
 - unless recent_articles.empty?
-  - if section.format == "condensed"
+  - if section.format != "full"
     .articles-for-main-column
       - unless section.title.blank?
         %h2= section.title
