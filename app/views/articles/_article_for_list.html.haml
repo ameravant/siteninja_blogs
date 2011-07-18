@@ -8,6 +8,6 @@
       = clear
   = render :partial => "/articles/article_stats", :locals => { :article => article_for_list }
   .article_body
-    = simple_format(article_for_list.blurb.strip)
+    = simple_format(article_for_list.blurb)
     = link_to 'Read more...', article_for_list
   = clear # in case of floating images in blurb
