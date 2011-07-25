@@ -14,7 +14,7 @@
             %h2=link_to(ac.title, ac)
             -# Find an article if it is not in the already_feat array and is the first featured article in this section
             - already_feat << article.id
-            = link_to(image_tag(article.images.first.image(:medium_thumb), :title => article.title, :alt => article.title), article) if article.images.any?
+            = link_to(image_tag(article.images.first.thumbnail, :title => article.title, :alt => article.title), article) if article.images.any?
             %h3= link_to article.title, article
         = cycle("", "", "", "<li class=\"clear\"></li>") 
 = clear

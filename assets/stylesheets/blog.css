@@ -114,4 +114,4 @@ div.items div.active {
     div#blog-cats p { font-size: .8em; }
     div#blog-cats li.clear { width: 100%; height: 1px; border-top: 1px dotted #bbb; padding: 0; margin: 0; }
     div#blog-cats p { margin: 0; line-height: 1.2em; }
-    div#blog-cats img { margin: 5px 0; }
+    div#blog-cats img { margin: 5px 0; width: 130px; }
