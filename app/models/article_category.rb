@@ -7,6 +7,8 @@ class ArticleCategory < ActiveRecord::Base
   has_many :features, :as => :featurable, :dependent => :destroy
   has_many :images, :as => :viewable, :dependent => :destroy
   has_many :menus, :as => :navigatable, :dependent => :destroy
+  has_many :article_category_column_sections
+  has_many :column_sections, :through => :article_category_column_sections
   validates_presence_of :name
   named_scope :active, :conditions => { :active => true }
   default_scope :conditions => { :active => true }, :order => "name"

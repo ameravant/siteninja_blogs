@@ -100,3 +100,18 @@ div.items div.active {
   .main-column-section.article-categories ul li img { width: 160px; }
   .main-column-section.article-categories ul li { margin-right: 20px; }
   .main-column-section.article-categories ul li.clear-article-category-row { clear: both; width:0; height:0; margin: 0;}
+  
+  
+/* Featured Articles in Categories Default Formatting */
+    div#blog-cats ul { list-style: none; margin: 0 -5px; padding: 0; }
+    div#blog-cats li { display: block; float: left; padding: 5px; }
+    div#blog-cats li div { width: 130px; }
+    div#blog-cats h2 { font-size: .85em; border: 1px solid #000; text-transform: uppercase; font-weight: bold; padding: 0; }
+    div#blog-cats h2 a { display: block; padding: 4px; line-height: 1.2em; font-family: Helvetica, Arial, Sans-Serif; }
+    div#blog-cats h3 { font-size: 1em; padding: 0; font-weight: normal; line-height: 1.2em; }
+    div#blog-cats h3 a:hover { text-decoration: underline; }
+    div#blog-cats .date { margin: 4px 0; line-height: 1.2em; font-size: .9em; color: #A70E13; }
+    div#blog-cats p { font-size: .8em; }
+    div#blog-cats li.clear { width: 100%; height: 1px; border-top: 1px dotted #bbb; padding: 0; margin: 0; }
+    div#blog-cats p { margin: 0; line-height: 1.2em; }
+    div#blog-cats img { margin: 5px 0; }
