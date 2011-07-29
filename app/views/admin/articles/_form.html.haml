@@ -95,7 +95,7 @@
     = render :partial => "admin/shared/parser_help"
     
     - unless @article.images.empty?
-      = link_to("#{icon('Picture')} Add Attached Image", admin_article_images_path(@article, :fancy => "true"), :class => "fancy-iframe")
+      = link_to("#{icon('Picture')} Insert Attached Image", admin_article_images_path(@article, :fancy => "true"), :class => "fancy-iframe")
     = render :partial => "admin/shared/asset_options"
   %div{:style => "width: 560px;"}
     %h2.form-label
