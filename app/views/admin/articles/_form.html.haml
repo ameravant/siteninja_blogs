@@ -88,15 +88,17 @@
 .clear
 #body-wrapper
   .options#body-details
-    = link_to("#{icon("Search")} Preview Page", "", :id => "preview-link", :class => "icon preview-link", :onclick => "setLink()")
+    = link_to("#{icon("Search")} Preview Article", "", :id => "preview-link", :class => "icon preview-link", :onclick => "setLink()")
   
     = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
-    %br
-    = render :partial => "admin/shared/parser_help"
+    .inserts
+      %strong Insert:
+      %br
+      = render :partial => "admin/shared/parser_help"
     
-    - unless @article.images.empty?
-      = link_to("#{icon('Picture')} Insert Attached Image", admin_article_images_path(@article, :fancy => "true"), :class => "fancy-iframe")
-    = render :partial => "admin/shared/asset_options"
+      - unless @article.id.blank?
+        = link_to("#{icon('Picture')} Insert Attached Image", admin_article_images_path(@article, :fancy => "true"), :class => "fancy-iframe")
+      = render :partial => "admin/shared/asset_options"
   %div{:style => "width: 560px;"}
     %h2.form-label
       = f.label :body
