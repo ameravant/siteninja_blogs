@@ -99,6 +99,7 @@
       - unless @article.id.blank?
         = link_to("#{icon('Picture')} Insert Attached Image", admin_article_images_path(@article, :fancy => "true"), :class => "fancy-iframe")
       = render :partial => "admin/shared/asset_options"
+      = render :partial => "admin/shared/insert_map"
   %div{:style => "width: 560px;"}
     %h2.form-label
       = f.label :body
@@ -142,6 +143,18 @@
       function addtext(text) {
       tinyMCE.execInstanceCommand("article_body","mceInsertContent",false,text);
       }
+      jQuery(document).ready(function() {
+      jQuery(".fancy-inline").fancybox({ 
+      'zoomSpeedIn': 300,
+      'zoomSpeedOut': 300,
+      'overlayShow': true,
+      'hideOnContentClick': false,
+      'hideOnOverlayClick': false,
+      'type': 'inline',
+      'showCloseButton' : false,
+      'autoScale': true
+      }); 
+      }); 
 
 = f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])
 = f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"
