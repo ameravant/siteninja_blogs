@@ -8,30 +8,11 @@
     };
     });
 = render :partial => "shared/side_column"
-%h1= link_to yield(:meta_title), @article, :class => "no_underline"
-#article-description= @article.description if @article.show_description?
 = error_messages_for "comment", :header_message => "Your comment could not be posted!", :message => nil
 
-= render :partial => "/articles/article_stats", :locals => { :article => @article }
+- template = Liquid::Template.parse(@tmplate.article_show) 
+= template.render( 'article' => @article, 'title' => (link_to(@article.title, article_path(@article))), 'author' => (render :partial => "article_author", :locals => { :article => @article}), 'date' => @article.published_at.strftime("%b %d, %Y"), 'time' => @article.published_at.strftime("%I:%M %p"), 'body' => ninja_parse(@article.body), 'attachments' => (render :partial => "article_attachments", :locals => { :article => @article }), 'sharethis' => (render :partial => "/shared/sharethis"), 'comments' => (render :partial => "shared/comment_form", :locals => { :owner => @owner}), 'article_path' => article_path(self) )
 
-
-=# render :partial => "/shared/image_box", :locals => { :owner => @article } unless @article.images.empty?
-
-    
-.article_body
-  = ninja_parse(@article.body.strip)
-
-- if @article.assets_count > 0
-  .article_attachments
-    %h3 Attachment(s)
-    %ul
-    -for asset in @article.assets
-      %li 
-        = link_to asset.name, asset.file.url
-        &mdash;
-        = asset.file_file_name
-= render :partial => "/shared/sharethis"
 
 = clear
 
-= render :partial => "shared/comment_form", :locals => { :owner => @owner}

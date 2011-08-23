@@ -1,4 +1,5 @@
 class ArticleCategory < ActiveRecord::Base
+  unloadable
   has_permalink :name
   belongs_to :column
   has_many :articles
@@ -12,9 +13,14 @@ class ArticleCategory < ActiveRecord::Base
   validates_presence_of :name
   named_scope :active, :conditions => { :active => true }
   default_scope :conditions => { :active => true }, :order => "name"
+  liquid_methods :title, :path
   
   def to_param
     "#{self.id}-#{self.permalink}"
+  end
+  
+  def path
+    "#{(CMS_CONFIG['site_settings']['article_title']).singularize}-categories/#{self.to_param}"
   end
   
   def title # for model consistency, title is treated as name

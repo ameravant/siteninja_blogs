@@ -1,0 +1,9 @@
+- if article.assets_count > 0
+  .article_attachments
+    %h3 Attachment(s)
+    %ul
+    -for asset in article.assets
+      %li 
+        = link_to asset.name, asset.file.url
+        &mdash;
+        = asset.file_file_name
