@@ -1,12 +1,11 @@
 -# Collect article cats containing a sort order meaning they will be in this feat section
 -article_cats = section.article_categories
--article_categories = section.article_category_column_sections
+-article_categories = section.article_categories
 -already_feat = []
 -# Roll through them grabbing the ones that contain features and outputting the newest
 #blog-cats
   %ul
-    -article_categories.sort_by{|ac| ac.sort_order}.each do |accs|
-      - ac = accs.article_category
+    -article_categories.sort_by{|ac| ac.sort_order}.each do |ac|
       - article = Article.published.reject{|a| a.article_category_id != ac.id}.reject{|a| a.features.reject{|f| f.featurable_section_id != section.featurable_section.id}.empty?}.first
       -if !article.blank?
         %li
