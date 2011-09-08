@@ -1,19 +1,21 @@
 -# Collect article cats containing a sort order meaning they will be in this feat section
 -article_cats = section.article_categories
--article_categories = section.article_categories
+-article_categories = section.article_category_column_sections
 -already_feat = []
 -# Roll through them grabbing the ones that contain features and outputting the newest
 #blog-cats
   %ul
-    -article_categories.sort_by{|ac| ac.sort_order}.each do |ac|
-      - article = Article.published.reject{|a| a.article_category_id != ac.id}.reject{|a| a.features.reject{|f| f.featurable_section_id != section.featurable_section.id}.empty?}.first
-      -if !article.blank?
-        %li
-          %div
-            %h2=link_to(ac.title, ac)
-            -# Find an article if it is not in the already_feat array and is the first featured article in this section
-            - already_feat << article.id
-            = link_to(image_tag(article.images.first.thumbnail, :title => article.title, :alt => article.title), article) if article.images.any?
-            %h3= link_to article.title, article
-        = cycle("", "", "", "<li class=\"clear\"></li>") 
+    -article_categories.sort_by{|ac| ac.sort_order}.each do |accs|
+      - ac = accs.article_category
+      - if !ac.blank?
+        - article = Article.published.reject{|a| a.article_category_id != ac.id}.reject{|a| a.features.reject{|f| f.featurable_section_id != section.featurable_section.id}.empty?}.first
+        -if !article.blank?
+          %li
+            %div
+              %h2=link_to(ac.title, ac)
+              -# Find an article if it is not in the already_feat array and is the first featured article in this section
+              - already_feat << article.id
+              = link_to(image_tag(article.images.first.thumbnail, :title => article.title, :alt => article.title), article) if article.images.any?
+              %h3= link_to article.title, article
+          = cycle("", "", "", "<li class=\"clear\"></li>") 
 = clear
