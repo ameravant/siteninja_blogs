@@ -3,7 +3,7 @@
 - unless @article_tags.empty?
   - content_for :side_column do
     .side-column-section
-      %h1 Tags
+      %h2 Tags
       %ul.article_tags.list_of_links
         - tag_cloud @article_tags, %w(tag-size-1 tag-size-2 tag-size-3 tag-size-4) do |tag, css_class|
           - if params[:tag] == tag.name

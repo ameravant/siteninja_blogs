@@ -2,7 +2,7 @@
 - unless @article_authors.empty?
   - content_for :side_column do
     .side-column-section
-      %h1 Authors
+      %h2 Authors
       %ul.list_of_links
         - for author in @article_authors
           - if params[:author].to_i == author.id
