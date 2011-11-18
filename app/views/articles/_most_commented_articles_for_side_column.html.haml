@@ -14,7 +14,7 @@
             .date
               = "by #{article.person.name} - " if show_author
               == #{article.published_at.strftime("%a, %b %d, %Y")},
-              %span.count= pluralize(article.comments_count, "Comments")
+              %span.count= pluralize(article.comments_count, "Comment")
             - if show_blurb
               %p= article.description.blank? ? truncate(h(article.blurb), :length => 100) : truncate(h(article.description), :length => 100)
             = clear
