@@ -1,7 +1,7 @@
 - count = ColumnSectionType.find_by_partial_name("most_commented_articles_for_side_column").default_count if count.blank?
 - ops = "person_id = #{@page.author_id}" if @page.author_id
 - articles = @page.article_category_id.nil? ? Article.published.find(:all, :conditions => ops, :limit => count) : @page.article_category.articles.published.find(:all, :conditions => ops, :limit => count)
-- @most_commented_articles = Article.all(:conditions => ["published_at <= ? and published = ? and comments_count > ? and published_at >= ?", (Time.now + 59.seconds), true, 0, @cms_config['site_settings']['most_commented_cutoff'].days.ago], :order => "comments_count DESC", :limit => count)
+- @most_commented_articles = Article.all(:conditions => ["published_at <= ? and published = ? and comments_count > ? and published_at >= ?", (Time.now + 59.seconds), true, 0, @cms_config['site_settings']['most_commented_cutoff'].to_i.days.ago], :order => "comments_count DESC", :limit => count)
 
 - content_for :side_column do
   .side-column-section
