@@ -113,8 +113,14 @@
     %span.note Will not be shown publicly. Use to save page content while editing.
     = f.text_area :notes, :size => "85x40", :class => "mceEditor"
   - content_for :head do
-    :javascript
+    %script{:type => "text/javascript"}
       jQuery(document).ready(function() {
+      - if @article.publish_immediately
+        jQuery("#date-to-publish").hide();
+      jQuery("#article_publish_immediately").click(function()
+      {
+      jQuery("#date-to-publish").slideToggle(250);
+      });
       jQuery(".notes").hide();
       jQuery(".display-notes").click(function()
       {
@@ -155,14 +161,19 @@
       'autoScale': true
       }); 
       }); 
+      
 
-= f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])
-= f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"
-= f.label :published_at, "on"
+- if current_user.has_role(["Admin", "Editor", "Author"])
+  #publish-immediately
+    = f.check_box :publish_immediately
+    = f.label :publish_immediately, "Publish Immediately", :id => "publish_immediately_label"
+#date-to-publish
+  = f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])
+  = f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"
+  = f.label :published_at, "on"
 
-= f.text_field(:published_at, :value => (@article.published_at.blank? ? Time.now.strftime("%m/%d/%Y %I:%M %p") : @article.published_at.strftime("%m/%d/%Y %I:%M %p")), :class => "datetimepicker")
+  = f.text_field(:published_at, :value => (@article.published_at.blank? ? Time.now.strftime("%m/%d/%Y %I:%M %p") : @article.published_at.strftime("%m/%d/%Y %I:%M %p")), :class => "datetimepicker")
 
-%br
 - unless current_user.is_contributor_only?
   = f.check_box :social_share
   = f.label :social_share, "Show ShareThis link"

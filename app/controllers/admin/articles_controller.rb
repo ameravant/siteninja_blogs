@@ -26,6 +26,7 @@ class Admin::ArticlesController < AdminController
     add_breadcrumb "New"
     # The following line allows an Editor or Administrator to save an article as a different person
     @editor ? (@article = Article.new) : (@article = current_user.person.articles.build)
+    @article.publish_immediately = true if current_user.has_role(["Admin", "Editor", "Author"])
   end
 
   def edit
@@ -43,6 +44,7 @@ class Admin::ArticlesController < AdminController
     # The following line allows an Editor or Administrator to save an article as a different person
     @editor ? (@article = Article.new(params[:article])) : (@article = current_user.person.articles.build(params[:article]))
     @article.published = false unless current_user.has_role(["Admin", "Editor", "Author"])
+    @article.published_at = Time.now if @article.publish_immediately = true
     #this makes sure the main article category is also in the habtm relationship so it will scope correctly
     params[:article][:article_category_ids] ||= []
     params[:article][:article_category_ids] = params[:article][:article_category_ids] << @article.article_category_id unless @article.article_category_id.blank?
