@@ -11,10 +11,10 @@
         - for article in @most_commented_articles
           %li
             %h3= link_to article.title, article_path(article)
-            %span.date
+            .date
               = "by #{article.person.name} - " if show_author
-              = article.published_at.strftime("%a, %b %d, %Y")
-            .count= pluralize(article.comments_count, "Comments")
+              == #{article.published_at.strftime("%a, %b %d, %Y")},
+              %span.count= pluralize(article.comments_count, "Comments")
             - if show_blurb
               %p= article.description.blank? ? truncate(h(article.blurb), :length => 100) : truncate(h(article.description), :length => 100)
             = clear
