@@ -4,7 +4,7 @@
 
 %h1= yield(:meta_title).strip
 
-= render :partial => "/articles/sidebar"
+= render :partial => "/shared/side_column"
 
 = render :partial => "/articles/article_for_list", :collection => @articles
 
