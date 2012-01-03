@@ -10,6 +10,14 @@ class ArticleCategoriesController < ApplicationController
     begin
       @article_category = ArticleCategory.active.find(params[:id])
       @page = Page.find_by_permalink!('blog')# if @article_category.menus.empty?
+      @tmplate = @page.template unless @page.template.blank?
+      @tmplate.layout_top = @global_template.layout_top if @tmplate.layout_top.blank?
+      @tmplate.layout_bottom = @global_template.layout_bottom if @tmplate.layout_bottom.blank?
+      @tmplate.article_show = @global_template.article_show if @tmplate.article_show.blank?
+      @tmplate.articles_index = @global_template.articles_index if @tmplate.articles_index.blank?
+      @tmplate.small_article_for_index = @global_template.small_article_for_index if @tmplate.small_article_for_index.blank?
+      @tmplate.medium_article_for_index = @global_template.medium_article_for_index if @tmplate.medium_article_for_index.blank?
+      @tmplate.large_article_for_index = @global_template.large_article_for_index if @tmplate.large_article_for_index.blank?
       @side_column_sections = ColumnSection.all(:conditions => {:column_id => @article_category.column_id, :visible => true})
       @article_category.menus.empty? ? @menu = @page.menus.first : @menu = @article_category.menus.first
       @articles = @article_category.articles.published.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
