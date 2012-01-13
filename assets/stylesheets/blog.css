@@ -93,6 +93,13 @@ div.items div.active {
 .rss-icon { float: left; margin: 3px 5px 0 0; }
 .rss-icon-selected { float: left; margin: 0 5px 0 0;}
 
+div#content-inner tr.even.from-feed { background: #FFEFCE; }
+div#content-inner tr.odd.from-feed { background: #FFE5AF; }
+.feed-details { float: left; width: 550px; overflow: hidden; margin-bottom: 20px; }
+.secondary-categories { max-height: 200px; width: 200px; overflow: auto; background: #fff; padding: 5px 10px; border: 1px solid #ccc; }
+.feed { padding: 10px; border-bottom: 1px solid #ccc; }
+.feed.published { background: #FFEFCE; }
+.feed.published.odd { background: #FFE5AF; }
 
 /* Article Categories Homepage Default Formatting */
 .main-column-section.article-categories ul { list-style: none; margin: 0; padding: 0; }

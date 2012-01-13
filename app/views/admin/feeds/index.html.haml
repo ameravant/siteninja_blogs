@@ -1,0 +1,18 @@
+- content_for :meta_title do
+  Feeds
+
+%h1= large_icon('Rss 1') + ' RSS Feeds'
+
+%p
+  = icon "Plus"
+  = link_to "Add a new RSS feed", new_admin_feed_path
+
+%table
+  %th Title
+  %th URL
+  %th Options
+  - @feeds.each do |feed|
+    %tr{:id => "feed_#{feed.id}", :class => "admin_feed"}
+      %td= link_to "#{feed.title}", admin_feed_path(feed)
+      %td= link_to "#{feed.url}", admin_feed_path(feed)
+      %td= trash_icon(feed, admin_feed_path(feed), "This feed")

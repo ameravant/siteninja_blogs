@@ -10,8 +10,6 @@
   %style{:type => "text/css"}
     ==#article_description { margin: 0; }
     ==#secondary-categories { padding: 5px; border: 1px solid #ccc; background: #fff; color: #333; position: absolute; width: 200px; font-size: .9em; height: 200px; overflow: auto; -moz-box-shadow: 0 4px 10px rgba(0,0,0,.6); -webkit-box-shadow: 0 4px 10px rgba(0,0,0,.6); box-shadow: 0 4px 10px rgba(0,0,0,.6); }
-    ==#main-details { font-size: .85em; }
-    ==#main-details label { font-weight: bold; }
     ==#article_description { font-size: .9em; margin-bottom: -4px; width: 260px; }
     ==#article_tag_list { width: 220px; }
     ==#article_title { font-size: 1.2em; width: 550px; }
@@ -44,9 +42,14 @@
 #main-details.options
   %h3 Article Details
   - if @editor && !current_user.is_contributor_only?
-    = f.label :person_id, "Author"
-    %br
-    = f.select :person_id, @possible_authors.collect {|p| [p.name, p.id]}, :selected => (@article.new_record? ? current_user.person_id : @article.person_id)
+    - if @article.person.blank? and !@article.title.blank?
+      = f.label :author_name, "Author"
+      %br
+      = f.text_field :author_name, :disabled => true
+    - else
+      = f.label :person_id, "Author"
+      %br
+      = f.select :person_id, @possible_authors.collect {|p| [p.name, p.id]}, :selected => (@article.new_record? ? current_user.person_id : @article.person_id)
     %br
   = f.label :article_category_id, "Primary Category"
   %br
@@ -63,9 +66,13 @@
           = label_tag dom_id(article_category), "#{article_category.name}"
           %br
     = clear
+    = f.label :importance, "Importance"
+    = f.select :importance, options_for_select(["Small", "Medium", "Large"], :selected => @article.importance)
+    = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "Importance determines how large the article summary is. An article with \"Small\" importance will not display an image on the summary page, while an article with \"Large\" importance will display a large image."}
+    %br
     = f.label :description, "Short Description"
     = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Short Description is used for the Meta Description, the side column short description under the title, and the feature box description of the article. In addition, the checkbox beneath this field enables the description to be displayed underneath the Title on the article's page."}
-    = f.text_area :description, :size => "40x5"
+    = f.text_area :description, :style => "width: 250px; height: 40px;"
     %br
     = f.check_box :show_description
     = f.label :show_description, "Show Description under Title on Article.", :class => "note"
@@ -77,35 +84,32 @@
 .note
   %span.required *Required
   Article Title is used to generate the article permalink.
-= f.text_field :title, :class => "big", :size => 80
+= f.text_field :title, :class => "big", :size => 80, :disabled => @disabled
 
 - unless current_user.is_contributor_only?
   %br
   %h2.form-label= f.label :blurb
   .note Displayed on Blog Summary page, under Title. This frequently includes the first paragraph of the Body.
-  = f.text_area :blurb, :size => "70x10"
+  = f.text_area :blurb, :size => "70x10", :disabled => @disabled
 
 .clear
 #body-wrapper
-  .options#body-details
-    = link_to("#{icon("Search")} Preview Article", "", :id => "preview-link", :class => "icon preview-link", :onclick => "setLink()")
-  
-    = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
-    .inserts
-      %strong Insert:
-      %br
-      = render :partial => "admin/shared/parser_help"
-    
-      - unless @article.id.blank?
-        = link_to("#{icon('Picture')} Insert Attached Image", admin_article_images_path(@article, :fancy => "true"), :class => "fancy-iframe")
-      = render :partial => "admin/shared/asset_options"
-      = render :partial => "admin/shared/insert_map"
-  %div{:style => "width: 560px;"}
-    %h2.form-label
-      = f.label :body
-
-  = f.text_area :body, :size => "100x40", :class => "mceEditor"
-
+  - unless @disabled
+    .options#body-details
+      = link_to("#{icon("Search")} Preview Article", "", :id => "preview-link", :class => "icon preview-link", :onclick => "setLink()")
+      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
+      .inserts
+        %strong Insert:
+        %br
+        = render :partial => "admin/shared/parser_help"
+        - unless @article.id.blank?
+          = link_to("#{icon('Picture')} Insert Attached Image", admin_article_images_path(@article, :fancy => "true"), :class => "fancy-iframe")
+        = render :partial => "admin/shared/asset_options"
+        = render :partial => "admin/shared/insert_map"
+    %div{:style => "width: 560px;"}
+      %h2.form-label
+        = f.label :body
+  = f.text_area :body, :size => "100x40", :class => "#{@disabled ? "" : "mceEditor"}", :disabled => @disabled, :style => "width: 550px;"
 - unless current_user.is_contributor_only?
   %p.display-notes=link_to("Display Note Field", "javascript:void(0)")
   .notes
@@ -159,9 +163,8 @@
       'type': 'inline',
       'showCloseButton' : false,
       'autoScale': true
-      }); 
-      }); 
-      
+      });
+      });
 
 - if current_user.has_role(["Admin", "Editor", "Author"])
   #publish-immediately
@@ -178,7 +181,6 @@
   = f.check_box :social_share
   = f.label :social_share, "Show ShareThis link"
   %br
-
 = f.check_box :notify_author_of_comments
 = f.label :notify_author_of_comments, "Notify the author when comments are posted for this #{@cms_config['site_settings']['article_title']}"
 

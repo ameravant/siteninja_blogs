@@ -32,8 +32,10 @@ class Admin::ArticlesController < AdminController
   def edit
     add_breadcrumb @cms_config['site_settings']['blog_title'], admin_articles_path
     add_breadcrumb "Edit"
-    if !@article.person.user.has_role('Author') and current_user != @article.user
-      @possible_authors << @article.person      
+    unless @article.person.blank?
+      if !@article.person.user.has_role('Author') and current_user != @article.user
+        @possible_authors << @article.person      
+      end
     end
     if !current_user.has_role('Author')
       @possible_authors << current_user.person
@@ -117,6 +119,7 @@ class Admin::ArticlesController < AdminController
   def find_article
     begin
       @article = Article.find(params[:id])
+      @article.source_url.blank? ? @disabled = false : @disabled = true
     rescue
       flash[:error] = "Article not found."
       redirect_to admin_articles_path

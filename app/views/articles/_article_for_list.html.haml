@@ -1,14 +1,9 @@
-.article-box-for-list
-  %h2= link_to h(article_for_list.title), article_for_list 
+- if article_for_list.importance == "Small"
+  - template = Liquid::Template.parse(@tmplate.small_article_for_index)
+- elsif article_for_list.importance == "Medium"
+  - template = Liquid::Template.parse(@tmplate.medium_article_for_index)
+- elsif article_for_list.importance == "Large"
+  - template = Liquid::Template.parse(@tmplate.large_article_for_index)
 
-  .article_for_list
-    - unless article_for_list.images.empty? or @person
-      .images 
-        - image = article_for_list.images.sort_by(&:position).first
-        = link_to image_tag(image.image.url(:medium)), article_for_list, :title => h(image.caption)
-        = clear
-    = render :partial => "/articles/article_stats", :locals => { :article => article_for_list }
-    .article_body
-      = simple_format(article_for_list.blurb)
-      = link_to 'Read more...', article_for_list
-    = clear # in case of floating images in blurb
+= template.render( 'article' => article_for_list, 'title' => (link_to(article_for_list.title, article_path(article_for_list))), 'author' => (render :partial => "articles/article_author", :locals => { :article => article_for_list}), 'date' => article_for_list.published_at.strftime("%b %d, %Y"), 'time' => article_for_list.published_at.strftime("%I:%M %p"), 'body' => ninja_parse(article_for_list.body), 'attachments' => (render :partial => "articles/article_attachments", :locals => { :article => article_for_list }), 'feed_link' => "<p>#{link_to("Continue reading original article.", article_for_list.source_url)}</p>", 'article_path' => article_path(self) )
+

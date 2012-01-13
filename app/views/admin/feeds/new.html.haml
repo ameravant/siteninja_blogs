@@ -1,0 +1,7 @@
+- content_for :meta_title do
+  New RSS Feed
+
+%h1= yield(:meta_title).strip
+- form_for [:admin, @feed], :html => { :onsubmit => "form_submitted('')" } do |f|
+  = render :partial => "form", :locals => { :f => f }
+

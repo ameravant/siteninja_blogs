@@ -1,0 +1,21 @@
+= f.error_messages
+#main-details.options
+  %h3 Feed Details
+  = f.label :results_limit
+  = f.text_field :results_limit, :size => 5
+  .note Number of results to retrieve.
+  %br
+  = f.label :description, "Short Description"
+  = f.text_area :description, :style => "width: 250px; height: 60px;"
+%h2.form-label= f.label :title
+.note
+  %span.required *Required
+= f.text_field :title, :class => "big", :size => 80
+%h2.form-label= f.label :url
+.note
+  %span.required *Required
+= f.text_field :url, :class => "big", :size => 80
+
+
+- fancy_submit admin_feeds_path do
+  = f.submit "Save RSS Feed"

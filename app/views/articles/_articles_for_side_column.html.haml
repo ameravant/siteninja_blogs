@@ -4,16 +4,5 @@
 - @recent_articles = articles
 
 - content_for :side_column do
-  .side-column-section.list-of-articles
-    - unless @recent_articles.empty?
-      %h2= title
-      %ul.recent_articles.list_of_links
-        - for article in @recent_articles
-          %li
-            %h3= link_to article.title, article_path(article)
-            %span.date
-              = "by #{article.person.name} - " if show_author
-              = article.published_at.strftime("%a, %b %d, %Y")
-            - if show_blurb
-              %p= article.description.blank? ? truncate(h(article.blurb), :length => 100) : truncate(h(article.description), :length => 100)
-            = clear
+  - template = Liquid::Template.parse(section.section_layout)
+  = template.render( 'article_list' => @recent_articles, 'title' => title, 'article_loop' => (render :partial => 'articles/article_for_side_column', :collection => @recent_articles, :locals => { :article_for_side_column_layout => @article_for_side_column_layout, :show_blurb => show_blurb, :section => section, :show_author => section.show_author}))

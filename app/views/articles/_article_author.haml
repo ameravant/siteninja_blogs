@@ -1,7 +1,10 @@
-- if CMS_CONFIG['modules']['profiles']
-  - if article.person.profile.blank?
-    == #{link_to h(article.person.name), articles_path(:author => article.person.id)}
-  - else
-    == #{link_to h(article.person.name), article.person.profile}
+- if article.person.blank?
+  = article.author_name
 - else
-  == #{link_to h(article.person.name), articles_path(:author => article.person.id)}
+  - if CMS_CONFIG['modules']['profiles']
+    - if article.person.profile.blank?
+      == #{link_to h(article.person.name), articles_path(:author => article.person.id)}
+    - else
+      == #{link_to h(article.person.name), article.person.profile}
+  - else
+    == #{link_to h(article.person.name), articles_path(:author => article.person.id)}

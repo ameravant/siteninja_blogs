@@ -13,6 +13,10 @@
     %span.hmenu
       = icon "Folder2", admin_article_categories_path
       = link_to "Manage categories", admin_article_categories_path
+  - if current_user.has_role(["Admin", "Editor"])
+    %span.hmenu
+      = icon "Rss 1", admin_feeds_path
+      = link_to "Manage RSS Feeds", admin_feeds_path
   = clear
 %br
 
@@ -35,11 +39,11 @@
   %tbody
     - for article in @articles do
 
-      %tr[article]{ :class => cycle('odd','even') }
+      %tr[article]{ :class => "#{cycle('odd','even')} #{'from-feed' if !article.source_url.blank?}" }
         %td
           %span.hmenu
             = link_to h(article.title), edit_admin_article_path(article)
-            %span.small.gray== by #{article.person.name}
+            %span.small.gray== by #{article.person.blank? ? article.author_name : article.person.name}
           - if article.article_categories.active.count == 0 and article.article_category.blank?
             %span.small.red= link_to("no category", edit_admin_article_path(article), :class => "red")
         %td

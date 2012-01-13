@@ -1,12 +1,15 @@
 .article_posted_info
   %span.hmenu
-    - if CMS_CONFIG['modules']['profiles']
-      - if article.person.profile.blank?
-        == By #{link_to h(article.person.name), articles_path(:author => article.person.id)}
-      - else
-        == By #{link_to h(article.person.name), article.person.profile}
+    - if article.person.blank?
+      = "By #{article.author_name}"
     - else
-      == By #{link_to h(article.person.name), articles_path(:author => article.person.id)}
+      - if CMS_CONFIG['modules']['profiles']
+        - if article.person.profile.blank?
+          == By #{link_to h(article.person.name), articles_path(:author => article.person.id)}
+        - else
+          == By #{link_to h(article.person.name), article.person.profile}
+      - else
+        == By #{link_to h(article.person.name), articles_path(:author => article.person.id)}
     == on #{article.published_at.strftime("%b %d, %Y")}
     == at #{article.published_at.strftime("%I:%M %p")}
     - acs = article.article_category_id.blank? ? article.article_categories.active : article.article_categories.active.reject { |c| c.id == article.article_category_id }
