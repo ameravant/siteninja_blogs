@@ -46,9 +46,9 @@
             = link_to h(article.title), edit_admin_article_path(article)
           - if article.article_categories.active.count == 0 and article.article_category.blank?
             %span.small.red= link_to("no category", edit_admin_article_path(article), :class => "red")
-        %td.note
+        %td.detail
           == #{article.person.blank? ? article.author_name : article.person.name}
-        %td.note
+        %td.detail
           - if article.published_date_in_past? and article.published?
             .publish= link_to "Published", article, :class => "green"
             %div== #{article.published_at.strftime('%b %d, %Y')}
