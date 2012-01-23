@@ -1,5 +1,5 @@
 - count = ColumnSectionType.find_by_partial_name("tags_for_side_column").default_count if count.blank?
-- @article_tags = Article.published.tag_counts[0..(count - 1)].reject{|tag| tag.taggings.empty?}.sort_by(&:name)
+- @article_tags = Article.published.tag_counts[0..(count - 1)].reject{|tag| tag.taggings.reject{|tagging| tagging.taggable_type != "Article"}.empty?}.sort_by(&:name)
 - unless @article_tags.empty?
   - content_for :side_column do
     .side-column-section
