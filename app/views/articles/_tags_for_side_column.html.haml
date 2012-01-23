@@ -1,14 +1,13 @@
 - count = ColumnSectionType.find_by_partial_name("tags_for_side_column").default_count if count.blank?
-- @article_tags = Article.published.tag_counts[0..(count - 1)].sort_by(&:name)
+- @article_tags = Article.published.tag_counts[0..(count - 1)].reject{|tag| tag.taggings.empty?}.sort_by(&:name)
 - unless @article_tags.empty?
   - content_for :side_column do
     .side-column-section
       %h2 Tags
       %ul.article_tags.list_of_links
         - tag_cloud @article_tags, %w(tag-size-1 tag-size-2 tag-size-3 tag-size-4) do |tag, css_class|
-          - if tag.taggings.first
-            - if params[:tag] == tag.name
-              %li{:class => "sidebar_link_active #{css_class}"}= h(tag.name)
-            - else
-              %li{:class => "#{css_class}"}[tag]= link_to h(tag.name), articles_path(:tag => tag.name)
+          - if params[:tag] == tag.name
+            %li{:class => "sidebar_link_active #{css_class}"}= h(tag.name)
+          - else
+            %li{:class => "#{css_class}"}[tag]= link_to h(tag.name), articles_path(:tag => tag.name)
       = clear
