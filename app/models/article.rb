@@ -1,5 +1,4 @@
 class Article < ActiveRecord::Base
-  unloadable
   has_permalink :title
   acts_as_taggable
   belongs_to :article_category

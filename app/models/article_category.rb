@@ -1,5 +1,4 @@
 class ArticleCategory < ActiveRecord::Base
-  unloadable
   has_permalink :name
   belongs_to :column
   has_many :articles
