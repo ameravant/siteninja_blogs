@@ -2,11 +2,10 @@
 - categories = []
 - for category in accs
   - categories << category.id
-
 - count = ColumnSectionType.find_by_partial_name("articles_for_side_column").default_count if count.blank?
 - ops = "person_id = #{@page.author_id}" if @page.author_id
 - if @page.article_category_id.nil?
-  - articles = Article.published.find(:all, :conditions => ops, :limit => count)
+  - articles = Article.published.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)} or categories.include?(a.article_category_id))}[0..count-1]
 - else
   - articles = @page.article_category.articles.published.find(:all, :conditions => ops, :limit => count)
 

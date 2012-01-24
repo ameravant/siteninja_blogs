@@ -1,6 +1,13 @@
 - section.count.blank? ? count = ColumnSectionType.find_by_partial_name("articles_for_main_column").default_count : count = section.count
 - ops = "person_id = #{@page.author_id}" if @page.author_id
-- articles = @page.article_category_id.nil? ? Article.published.find(:all, :conditions => ops, :limit => count) : @page.article_category.articles.published.find(:all, :conditions => ops, :limit => count)
+- accs = section.article_categories
+- categories = []
+- for category in accs
+  - categories << category.id
+- if @page.article_category_id.nil?
+  - articles = Article.published.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)} or categories.include?(a.article_category_id))}[0..count-1]
+- else
+  - articles = @page.article_category.articles.published.find(:all, :conditions => ops, :limit => count)
 - recent_articles = articles
 - unless recent_articles.empty?
   - if section.format != "full"
@@ -15,7 +22,7 @@
               = "by #{article.person.name} - " if section.show_author
               = article.published_at.strftime("%a, %b %d, %Y")
             - if section.show_blurb
-              %p= article.description.blank? ? truncate(h(article.blurb), :length => 100) : truncate(h(article.description), :length => 100)
+              %p= article.description.blank? ? article.blurb : truncate(h(article.description), :length => 100)
             = clear
   - else
     .articles-for-main-column
