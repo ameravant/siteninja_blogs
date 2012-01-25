@@ -9,7 +9,7 @@ xml.rss(:version=>"2.0"){
     for article in @articles
       xml.item do
         xml.title(h(article.title))
-        xml.author(h(article.person.name))
+        xml.author(h(article.name))
         xml.category(h(@article_category.name))
         xml.description(h(article.blurb))
         xml.pubDate(article.created_at.strftime("%a, %d %b %Y %H:%M:%S %z"))
