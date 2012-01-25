@@ -64,6 +64,20 @@ class Article < ActiveRecord::Base
     end
   end
   
+  def name
+    if CMS_CONFIG['modules']['profiles']
+      if self.person.blank? and self.person.profile.blank?
+        self.person.name
+      else
+        self.person.name
+      end
+    elsif self.person.blank?
+      self.author_name
+    else
+      self.person.name
+    end
+  end
+  
   def author
     if CMS_CONFIG['modules']['profiles']
       if self.person.profile.blank?
