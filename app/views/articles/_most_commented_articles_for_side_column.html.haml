@@ -3,18 +3,17 @@
 - articles = @page.article_category_id.nil? ? Article.published.find(:all, :conditions => ops, :limit => count) : @page.article_category.articles.published.find(:all, :conditions => ops, :limit => count)
 - @most_commented_articles = Article.all(:conditions => ["published_at <= ? and published = ? and comments_count > ? and published_at >= ?", (Time.now + 59.seconds), true, 0, @cms_config['site_settings']['most_commented_cutoff'].to_i.days.ago], :order => "comments_count DESC", :limit => count)
 
-- content_for :side_column do
-  .side-column-section
-    - unless @most_commented_articles.empty?
-      %h2= title
-      %ul.recent_articles.list_of_links
-        - for article in @most_commented_articles
-          %li
-            %h3= link_to article.title, article_path(article)
-            .date
-              = "by #{article.person.name} - " if show_author
-              == #{article.published_at.strftime("%a, %b %d, %Y")},
-              %span.count= pluralize(article.comments_count, "Comment")
-            - if show_blurb
-              %p= article.description.blank? ? truncate(h(article.blurb), :length => 100) : truncate(h(article.description), :length => 100)
-            = clear
+.side-column-section
+  - unless @most_commented_articles.empty?
+    %h2= title
+    %ul.recent_articles.list_of_links
+      - for article in @most_commented_articles
+        %li
+          %h3= link_to article.title, article_path(article)
+          .date
+            = "by #{article.person.name} - " if show_author
+            == #{article.published_at.strftime("%a, %b %d, %Y")},
+            %span.count= pluralize(article.comments_count, "Comment")
+          - if show_blurb
+            %p= article.description.blank? ? truncate(h(article.blurb), :length => 100) : truncate(h(article.description), :length => 100)
+          = clear

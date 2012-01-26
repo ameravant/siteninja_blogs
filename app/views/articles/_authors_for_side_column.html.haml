@@ -1,12 +1,11 @@
 - @article_authors = Person.active.find(:all, :conditions => "articles_count > 0")
 - unless @article_authors.empty?
-  - content_for :side_column do
-    .side-column-section
-      %h2 Authors
-      %ul.list_of_links
-        - for author in @article_authors
-          - if params[:author].to_i == author.id
-            %li.sidebar_link_active= "#{author.name}"
-          - else
-            - unless author.articles.length == 0
-              %li= link_to "#{author.name}", articles_path(:author => author.id)
+  .side-column-section
+    %h2 Authors
+    %ul.list_of_links
+      - for author in @article_authors
+        - if params[:author].to_i == author.id
+          %li.sidebar_link_active= "#{author.name}"
+        - else
+          - unless author.articles.length == 0
+            %li= link_to "#{author.name}", articles_path(:author => author.id)

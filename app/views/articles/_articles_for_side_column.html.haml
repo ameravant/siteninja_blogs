@@ -14,6 +14,5 @@
 
 - @recent_articles = articles
 
-- content_for :side_column do
-  - template = Liquid::Template.parse(section.section_layout)
-  = template.render( 'article_list' => @recent_articles, 'title' => title, 'article_loop' => (render :partial => 'articles/article_for_side_column', :collection => @recent_articles, :locals => { :article_for_side_column_layout => @article_for_side_column_layout, :show_blurb => show_blurb, :section => section, :show_author => section.show_author}))
+- template = Liquid::Template.parse(section.section_layout)
+= template.render( 'article_list' => @recent_articles, 'title' => title, 'article_loop' => (render :partial => 'articles/article_for_side_column', :collection => @recent_articles, :locals => { :article_for_side_column_layout => @article_for_side_column_layout, :show_blurb => show_blurb, :section => section, :show_author => section.show_author}))

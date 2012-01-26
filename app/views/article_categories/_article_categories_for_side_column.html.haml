@@ -3,20 +3,19 @@
 
 - @article_categories = ArticleCategory.all
 - unless @article_categories.empty?
-  - content_for :side_column do
-    .side-column-section
-      %h2== #{@cms_config["site_settings"]["article_title"].titlecase} Categories
-      %ul.article_categories.list_of_links
-        %li.sidebar_link
-          = link_to(icon("Rss 1"), "/#{path_safe(@cms_config['site_settings']['article_title'])}.rss", :class => "rss-icon", :title => "Subscribe to RSS Feed")
-          = link_to("All Categories", "/#{path_safe(@cms_config['site_settings']['blog_title'])}")
-        - article_categories.sort_by{|ac| ac.sort_order}.each do |accs|
-          - category = accs.article_category
-          - if @article_category and @article_category == category
-            %li.sidebar_link_active
-              = link_to(icon("Rss 1"), article_category_url(category, :format => :rss), :class => "rss-icon-selected", :title => "Subscribe to RSS Feed")
-              = h(category.name)
-          - else
-            %li
-              = link_to(icon("Rss 1"), article_category_url(category, :format => :rss), :class => "rss-icon", :title => "Subscribe to RSS Feed")
-              = link_to h(category.name), category 
+  .side-column-section
+    %h2== #{@cms_config["site_settings"]["article_title"].titlecase} Categories
+    %ul.article_categories.list_of_links
+      %li.sidebar_link
+        = link_to(icon("Rss 1"), "/#{path_safe(@cms_config['site_settings']['article_title'])}.rss", :class => "rss-icon", :title => "Subscribe to RSS Feed")
+        = link_to("All Categories", "/#{path_safe(@cms_config['site_settings']['blog_title'])}")
+      - article_categories.sort_by{|ac| ac.sort_order}.each do |accs|
+        - category = accs.article_category
+        - if @article_category and @article_category == category
+          %li.sidebar_link_active
+            = link_to(icon("Rss 1"), article_category_url(category, :format => :rss), :class => "rss-icon-selected", :title => "Subscribe to RSS Feed")
+            = h(category.name)
+        - else
+          %li
+            = link_to(icon("Rss 1"), article_category_url(category, :format => :rss), :class => "rss-icon", :title => "Subscribe to RSS Feed")
+            = link_to h(category.name), category 
