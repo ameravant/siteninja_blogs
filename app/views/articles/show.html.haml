@@ -11,7 +11,7 @@
 = error_messages_for "comment", :header_message => "Your comment could not be posted!", :message => nil
 
 - template = Liquid::Template.parse(@tmplate.article_show) 
-= template.render( 'article' => @article, 'title' => (link_to(@article.title, article_path(@article))), 'author' => (render :partial => "article_author", :locals => { :article => @article}), 'date' => @article.published_at.strftime("%b %d, %Y"), 'time' => @article.published_at.strftime("%I:%M %p"), 'body' => ninja_parse(@article.body), 'attachments' => (render :partial => "article_attachments", :locals => { :article => @article }), 'feed_link' => ("<p>#{link_to("Continue reading original article.", @article.source_url)}</p>" if !@article.source_url.blank?), 'sharethis' => (render :partial => "/shared/sharethis"), 'comments' => (render :partial => "shared/comment_form", :locals => { :owner => @owner}), 'article_path' => article_path(self) )
+= template.render( 'article' => @article, 'title' => (link_to(@article.title, article_path(@article))), 'author' => (render :partial => "articles/article_author", :locals => { :article => @article}), 'date' => @article.published_at.strftime("%b %d, %Y"), 'time' => @article.published_at.strftime("%I:%M %p"), 'body' => ninja_parse(@article.body), 'attachments' => (render :partial => "articles/article_attachments", :locals => { :article => @article }), 'feed_link' => ("<p>#{link_to("Continue reading original article.", @article.source_url)}</p>" if !@article.source_url.blank?), 'sharethis' => (render :partial => "shared/sharethis"), 'comments' => (render :partial => "shared/comment_form", :locals => { :owner => @owner}), 'article_path' => article_path(self) )
 
 
 = clear

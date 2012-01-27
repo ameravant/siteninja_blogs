@@ -99,20 +99,15 @@ class Admin::ArticlesController < AdminController
     @settings = Setting.first
     @footer_menus = Menu.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
     @hide_admin_menu = true
-    params[:article_id].blank? ? @article = Article.new : @article = Article.find(params[:article_id])
-    @images = @article.images
+    @article = Article.new(JSON.parse(@cms_config['site_settings']['preview']))
+    @article.id.blank? ? @images = @article.images : @images = Article.find(@article.id).images
     params[:article_article_category_id].blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => ArticleCategory.find(params[:article_article_category_id]).column_id, :visible => true})
     @owner = @article
-    #@article.body = params[:article_body]
-    @article.person = Person.find(params[:article_person_id])
-    @article.title = params[:article_title]
-    @article.description = params[:article_description]
-    @article.blurb = params[:article_blurb]
-    @article.published_at = Time.now if params[:article_id].blank?
+    render 'articles/show'
   end
   
   def post_preview
-    @cms_config['site_settings']['preview'] = params[:post_preview][:body]
+    @cms_config['site_settings']['preview'] = ActiveSupport::JSON.encode(params[:preview_article])
     File.open(@cms_path, 'w') { |f| YAML.dump(@cms_config, f) }
   end
   

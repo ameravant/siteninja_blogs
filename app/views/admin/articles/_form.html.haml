@@ -1,6 +1,5 @@
 = f.error_messages
 - @calendar_select = true
-#article-update-info= render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "Information on the new Article Form format.", :tip_text => "The Article Form has been revamped to make the process of writing and editing articles simpler. Now, the Title, Blurb, and Body fields are prominently displayed in the main column of the page, while ancillary details have been moved to the side column. Secondary Categories now appear as a drop down box, removing extra clutter from the page."}
 - content_for :head do
   
   %script{:type => "text/javascript"}
@@ -34,10 +33,20 @@
     }); 
     }); 
     function setLink(){
-    =#=document.cookie = "article_body=" + escape(tinyMCE.get('article_body').getContent())+"; path=/admin/articles/; host=#{self.request.domain}";
-    document.getElementById('post_preview_body').value = tinyMCE.get('article_body').getContent();
+    document.getElementById('preview_article_body').value = tinyMCE.get('article_body').getContent()
+    document.getElementById('preview_article_title').value = document.getElementById('article_title').value
+    document.getElementById('preview_article_blurb').value = document.getElementById('article_blurb').value
+    document.getElementById('preview_article_article_category_id').value = document.getElementById('article_article_category_id').value
+    document.getElementById('preview_article_published_at').value = document.getElementById('article_published_at').value
+    document.getElementById('preview_article_social_share').checked = document.getElementById('article_social_share').checked
+    - if @article.person.blank? and !@article.title.blank?
+      document.getElementById('preview_article_author_name').value = document.getElementById('article_author_name').value
+    - else
+      document.getElementById('preview_article_person_id').value = document.getElementById('article_person_id').value
+    document.getElementById('preview_article_description').value = document.getElementById('article_description').value
+    document.getElementById('preview_article_show_description').checked = document.getElementById('article_show_description').checked
+    document.getElementById('preview_article_tag_list').value = document.getElementById('article_tag_list').value
     document.getElementById('submit-preview').click();
-    ==document.getElementById('preview-link').href= '/admin/articles/preview?reload=true&article_id=#{@article.id}&article_title=' + escape(document.getElementById('article_title').value) + '&article_person_id=' + escape(document.getElementById('article_person_id').value) + '&article_article_category_id=' + document.getElementById('article_article_category_id').value + '&article_description=' + escape(document.getElementById('article_description').value) + '&article_show_description=' + document.getElementById('article_show_description').value + '&article_tag_list=' + escape(document.getElementById('article_tag_list').value) + '&article_blurb=' + escape(document.getElementById('article_blurb').value)
     }
 
 #main-details.options
@@ -47,6 +56,10 @@
       = f.label :author_name, "Author"
       %br
       = f.text_field :author_name, :disabled => true
+    - elsif @possible_authors.empty?
+      = f.label :author_name, "Author"
+      %br
+      = f.text_field :author_name
     - else
       = f.label :person_id, "Author"
       %br
@@ -97,7 +110,7 @@
 #body-wrapper
   - unless @disabled
     .options#body-details
-      = link_to("#{icon("Search")} Preview Article", "", :id => "preview-link", :class => "icon preview-link", :onclick => "setLink()")
+      = link_to("#{icon("Search")} Preview Article", "/admin/articles/preview?reload=true", :id => "preview-link", :class => "icon preview-link", :onclick => "setLink()")
       = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
       .inserts
         %strong Insert:
@@ -189,7 +202,19 @@
 - fancy_submit admin_articles_path do
   = f.submit "Save #{@cms_config['site_settings']['article_title']}"
 - content_for :pre_footer do
-  %div{:style => "width: 1px; height: 1px; overflow: hidden;"}
+  %div{:style => "display: none;"}
     - form_remote_tag :url => post_preview_admin_articles_path, :method => "put", :html => {:name => "post_preview"} do
-      = text_area :post_preview, :body
+      = text_field :preview_article, :id, :value => @article.id
+      = text_area :preview_article, :body
+      = text_area :preview_article, :title
+      = text_area :preview_article, :blurb
+      = text_field :preview_article, :article_category_id
+      = text_field :preview_article, :person_id
+      = text_field :preview_article, :published_at
+      = check_box :preview_article, :social_share
+      - if @article.person.blank? and !@article.title.blank?
+        = text_field :preview_author_name, :author_name
+      = text_area :preview_article, :description
+      = check_box :preview_article, :show_description
+      = text_area :preview_article, :tag_list
       = submit_tag "submit", :id => "submit-preview"
