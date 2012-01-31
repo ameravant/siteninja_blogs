@@ -26,7 +26,11 @@ class ArticlesController < ApplicationController
       add_breadcrumb "#{@cms_config['site_settings']['blog_title']}"
       found_articles = Article.published
     end
-    @articles = found_articles.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
+    if ActiveRecord::Base.connection.tables.include?("accounts")
+      @articles = found_articles.reject{|a| a.account_id != $CURRENT_ACCOUNT.id}.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
+    else
+      @articles = found_articles.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
+    end
     @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
     respond_to do |wants|
       wants.html # index.html.erb
@@ -37,7 +41,7 @@ class ArticlesController < ApplicationController
 
   def show
     @article_category = @article.article_category || @article.article_categories.first
-    @article.article_category_id.blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => @article.article_category.column_id, :visible => true})
+    @article.article_category.blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => @article.article_category.column_id, :visible => true})
     @images = @article.images
     add_breadcrumb @cms_config['site_settings']['blog_title'], 'blog_path'
     add_breadcrumb @article.article_category.title, @article.article_category unless @article.article_category.blank?
