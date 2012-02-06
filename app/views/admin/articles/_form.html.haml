@@ -9,10 +9,7 @@
   %style{:type => "text/css"}
     ==#article_description { margin: 0; }
     ==#secondary-categories { padding: 5px; border: 1px solid #ccc; background: #fff; color: #333; position: absolute; width: 200px; font-size: .9em; height: 200px; overflow: auto; -moz-box-shadow: 0 4px 10px rgba(0,0,0,.6); -webkit-box-shadow: 0 4px 10px rgba(0,0,0,.6); box-shadow: 0 4px 10px rgba(0,0,0,.6); }
-    ==#article_description { font-size: .9em; margin-bottom: -4px; width: 260px; }
-    ==#article_tag_list { width: 220px; }
-    ==#article_title { font-size: 1.2em; width: 550px; }
-    ==#article_blurb { width: 550px; font-size: .8em; }
+
     ==#article_show_description { margin: 0; }
     ==h2.form-label { padding: 10px 0 0 0; margin: 0; }
     ==.notes { margin: 0 0 20px; }
@@ -86,25 +83,25 @@
     %br
     = f.label :description, "Short Description"
     = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Short Description is used for the Meta Description, the side column short description under the title, and the feature box description of the article. In addition, the checkbox beneath this field enables the description to be displayed underneath the Title on the article's page."}
-    = f.text_area :description, :style => "width: 250px; height: 40px;"
+    = f.text_area :description, :class => "small-area"
     %br
     = f.check_box :show_description
     = f.label :show_description, "Show Description under Title on Article.", :class => "note"
     %br
     = f.label :tag_list, "Tags"
-    = f.text_field :tag_list, :size => 39
+    = f.text_field :tag_list, :size => 39, :class => "small-input"
     .note Separate words or phrases with a comma
 %h2.form-label= f.label :title
 .note
   %span.required *Required
   Article Title is used to generate the article permalink.
-= f.text_field :title, :class => "big", :size => 80, :disabled => @disabled
+= f.text_field :title, :class => "big-input", :disabled => @disabled
 
 - unless current_user.is_contributor_only?
   %br
   %h2.form-label= f.label :blurb
   .note Displayed on Blog Summary page, under Title. This frequently includes the first paragraph of the Body.
-  = f.text_area :blurb, :size => "70x10", :disabled => @disabled
+  = f.text_area :blurb, :class => "big-area blurb", :disabled => @disabled
 
 .clear
 #body-wrapper
