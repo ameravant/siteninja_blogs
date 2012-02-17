@@ -101,7 +101,7 @@ class Admin::ArticlesController < AdminController
       @footer_menus = Menu.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
       @hide_admin_menu = true
       @article = Article.new(JSON.parse(@cms_config['site_settings']['preview']))
-      @article.id.blank? ? @images = @article.images : @images = Article.find(@article.id).images
+      @images = @article.permalink.blank? ? [] : Article.find_by_permalink(@article.permalink).images
       params[:article_article_category_id].blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => ArticleCategory.find(params[:article_article_category_id]).column_id, :visible => true})
       @owner = @article
       render 'articles/show'

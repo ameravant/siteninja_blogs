@@ -2,9 +2,9 @@
 - content_for(:meta_description) { concat h(@article.description) }
 - content_for :head do
   :javascript
-    jQuery(document).ready(function() {
-    if (jQuery(".newcomment").is(":visible")){
-    jQuery(".newcomment").animate({opacity: 1},2000).slideUp("slow");
+    $(document).ready(function() {
+    if ($(".newcomment").is(":visible")){
+    $(".newcomment").animate({opacity: 1},2000).slideUp("slow");
     };
     });
 = render :partial => "shared/side_column"

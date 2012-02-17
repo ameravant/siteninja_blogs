@@ -49,7 +49,7 @@
 #main-details.options
   %h3 Article Details
   - if @editor && !current_user.is_contributor_only?
-    - if @article.person.blank? and !@article.title.blank?
+    - if @article.person.blank? and !@article.title.blank? and !@possible_authors.empty?
       = f.label :author_name, "Author"
       %br
       = f.text_field :author_name, :disabled => true
@@ -107,8 +107,9 @@
 #body-wrapper
   - unless @disabled
     .options#body-details
-      = link_to("#{icon("Search")} Preview Article", "/admin/articles/preview?reload=true", :id => "preview-link", :class => "icon preview-link", :onclick => "setLink()")
+      = link_to("#{image_tag(css_icon("Search", "", "", "blue"), :alt => "Preview", :class => "icon")} Preview Article", "/admin/articles/preview?reload=true", :id => "preview-link", :class => "preview-link link-button float-left", :onclick => "setLink()", :style => "width: 120px;")
       = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
+      = clear
       .inserts
         %strong Insert:
         %br
@@ -117,6 +118,7 @@
           = link_to("#{icon('Picture')} Insert Attached Image", admin_article_images_path(@article, :fancy => "true"), :class => "fancy-iframe")
         = render :partial => "admin/shared/asset_options"
         = render :partial => "admin/shared/insert_map"
+        = render :partial => "admin/shared/insert_youtube"
     %div{:style => "width: 560px;"}
       %h2.form-label
         = f.label :body
@@ -201,7 +203,7 @@
 - content_for :pre_footer do
   %div{:style => "display: none;"}
     - form_remote_tag :url => post_preview_admin_articles_path, :method => "put", :html => {:name => "post_preview"} do
-      = text_field :preview_article, :id, :value => @article.id
+      = text_field :preview_article, :permalink, :value => @article.permalink
       = text_area :preview_article, :body
       = text_area :preview_article, :title
       = text_area :preview_article, :blurb
@@ -210,7 +212,7 @@
       = text_field :preview_article, :published_at
       = check_box :preview_article, :social_share
       - if @article.person.blank? and !@article.title.blank?
-        = text_field :preview_author_name, :author_name
+        = text_field :preview_article, :author_name
       = text_area :preview_article, :description
       = check_box :preview_article, :show_description
       = text_area :preview_article, :tag_list

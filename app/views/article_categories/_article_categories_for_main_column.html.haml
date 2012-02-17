@@ -8,7 +8,7 @@
         - category = accs.article_category
         %li
           = link_to h(category.name), category, :class => "article-category-link"
-          - if section.format == "show_thumbs" || section.format == "show_thumbs_limited" 
+          - if section.section_format == "show_thumbs" || section.section_format == "show_thumbs_limited" 
             - unless category.images.empty?
               .thumbnail-wrapper
                 = link_to(image_tag(category.images.first.thumbnail, :alt => category.title), category)

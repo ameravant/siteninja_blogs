@@ -1,53 +1,60 @@
 - content_for :meta_title do
   ==#{@feed.title} RSS Feed
-%h1= large_icon('Rss 1') + ' ' + @feed.title
-#full-format
-  = link_to("Display Condensed Format", "javascript:void(0)", :onclick => "jQuery('#full-format').hide();jQuery('#condensed-format').show();jQuery('.feed-description').hide()")
-#condensed-format{:style => "display: none;"}
-  = link_to("Display Full Format", "javascript:void(0)", :onclick => "jQuery('#full-format').show();jQuery('#condensed-format').hide();jQuery('.feed-description').show()")
-    
-- open(@feed.url) do |http|
-  - response = http.read
-  - result = RSS::Parser.parse(response, false)
-  - result.items.each_with_index do |item, i|[0..9]
-    - a = Article.find_by_source_url(item.link)
-    %div{:class => (a ? "feed published" : "feed") + " " + cycle('odd','even'), :id => "feed-for-#{i}"}
-      .feed-details
-        == <h3><a href="#{item.link}" class="fancy-iframe">#{item.title}</a></h3>
-        ==<div class="article_posted_info"><span class="hmenu">Posted by #{item.author.blank? ? (item.dc_creator.blank? ? @feed.title : item.dc_creator) : item.author} on #{item.pubDate.strftime("%b %d, %Y")}</span></div>
-        ="<div class=\"feed-description\">#{item.description}</div>" unless item.description.blank?
-        ==<div><a href="#{item.link}" class="fancy-iframe">#{item.link}</a></div>
-      .options
-        - if a
-          %h3=link_to("Published", edit_admin_article_path(a))
-        - else
-          - form_remote_tag :url => create_article_admin_feeds_path, :method => "put", :html => {:id => "form-for-#{i}"} do
-            %h3 Import Article
-            - fields_for @article do |f|
-              = f.hidden_field :title, :value => item.title
-              = f.hidden_field :blurb, :value => (item.description ? truncate(strip_tags(item.description), 255).strip : "")
-              = f.hidden_field :body, :value => item.description
-              = f.hidden_field :source_url, :value => item.link
-              = f.hidden_field :feed_id, :value => @feed.id
-              = f.hidden_field :author_name, :value => item.author.blank? ? (item.dc_creator.blank? ? @feed.title : item.dc_creator) : item.author
-              = f.hidden_field :published_at, :value => item.pubDate
-              = f.hidden_field :publish_immediately, :value => false
-              = f.select :article_category_id, ArticleCategory.all.sort_by(&:title).collect {|ac| [ac.title, ac.id]}, {:include_blank => "Select a main category"}, :selected => current_user.id
-              - unless current_user.is_contributor_only?
-                %div{:class => (!@article.new_record? and @article.article_categories.active.count == 0 ? "bold red" : nil)}
-                  = f.label :article_category_ids, link_to("Secondary Categories", "javascript:void(0)", :onclick => "jQuery('#secondary-categories-#{i}').toggle()")
-                .secondary-categories{:id => "secondary-categories-#{i}", :style => "display: none; "}
-                  - for article_category in ArticleCategory.all.sort_by(&:title).collect
-                    .article_category_checkbox
-                      = check_box_tag "article[article_category_ids][]", article_category.id, @article.article_categories.include?(article_category), :id => dom_id(article_category)
-                      = label_tag dom_id(article_category), "#{article_category.name}"
-                    = clear
-              %strong Tag List
-              = f.text_field :tag_list
-              = clear
-              %br
-              = f.submit "Publish to Blog", :onclick => "jQuery('#form-for-#{i}').hide();jQuery('#published-for-#{i}').show();jQuery('#feed-for-#{i}').addClass('published')"
-              = #submit_to_remote 'article_publish', 'Publish to Blog', :url => { :action => 'create_article' }, :update => { :success => "jQuery('#form-for-#{i}').hide()", :failure => "fail" }
-          %div{:id => "published-for-#{i}", :style => "display: none;"}
-            %h3 Published
-      = clear
+
+- begin
+  - open(@feed.url.gsub("feed://", "http://")) do |http|
+    - response = http.read
+    - result = RSS::Parser.parse(response, false)
+    %h1= large_icon('Rss 1') + ' ' + @feed.title
+    #full-format
+      = link_to("Display Condensed Format", "javascript:void(0)", :class => "format-link", :onclick => "jQuery('#full-format').hide();jQuery('#condensed-format').show();jQuery('.feed-description').hide()")
+    #condensed-format{:style => "display: none;"}
+      = link_to("Display Full Format", "javascript:void(0)", :class => "format-link", :onclick => "jQuery('#full-format').show();jQuery('#condensed-format').hide();jQuery('.feed-description').show()")
+    - result.items.each_with_index do |item, i|[0..9]
+      - a = Article.find_by_source_url(item.link)
+      %div{:class => (a ? "feed published" : "feed") + " " + cycle('odd','even'), :id => "feed-for-#{i}"}
+        .feed-details
+          == <h3><a href="#{item.link}" class="fancy-iframe">#{item.title}</a></h3>
+          ==<div class="article_posted_info"><span class="hmenu">Posted by #{item.author.blank? ? (item.dc_creator.blank? ? @feed.title : item.dc_creator) : item.author} on #{item.pubDate.strftime("%b %d, %Y")}</span></div>
+          ="<div class=\"feed-description\">#{item.description}</div>" unless item.description.blank?
+          ==<div><a href="#{item.link}" class="fancy-iframe">#{item.link}</a></div>
+        .options
+          - if a
+            %h3=link_to("Published", edit_admin_article_path(a))
+          - else
+            - form_remote_tag :url => create_article_admin_feeds_path, :method => "put", :html => {:id => "form-for-#{i}"} do
+              %h3 Import Article
+              - fields_for @article do |f|
+                = f.hidden_field :title, :value => item.title
+                = f.hidden_field :blurb, :value => (item.description ? truncate(strip_tags(item.description), 255).strip : "")
+                = f.hidden_field :body, :value => item.description
+                = f.hidden_field :source_url, :value => item.link
+                = f.hidden_field :feed_id, :value => @feed.id
+                = f.hidden_field :author_name, :value => item.author.blank? ? (item.dc_creator.blank? ? @feed.title : item.dc_creator) : item.author
+                = f.hidden_field :published_at, :value => item.pubDate
+                = f.hidden_field :publish_immediately, :value => false
+                = f.select :article_category_id, ArticleCategory.all.sort_by(&:title).collect {|ac| [ac.title, ac.id]}, {:include_blank => "Select a main category"}, :selected => current_user.id
+                - unless current_user.is_contributor_only?
+                  %div{:class => (!@article.new_record? and @article.article_categories.active.count == 0 ? "bold red" : nil)}
+                    = f.label :article_category_ids, link_to("Secondary Categories", "javascript:void(0)", :onclick => "jQuery('#secondary-categories-#{i}').toggle()")
+                  .secondary-categories{:id => "secondary-categories-#{i}", :style => "display: none; "}
+                    - for article_category in ArticleCategory.all.sort_by(&:title).collect
+                      .article_category_checkbox
+                        = check_box_tag "article[article_category_ids][]", article_category.id, @article.article_categories.include?(article_category), :id => dom_id(article_category)
+                        = label_tag dom_id(article_category), "#{article_category.name}"
+                      = clear
+                %strong Tag List
+                = f.text_field :tag_list
+                = clear
+                %br
+                = f.submit "Publish to Blog", :onclick => "jQuery('#form-for-#{i}').hide();jQuery('#published-for-#{i}').show();jQuery('#feed-for-#{i}').addClass('published')"
+                = #submit_to_remote 'article_publish', 'Publish to Blog', :url => { :action => 'create_article' }, :update => { :success => "jQuery('#form-for-#{i}').hide()", :failure => "fail" }
+            %div{:id => "published-for-#{i}", :style => "display: none;"}
+              %h3 Published
+        = clear
+- rescue Exception => exc
+  - flash[:error] = "The URL provided was not able to be read by our RSS Parser."
+  %p 
+    %strong It is possible the the provided link was not a valid RSS feed. Websites frequently include pages with list of RSS feeds, make sure you selected a specific feed first. 
+  %p Below is the error message:
+  %pre= exc

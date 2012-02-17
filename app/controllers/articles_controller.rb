@@ -45,7 +45,7 @@ class ArticlesController < ApplicationController
     @images = @article.images
     add_breadcrumb @cms_config['site_settings']['blog_title'], 'blog_path'
     add_breadcrumb @article.article_category.title, @article.article_category unless @article.article_category.blank?
-    add_breadcrumb @article.title
+    add_breadcrumb '@article.title'
   end
 
   private

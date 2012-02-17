@@ -20,7 +20,11 @@ class ArticleCategoriesController < ApplicationController
       @tmplate.large_article_for_index = @global_template.large_article_for_index if @tmplate.large_article_for_index.blank?
       @side_column_sections = ColumnSection.all(:conditions => {:column_id => @article_category.column_id, :visible => true})
       @article_category.menus.empty? ? @menu = @page.menus.first : @menu = @article_category.menus.first
-      @articles = @article_category.articles.published.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
+      
+      articles = @article_category.articles
+      articles << Article.all(:conditions => {:article_category_id => @article_category.id})
+      @articles = articles.published.uniq.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
+      
       add_breadcrumb @article_category.name
     end
     respond_to do |wants|
