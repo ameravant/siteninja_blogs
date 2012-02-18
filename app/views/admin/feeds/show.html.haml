@@ -53,8 +53,9 @@
               %h3 Published
         = clear
 - rescue Exception => exc
-  - flash[:error] = "The URL provided was not able to be read by our RSS Parser."
   %p 
     %strong It is possible the the provided link was not a valid RSS feed. Websites frequently include pages with a list of RSS feeds, make sure you selected a specific feed first. 
   %p Below is the error message:
-  %pre= exc
+  %pre= @exc
+  - if exc != @exc
+    %pre= exc

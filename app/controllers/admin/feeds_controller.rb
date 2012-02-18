@@ -27,6 +27,14 @@ class Admin::FeedsController < AdminController
     @feed = Feed.find(params[:id])
     add_breadcrumb @feed.title
     @article = Article.new
+    begin
+      open(@feed.url.gsub("feed://", "http://")) do |http|
+        response = http.read
+        result = RSS::Parser.parse(response, false)
+      end
+    rescue Exception => exc
+      flash[:error] = "The URL provided was not able to be read by our RSS Parser."
+    end
   end
   
   def create
