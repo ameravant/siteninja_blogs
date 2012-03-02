@@ -17,7 +17,7 @@
       in 
       - if !article.article_category.blank?
         = link_to(article.article_category.title, article.article_category) + (acs.empty? ? "" : ", ")
-      == #{acs.map { |c| link_to(h(c.name), c) }.join(", ")}
+      == #{acs.map { |c| link_to(h(c.name), c) }.uniq.join(", ")}
     - if article.comments_count > 0
       = article.comments_count == 1 ? icon("Bubble 1") : icon("Discuss")
       = link_to pluralize(article.comments_count, 'comment'), article_path(article) << '#comments_list'
