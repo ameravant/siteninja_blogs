@@ -48,7 +48,7 @@ class Article < ActiveRecord::Base
       if !self.article_category.blank?
         output += "<a href=\"/#{path_safe(CMS_CONFIG['site_settings']['article_title']).singularize}-categories/#{self.article_category.to_param}\">#{self.article_category.title}</a>" + (acs.empty? ? "" : ", ")
       end
-      output += acs.map { |c| "<a href=\"/#{path_safe(CMS_CONFIG['site_settings']['article_title']).singularize}-categories/#{c.to_param}\">#{c.title}</a>" }.join(", ")
+      output += acs.map { |c| "<a href=\"/#{path_safe(CMS_CONFIG['site_settings']['article_title']).singularize}-categories/#{c.to_param}\">#{c.title}</a>" }.uniq.join(", ")
     end
   end
   
