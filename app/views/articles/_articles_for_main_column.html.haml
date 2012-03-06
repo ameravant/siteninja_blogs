@@ -36,7 +36,7 @@
   - ops = "person_id = #{@page.author_id}" if @page.author_id
   - if @page.article_category_id.nil?
     - if section.show_all_categories == true
-      - found_articles = Article.published.find(:all)
+      - found_articles = Article.published.uniq
     - else
       - found_articles = Article.published.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)} or categories.include?(a.article_category_id))}
   - else
