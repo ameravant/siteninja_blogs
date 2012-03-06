@@ -40,7 +40,7 @@
     - else
       - found_articles = Article.published.uniq.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)} or categories.include?(a.article_category_id))}
   - else
-    - articles = @page.article_category.articles.uniq.published.find(:all, :conditions => ops)
+    - articles = @page.article_category.articles.published.uniq.find(:all, :conditions => ops)
   - articles = found_articles.paginate(:page => params[:page], :per_page => section.count, :include => :article_categories)
   
   - template = Liquid::Template.parse(@tmplate.articles_index)
