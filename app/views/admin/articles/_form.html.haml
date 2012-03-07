@@ -1,3 +1,4 @@
+- @responsive = true
 = f.error_messages
 - @calendar_select = true
 - content_for :head do
@@ -28,6 +29,9 @@
     'width': '90%',
     'height': '90%'
     }); 
+    jQuery('.advanced-options').click(function(){
+    jQuery('#main-details').toggle();
+    });
     }); 
     function setLink(){
     document.getElementById('preview_article_body').value = tinyMCE.get('article_body').getContent()
@@ -46,56 +50,57 @@
     document.getElementById('submit-preview').click();
     }
 
+=link_to("Show Article Details", "javascript:void(0)", :class => "advanced-options mobile-only")
 #main-details.options
   %h3 Article Details
-  - if @editor && !current_user.is_contributor_only?
-    - if @article.person.blank? and !@article.title.blank? and !@possible_authors.empty?
-      = f.label :author_name, "Author"
-      %br
-      = f.text_field :author_name, :disabled => true
-    - elsif @possible_authors.empty?
-      = f.label :author_name, "Author"
-      %br
-      = f.text_field :author_name
-    - else
-      = f.label :person_id, "Author"
-      %br
-      = f.select :person_id, @possible_authors.collect {|p| [p.name, p.id]}, :selected => (@article.new_record? ? current_user.person_id : @article.person_id)
-    %br
-  = f.label :article_category_id, "Primary Category"
-  %br
-  = f.select :article_category_id, ArticleCategory.all.sort_by(&:title).collect {|ac| [ac.title, ac.id]}, {:include_blank => "Select a main category"}, :selected => current_user.id
-  - unless current_user.is_contributor_only?
-    %div{:class => (!@article.new_record? and @article.article_categories.active.count == 0 ? "bold red" : nil)}
-      = f.label :article_category_ids, link_to("Secondary Categories", "javascript:void(0)", :id => "display-secondary-categories")
-      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "Secondary Categories are categories an article is associated with that are not the primary category. The article will use settings (such as side column) from the main category, while still appearing on the secondary categories' lists of articles."}
-    #secondary-categories
-      %img{:src =>"#{css_icon("Cancel","","16x16","red")}", :title =>"close", :alt=> "close box icon", :class => "close-icon", :onclick => "jQuery('#secondary-categories').slideUp()"}
-      - for article_category in @article_categories
-        %span.article_category_checkbox
-          = check_box_tag "article[article_category_ids][]", article_category.id, @article.article_categories.include?(article_category), :id => dom_id(article_category)
-          = label_tag dom_id(article_category), "#{article_category.name}"
+  %ul
+    %li
+      - if @editor && !current_user.is_contributor_only?
+        - if @article.person.blank? and !@article.title.blank? and !@possible_authors.empty?
+          = f.label :author_name, "Author"
           %br
-    = clear
-    = f.label :importance, "Importance"
-    = f.select :importance, options_for_select(["Small", "Medium", "Large"], :selected => @article.importance)
-    = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "Importance determines how large the article summary is. An article with \"Small\" importance will not display an image on the summary page, while an article with \"Large\" importance will display a large image."}
-    %br
-    = f.label :description, "Short Description"
-    = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Short Description is used for the Meta Description, the side column short description under the title, and the feature box description of the article. In addition, the checkbox beneath this field enables the description to be displayed underneath the Title on the article's page."}
-    = f.text_area :description, :class => "small-area"
-    %br
-    = f.check_box :show_description
-    = f.label :show_description, "Show Description under Title on Article.", :class => "note"
-    %br
-    = f.label :tag_list, "Tags"
-    = f.text_field :tag_list, :size => 39, :class => "small-input"
-    .note Separate words or phrases with a comma
+          = f.text_field :author_name, :disabled => true
+        - elsif @possible_authors.empty?
+          = f.label :author_name, "Author"
+          %br
+          = f.text_field :author_name
+        - else
+          = f.label :person_id, "Author"
+          %br
+          = f.select :person_id, @possible_authors.collect {|p| [p.name, p.id]}, :selected => (@article.new_record? ? current_user.person_id : @article.person_id)
+    %li
+      = f.label :article_category_id, "Primary Category"
+      %br
+      = f.select :article_category_id, ArticleCategory.all.sort_by(&:title).collect {|ac| [ac.title, ac.id]}, {:include_blank => "Select a main category"}, :selected => current_user.id
+    %li
+      - unless current_user.is_contributor_only?
+        %div{:class => (!@article.new_record? and @article.article_categories.active.count == 0 ? "bold red" : nil)}
+          = f.label :article_category_ids, link_to("Secondary Categories", "javascript:void(0)", :id => "display-secondary-categories")
+          = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "Secondary Categories are categories an article is associated with that are not the primary category. The article will use settings (such as side column) from the main category, while still appearing on the secondary categories' lists of articles."}
+        #secondary-categories
+          %img{:src =>"#{css_icon("Cancel","","16x16","red")}", :title =>"close", :alt=> "close box icon", :class => "close-icon", :onclick => "jQuery('#secondary-categories').slideUp()"}
+          - for article_category in @article_categories
+            %span.article_category_checkbox
+              = check_box_tag "article[article_category_ids][]", article_category.id, @article.article_categories.include?(article_category), :id => dom_id(article_category)
+              = label_tag dom_id(article_category), "#{article_category.name}"
+      = clear
+    %li
+      = f.label :importance, "Importance"
+      = f.select :importance, options_for_select(["Small", "Medium", "Large"], :selected => @article.importance)
+      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "Importance determines how large the article summary is. An article with \"Small\" importance will not display an image on the summary page, while an article with \"Large\" importance will display a large image."}
+    %li
+      = f.label :description, "Short Description"
+      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Short Description is used for the Meta Description, the side column short description under the title, and the feature box description of the article. In addition, the checkbox beneath this field enables the description to be displayed as a byline underneath the Title on the article's page."}
+      = f.text_area :description, :class => "small-area"
+      %br
+      = f.check_box :show_description
+      = f.label :show_description, "Show as byline under Title on Article.", :class => "note"
+    %li
+      = f.label :tag_list, "Tags"
+      = f.text_field :tag_list, :size => 39, :class => "small-input", :placeholder => "Tag 1, Tag 2, etc..."
 %h2.form-label= f.label :title
-.note
-  %span.required *Required
-  Article Title is used to generate the article permalink.
-= f.text_field :title, :class => "big-input", :disabled => @disabled
+= f.text_field :title, :class => "big-input", :disabled => @disabled, :placeholder => "Generates the permalink."
+.note.required *Required
 
 - unless current_user.is_contributor_only?
   %br
@@ -119,7 +124,7 @@
         = render :partial => "admin/shared/asset_options"
         = render :partial => "admin/shared/insert_map"
         = render :partial => "admin/shared/insert_youtube"
-    %div{:style => "width: 560px;"}
+    .body-wrapper-inner
       %h2.form-label
         = f.label :body
   = f.text_area :body, :size => "100x40", :class => "#{@disabled ? "" : "mceEditor"}", :disabled => @disabled, :style => "width: 550px;"
