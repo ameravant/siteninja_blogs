@@ -103,7 +103,6 @@
 .note.required *Required
 
 - unless current_user.is_contributor_only?
-  %br
   %h2.form-label= f.label :blurb
   .note Displayed on Blog Summary page, under Title. This frequently includes the first paragraph of the Body.
   = f.text_area :blurb, :class => "big-area blurb", :disabled => @disabled
