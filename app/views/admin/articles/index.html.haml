@@ -11,7 +11,7 @@
       %span.hmenu
         = icon "Plus", new_admin_article_path(@article)
         = link_to "Write a new #{@cms_config['site_settings']['article_title']}", new_admin_article_path(@article)
-      %span.gray== as #{current_user.name}
+      %span.desktop-only== as #{current_user.name}
   - if current_user.has_role(["Admin", "Editor"])
     %li
       %span.hmenu
@@ -31,6 +31,7 @@
 %table.article-list.full_width{ :cellspacing => "0" }
   %thead
     %tr
+      %th
       %th.author-header Author
       %th.status-header Status
       %th.images-header Images
