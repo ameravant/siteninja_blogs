@@ -1,0 +1,6 @@
+- unless params[:reload] == "true"
+  - content_for :head do
+    = javascript_include_tag "/javascripts/slides/source/slides.jquery.patched.js"
+    = javascript_include_tag "/javascripts/jcarousel/lib/jquery.jcarousel.js"
+  #preview-content
+    = render :partial => "articles/show"

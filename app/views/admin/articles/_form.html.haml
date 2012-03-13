@@ -1,4 +1,5 @@
 - @responsive = true
+- @body_class = "responsive-form-body"
 = f.error_messages
 - @calendar_select = true
 - content_for :head do
@@ -18,6 +19,7 @@
     == #article_notes_ifr { height: 400px !important; }
   %script{:type => "text/javascript"}
     jQuery(document).ready(function() {
+    setLink();
     jQuery("a#preview-link").fancybox({ 
     'zoomSpeedIn': 300,
     'zoomSpeedOut': 300,
@@ -34,7 +36,12 @@
     });
     }); 
     function setLink(){
-    document.getElementById('preview_article_body').value = tinyMCE.get('article_body').getContent()
+    try {
+    document.getElementById('preview_article_body').value = tinyMCE.get('article_body').getContent();
+    }
+    catch(err) {
+    document.getElementById('preview_article_body').value = document.getElementById('article_body').value;
+    }
     document.getElementById('preview_article_title').value = document.getElementById('article_title').value
     document.getElementById('preview_article_blurb').value = document.getElementById('article_blurb').value
     document.getElementById('preview_article_article_category_id').value = document.getElementById('article_article_category_id').value
@@ -50,174 +57,182 @@
     document.getElementById('submit-preview').click();
     }
 
-=link_to("Show Article Details", "javascript:void(0)", :class => "advanced-options mobile-only")
-#main-details.options
-  %h3 Article Details
-  %ul
-    %li
-      - if @editor && !current_user.is_contributor_only?
-        - if @article.person.blank? and !@article.title.blank? and !@possible_authors.empty?
-          = f.label :author_name, "Author"
-          %br
-          = f.text_field :author_name, :disabled => true
-        - elsif @possible_authors.empty?
-          = f.label :author_name, "Author"
-          %br
-          = f.text_field :author_name
-        - else
-          = f.label :person_id, "Author"
-          %br
-          = f.select :person_id, @possible_authors.collect {|p| [p.name, p.id]}, :selected => (@article.new_record? ? current_user.person_id : @article.person_id)
-    %li
-      = f.label :article_category_id, "Primary Category"
-      %br
-      = f.select :article_category_id, ArticleCategory.all.sort_by(&:title).collect {|ac| [ac.title, ac.id]}, {:include_blank => "Select a main category"}, :selected => current_user.id
-    %li
-      - unless current_user.is_contributor_only?
-        %div{:class => (!@article.new_record? and @article.article_categories.active.count == 0 ? "bold red" : nil)}
-          = f.label :article_category_ids, link_to("Secondary Categories", "javascript:void(0)", :id => "display-secondary-categories")
-          = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "Secondary Categories are categories an article is associated with that are not the primary category. The article will use settings (such as side column) from the main category, while still appearing on the secondary categories' lists of articles."}
-        #secondary-categories
-          %img{:src =>"#{css_icon("Cancel","","16x16","red")}", :title =>"close", :alt=> "close box icon", :class => "close-icon", :onclick => "jQuery('#secondary-categories').slideUp()"}
-          - for article_category in @article_categories
-            %span.article_category_checkbox
-              = check_box_tag "article[article_category_ids][]", article_category.id, @article.article_categories.include?(article_category), :id => dom_id(article_category)
-              = label_tag dom_id(article_category), "#{article_category.name}"
-      = clear
-    %li
-      = f.label :importance, "Importance"
-      = f.select :importance, options_for_select(["Small", "Medium", "Large"], :selected => @article.importance)
-      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "Importance determines how large the article summary is. An article with \"Small\" importance will not display an image on the summary page, while an article with \"Large\" importance will display a large image."}
-    %li
-      = f.label :description, "Short Description"
-      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Short Description is used for the Meta Description, the side column short description under the title, and the feature box description of the article. In addition, the checkbox beneath this field enables the description to be displayed as a byline underneath the Title on the article's page."}
-      = f.text_area :description, :class => "small-area"
-      %br
-      = f.check_box :show_description
-      = f.label :show_description, "Show as byline under Title on Article.", :class => "note"
-    %li
-      = f.label :tag_list, "Tags"
-      = f.text_field :tag_list, :size => 39, :class => "small-input", :placeholder => "Tag 1, Tag 2, etc..."
-%h2.form-label= f.label :title
-= f.text_field :title, :class => "big-input", :disabled => @disabled, :placeholder => "Generates the permalink."
-.note.required *Required
 
-- unless current_user.is_contributor_only?
-  %h2.form-label= f.label :blurb
-  .note Displayed on Blog Summary page, under Title. This frequently includes the first paragraph of the Body.
-  = f.text_area :blurb, :class => "big-area blurb", :disabled => @disabled
+.responsive-form
+  .main-fields
+    %h2.form-label= f.label :title
+    = f.text_field :title, :class => "big-input", :disabled => @disabled, :placeholder => "Generates the permalink."
+    .note.required *Required
 
-.clear
-#body-wrapper
-  - unless @disabled
-    .options#body-details
-      = link_to("#{image_tag(css_icon("Search", "", "", "blue"), :alt => "Preview", :class => "icon")} Preview Article", "/admin/articles/preview?reload=true", :id => "preview-link", :class => "preview-link link-button float-left", :onclick => "setLink()", :style => "width: 120px;")
-      = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
-      = clear
-      .inserts
-        %strong Insert:
+    - unless current_user.is_contributor_only?
+      %h2.form-label= f.label :blurb
+      .note Displayed on Blog Summary page, under Title. This frequently includes the first paragraph of the Body.
+      = f.text_area :blurb, :class => "big-area blurb", :disabled => @disabled
+  =link_to("Show Article Details", "javascript:void(0)", :class => "advanced-options mobile-only")
+  #main-details.details.options
+    %h3 Article Details
+    %ul
+      %li
+        - if @editor && !current_user.is_contributor_only?
+          - if @article.person.blank? and !@article.title.blank? and !@possible_authors.empty?
+            = f.label :author_name, "Author"
+            %br
+            = f.text_field :author_name, :disabled => true
+          - elsif @possible_authors.empty?
+            = f.label :author_name, "Author"
+            %br
+            = f.text_field :author_name
+          - else
+            = f.label :person_id, "Author"
+            %br
+            = f.select :person_id, @possible_authors.collect {|p| [p.name, p.id]}, :selected => (@article.new_record? ? current_user.person_id : @article.person_id)
+      %li
+        = f.label :article_category_id, "Primary Category"
         %br
-        = render :partial => "admin/shared/parser_help"
-        - unless @article.id.blank?
-          = link_to("#{icon('Picture')} Insert Attached Image", admin_article_images_path(@article, :fancy => "true"), :class => "fancy-iframe")
-        = render :partial => "admin/shared/asset_options"
-        = render :partial => "admin/shared/insert_map"
-        = render :partial => "admin/shared/insert_youtube"
-    .body-wrapper-inner
-      %h2.form-label
-        = f.label :body
-  = f.text_area :body, :size => "100x40", :class => "#{@disabled ? "" : "mceEditor"}", :disabled => @disabled, :style => "width: 550px;"
-- unless current_user.is_contributor_only?
-  %p.display-notes=link_to("Display Note Field", "javascript:void(0)")
-  .notes
-    %h2= f.label :notes
-    %span.note Will not be shown publicly. Use to save page content while editing.
-    = f.text_area :notes, :size => "85x40", :class => "mceEditor"
-  - content_for :head do
-    %script{:type => "text/javascript"}
-      jQuery(document).ready(function() {
-      - if @article.publish_immediately
-        jQuery("#date-to-publish").hide();
-      jQuery("#article_publish_immediately").click(function()
-      {
-      jQuery("#date-to-publish").slideToggle(250);
-      });
-      jQuery(".notes").hide();
-      jQuery(".display-notes").click(function()
-      {
-      jQuery(".notes").slideToggle(500);
-      });
-      jQuery("#secondary-categories").hide();
-      jQuery("#display-secondary-categories").click(function()
-      {
-      jQuery("#secondary-categories").slideToggle(500);
-      });
-      });
-      jQuery(document).ready(function() {
-      jQuery(".fancy-iframe").fancybox({ 
-      'zoomSpeedIn': 300,
-      'zoomSpeedOut': 300,
-      'overlayShow': true,
-      'hideOnContentClick': 'true',
-      'easingOut': 'easeOutQuad',
-      'easingIn': 'easeInQuad',
-      'type': 'iframe',
-      'width': 910,
-      'autoScale': true,
-      'height':"90%"
-      }); 
-      });
-      function addtext(text) {
-      tinyMCE.execInstanceCommand("article_body","mceInsertContent",false,text);
-      }
-      jQuery(document).ready(function() {
-      jQuery(".fancy-inline").fancybox({ 
-      'zoomSpeedIn': 300,
-      'zoomSpeedOut': 300,
-      'overlayShow': true,
-      'hideOnContentClick': false,
-      'hideOnOverlayClick': false,
-      'type': 'inline',
-      'showCloseButton' : false,
-      'autoScale': true
-      });
-      });
+        = f.select :article_category_id, ArticleCategory.all.sort_by(&:title).collect {|ac| [ac.title, ac.id]}, {:include_blank => "Select a main category"}, :selected => current_user.id
+      %li
+        - unless current_user.is_contributor_only?
+          %div{:class => (!@article.new_record? and @article.article_categories.active.count == 0 ? "bold red" : nil)}
+            = f.label :article_category_ids, link_to("Secondary Categories", "javascript:void(0)", :id => "display-secondary-categories")
+            = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "Secondary Categories are categories an article is associated with that are not the primary category. The article will use settings (such as side column) from the main category, while still appearing on the secondary categories' lists of articles."}
+          #secondary-categories
+            %img{:src =>"#{css_icon("Cancel","","16x16","red")}", :title =>"close", :alt=> "close box icon", :class => "close-icon", :onclick => "jQuery('#secondary-categories').slideUp()"}
+            - for article_category in @article_categories
+              %span.article_category_checkbox
+                = check_box_tag "article[article_category_ids][]", article_category.id, @article.article_categories.include?(article_category), :id => dom_id(article_category)
+                = label_tag dom_id(article_category), "#{article_category.name}"
+        = clear
+      %li
+        = f.label :importance, "Importance"
+        = f.select :importance, options_for_select(["Small", "Medium", "Large"], :selected => @article.importance)
+        = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "Importance determines how large the article summary is. An article with \"Small\" importance will not display an image on the summary page, while an article with \"Large\" importance will display a large image."}
+      %li
+        = f.label :description, "Short Description"
+        = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Short Description is used for the Meta Description, the side column short description under the title, and the feature box description of the article. In addition, the checkbox beneath this field enables the description to be displayed as a byline underneath the Title on the article's page."}
+        = f.text_area :description, :class => "small-area"
+        %br
+        = f.check_box :show_description
+        = f.label :show_description, "Show as byline under Title on Article.", :class => "note"
+      %li
+        = f.label :tag_list, "Tags"
+        = f.text_field :tag_list, :size => 39, :class => "small-input", :placeholder => "Tag 1, Tag 2, etc..."
 
-- if current_user.has_role(["Admin", "Editor", "Author"])
-  #publish-immediately
-    = f.check_box :publish_immediately
-    = f.label :publish_immediately, "Publish Immediately", :id => "publish_immediately_label"
-#date-to-publish
-  = f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])
-  = f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"
-  = f.label :published_at, "on"
+  .clear
+  #body-wrapper
+    - unless @disabled
+      .options#body-details
+        .preview-link-wrapper
+          = link_to("#{image_tag(css_icon("Search", "", "", "blue"), :alt => "Preview", :class => "icon")} Preview Article", "/admin/articles/preview?reload=true", :id => "preview-link", :class => "preview-link link-button float-left", :onclick => "setLink()", :style => "width: 120px;")
+          = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Preview Button has been added to enable a very quick and simple way to preview what the content of the page will look like once published publicly. Clicking the preview button will pop up a box with the content formatted correctly, including images and videos."}
+        = clear
+        .inserts
+          %strong Insert:
+          %br
+          = render :partial => "admin/shared/parser_help"
+          - unless @article.id.blank?
+            = link_to("#{icon('Picture')} Insert Attached Image", admin_article_images_path(@article, :fancy => "true"), :class => "fancy-iframe")
+          = render :partial => "admin/shared/asset_options"
+          = render :partial => "admin/shared/insert_map"
+          = render :partial => "admin/shared/insert_youtube"
+      .body-wrapper-inner
+        %h2.form-label
+          = f.label :body
+    = f.text_area :body, :size => "100x40", :class => "#{@disabled ? "" : "mceEditor"}", :disabled => @disabled, :style => "width: 550px;"
+  - unless current_user.is_contributor_only?
+    %p.display-notes=link_to("Display Note Field", "javascript:void(0)")
+    .notes
+      %h2= f.label :notes
+      %span.note Will not be shown publicly. Use to save page content while editing.
+      = f.text_area :notes, :size => "85x40", :class => "mceEditor"
+    - content_for :head do
+      %script{:type => "text/javascript"}
+        jQuery(document).ready(function() {
+        - if @article.publish_immediately
+          jQuery("#date-to-publish").hide();
+        jQuery("#article_publish_immediately").click(function()
+        {
+        jQuery("#date-to-publish").slideToggle(250);
+        });
+        jQuery(".notes").hide();
+        jQuery(".display-notes").click(function()
+        {
+        jQuery(".notes").slideToggle(500);
+        });
+        jQuery("#secondary-categories").hide();
+        jQuery("#display-secondary-categories").click(function()
+        {
+        jQuery("#secondary-categories").slideToggle(500);
+        });
+        });
+        jQuery(document).ready(function() {
+        jQuery(".fancy-iframe").fancybox({ 
+        'zoomSpeedIn': 300,
+        'zoomSpeedOut': 300,
+        'overlayShow': true,
+        'hideOnContentClick': 'true',
+        'easingOut': 'easeOutQuad',
+        'easingIn': 'easeInQuad',
+        'type': 'iframe',
+        'width': 910,
+        'autoScale': true,
+        'height':"90%"
+        }); 
+        });
+        function addtext(text) {
+        tinyMCE.execInstanceCommand("article_body","mceInsertContent",false,text);
+        }
+        jQuery(document).ready(function() {
+        jQuery(".fancy-inline").fancybox({ 
+        'zoomSpeedIn': 300,
+        'zoomSpeedOut': 300,
+        'overlayShow': true,
+        'hideOnContentClick': false,
+        'hideOnOverlayClick': false,
+        'type': 'inline',
+        'showCloseButton' : false,
+        'autoScale': true
+        });
+        });
 
-  = f.text_field(:published_at, :value => (@article.published_at.blank? ? Time.now.strftime("%m/%d/%Y %I:%M %p") : @article.published_at.strftime("%m/%d/%Y %I:%M %p")), :class => "datetimepicker")
+  - if current_user.has_role(["Admin", "Editor", "Author"])
+    #publish-immediately
+      = f.check_box :publish_immediately
+      = f.label :publish_immediately, "Publish Immediately", :id => "publish_immediately_label"
+  #date-to-publish
+    = f.check_box :published if current_user.has_role(["Admin", "Editor", "Author"])
+    = f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"
+    = f.label :published_at, "on"
 
-- unless current_user.is_contributor_only?
-  = f.check_box :social_share
-  = f.label :social_share, "Show ShareThis link"
-  %br
-= f.check_box :notify_author_of_comments
-= f.label :notify_author_of_comments, "Notify the author when comments are posted for this #{@cms_config['site_settings']['article_title']}"
+    = f.text_field(:published_at, :value => (@article.published_at.blank? ? Time.now.strftime("%m/%d/%Y %I:%M %p") : @article.published_at.strftime("%m/%d/%Y %I:%M %p")), :class => "datetimepicker")
 
-= clear
-- fancy_submit admin_articles_path do
-  = f.submit "Save #{@cms_config['site_settings']['article_title']}"
-- content_for :pre_footer do
-  %div{:style => "display: none;"}
-    - form_remote_tag :url => post_preview_admin_articles_path, :method => "put", :html => {:name => "post_preview"} do
-      = text_field :preview_article, :permalink, :value => @article.permalink
-      = text_area :preview_article, :body
-      = text_area :preview_article, :title
-      = text_area :preview_article, :blurb
-      = text_field :preview_article, :article_category_id
-      = text_field :preview_article, :person_id
-      = text_field :preview_article, :published_at
-      = check_box :preview_article, :social_share
-      - if @article.person.blank? and !@article.title.blank?
-        = text_field :preview_article, :author_name
-      = text_area :preview_article, :description
-      = check_box :preview_article, :show_description
-      = text_area :preview_article, :tag_list
-      = submit_tag "submit", :id => "submit-preview"
+  - unless current_user.is_contributor_only?
+    = f.check_box :social_share
+    = f.label :social_share, "Show ShareThis link"
+    %br
+  = f.check_box :notify_author_of_comments
+  = f.label :notify_author_of_comments, "Notify the author when comments are posted for this #{@cms_config['site_settings']['article_title']}"
+
+  = clear
+  - fancy_submit admin_articles_path do
+    = f.submit "Save #{@cms_config['site_settings']['article_title']}"
+    
+  
+  = render :partial => 'admin/shared/responsive_preview', :locals => {:controller => "articles", :ajax => true, :extended => false}
+      
+  - content_for :pre_footer do
+    %div{:style => "display: none;"}
+      - form_remote_for :preview_article, :url => post_preview_admin_articles_path, :method => "put", :loading => "jQuery('#refresh-preview').text('...');",:success => "setPreviewContent();jQuery('#refresh-preview').text('Quick Refresh');", :html => {:name => "post_preview"} do
+        = text_field :preview_article, :permalink, :value => @article.permalink
+        = text_area :preview_article, :body
+        = text_area :preview_article, :title
+        = text_area :preview_article, :blurb
+        = text_field :preview_article, :article_category_id
+        = text_field :preview_article, :person_id
+        = text_field :preview_article, :published_at
+        = check_box :preview_article, :social_share
+        - if @article.person.blank? and !@article.title.blank?
+          = text_field :preview_article, :author_name
+        = text_area :preview_article, :description
+        = check_box :preview_article, :show_description
+        = text_area :preview_article, :tag_list
+        = submit_tag "submit", :id => "submit-preview"

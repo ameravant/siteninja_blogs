@@ -94,23 +94,47 @@ class Admin::ArticlesController < AdminController
   def preview
     if !params[:reload]
       @page = Page.find_by_permalink!('blog')
+      get_page_defaults(@page)
       @menu = @page.menus.first
       @admin = false
-      @menus = Menu.all
-      @settings = Setting.first
-      @footer_menus = Menu.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
       @hide_admin_menu = true
+      
+      
       @article = Article.new(JSON.parse(@cms_config['site_settings']['preview']))
       @images = @article.permalink.blank? ? [] : Article.find_by_permalink(@article.permalink).images
       params[:article_article_category_id].blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => ArticleCategory.find(params[:article_article_category_id]).column_id, :visible => true})
       @owner = @article
-      render 'articles/show'
+      @article_category = @article.article_category || @article.article_categories.first
+      @article.article_category.blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => @article.article_category.column_id, :visible => true})
+      add_breadcrumb @cms_config['site_settings']['blog_title'], 'blog_path'
+      add_breadcrumb @article.article_category.title, @article.article_category unless @article.article_category.blank?
+      add_breadcrumb '@article.title'
+      
+      #render 'articles/show'
     end
   end
   
   def post_preview
     @cms_config['site_settings']['preview'] = ActiveSupport::JSON.encode(params[:preview_article])
     File.open(@cms_path, 'w') { |f| YAML.dump(@cms_config, f) }
+  end
+  
+  def ajax_preview
+    @page = Page.find_by_permalink!('blog')
+    get_page_defaults(@page)
+    @menu = @page.menus.first
+    @admin = false
+    @hide_admin_menu = true
+    
+    
+    @article = Article.new(JSON.parse(@cms_config['site_settings']['preview']))
+    @images = @article.permalink.blank? ? [] : Article.find_by_permalink(@article.permalink).images
+    params[:article_article_category_id].blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => ArticleCategory.find(params[:article_article_category_id]).column_id, :visible => true})
+    @owner = @article
+    @article_category = @article.article_category || @article.article_categories.first
+    @article.article_category.blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => @article.article_category.column_id, :visible => true})
+    
+    render :layout => false
   end
   
   private
