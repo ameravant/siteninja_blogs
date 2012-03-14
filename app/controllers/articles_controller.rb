@@ -6,41 +6,41 @@ class ArticlesController < ApplicationController
   add_breadcrumb "Home", "root_path"
 
   def index
-    if !params[:tag].blank?
-      # Filter articles by tag
-      found_articles = Article.published.find_tagged_with(params[:tag])
-      add_breadcrumb "#{@cms_config['site_settings']['blog_title']}", articles_path
-      add_breadcrumb params[:tag]
-    elsif !params[:author].blank?
-      # Filter articles by user
-      @author = Person.find(params[:author])
-      found_articles = @author.articles.published
-      add_breadcrumb @cms_config['site_settings']['blog_title'], articles_path
-      add_breadcrumb @author.name
-    elsif !params[:month].blank? and !params[:year].blank?
-      begin
-        # Filter articles by month published
-        found_articles = Article.published_in_month(params[:month].to_i, params[:year].to_i)
+    begin
+      if !params[:tag].blank?
+        # Filter articles by tag
+        found_articles = Article.published.find_tagged_with(params[:tag])
         add_breadcrumb "#{@cms_config['site_settings']['blog_title']}", articles_path
-        add_breadcrumb "#{Date::MONTHNAMES[params[:month].to_i]} #{params[:year]}"
-      rescue Exception => e
-        redirect_to articles_path
-        flash[:error] = "Not a valid date."
+        add_breadcrumb params[:tag]
+      elsif !params[:author].blank?
+        # Filter articles by user
+        @author = Person.find(params[:author])
+        found_articles = @author.articles.published
+        add_breadcrumb @cms_config['site_settings']['blog_title'], articles_path
+        add_breadcrumb @author.name
+      elsif !params[:month].blank? and !params[:year].blank?
+          # Filter articles by month published
+          found_articles = Article.published_in_month(params[:month].to_i, params[:year].to_i)
+          add_breadcrumb "#{@cms_config['site_settings']['blog_title']}", articles_path
+          add_breadcrumb "#{Date::MONTHNAMES[params[:month].to_i]} #{params[:year]}"
+      else
+        add_breadcrumb "#{@cms_config['site_settings']['blog_title']}"
+        found_articles = Article.published
       end
-    else
-      add_breadcrumb "#{@cms_config['site_settings']['blog_title']}"
-      found_articles = Article.published
-    end
-    if ActiveRecord::Base.connection.tables.include?("accounts")
-      @articles = found_articles.reject{|a| a.account_id != $CURRENT_ACCOUNT.id}.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
-    else
-      @articles = found_articles.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
-    end
-    @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
-    respond_to do |wants|
-      wants.html # index.html.erb
-      wants.xml { render :xml => @articles.to_xml }
-      wants.rss { render :layout => false } # uses index.rss.builder
+      if ActiveRecord::Base.connection.tables.include?("accounts")
+        @articles = found_articles.reject{|a| a.account_id != $CURRENT_ACCOUNT.id}.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
+      else
+        @articles = found_articles.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
+      end
+      @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
+      respond_to do |wants|
+        wants.html # index.html.erb
+        wants.xml { render :xml => @articles.to_xml }
+        wants.rss { render :layout => false } # uses index.rss.builder
+      end
+    rescue Exception => e
+      redirect_to articles_path
+      flash[:error] = "Not a request."
     end
   end
 
