@@ -18,10 +18,14 @@ class ArticlesController < ApplicationController
       add_breadcrumb @cms_config['site_settings']['blog_title'], articles_path
       add_breadcrumb @author.name
     elsif !params[:month].blank? and !params[:year].blank?
-      # Filter articles by month published
-      found_articles = Article.published_in_month(params[:month].to_i, params[:year].to_i)
-      add_breadcrumb "#{@cms_config['site_settings']['blog_title']}", articles_path
-      add_breadcrumb "#{Date::MONTHNAMES[params[:month].to_i]} #{params[:year]}"
+      begin
+        # Filter articles by month published
+        found_articles = Article.published_in_month(params[:month].to_i, params[:year].to_i)
+        add_breadcrumb "#{@cms_config['site_settings']['blog_title']}", articles_path
+        add_breadcrumb "#{Date::MONTHNAMES[params[:month].to_i]} #{params[:year]}"
+      rescue Exception => e
+        render :text => "<h1>Not a valid date</h1>"
+      end
     else
       add_breadcrumb "#{@cms_config['site_settings']['blog_title']}"
       found_articles = Article.published
