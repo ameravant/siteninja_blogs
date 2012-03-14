@@ -40,7 +40,7 @@ class ArticlesController < ApplicationController
       end
     rescue Exception => e
       redirect_to articles_path
-      flash[:error] = "Not a request."
+      flash[:error] = "Not a valid request."
     end
   end
 
