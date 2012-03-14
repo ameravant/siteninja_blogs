@@ -24,6 +24,7 @@ class ArticlesController < ApplicationController
         add_breadcrumb "#{@cms_config['site_settings']['blog_title']}", articles_path
         add_breadcrumb "#{Date::MONTHNAMES[params[:month].to_i]} #{params[:year]}"
       rescue Exception => e
+        redirect_to articles_path
         flash[:error] = "Not a valid date."
       end
     else
