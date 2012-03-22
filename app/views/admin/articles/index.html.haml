@@ -74,8 +74,12 @@
             = icon "Picture", [:admin, article, :images]
             = link_to article.images_count, [:admin, article, :images]
           %td
-            = icon "Document", [:new, :admin, article, :asset]
-            = link_to article.assets_count, [:new, :admin, article, :asset]
+            - if article.assets_count < 1
+              = icon "Document", [:new, :admin, article, :asset]
+              = link_to article.assets_count, [:new, :admin, article, :asset]
+            - else
+              = icon "Document", [:admin, article, :assets]
+              = link_to article.assets_count, [:admin, article, :assets]
         %td
           = icon("Discuss", [:admin, article, :comments])
           = link_to article.comments_count, [:admin, article, :comments]

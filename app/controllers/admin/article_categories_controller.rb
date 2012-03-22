@@ -58,6 +58,7 @@ class Admin::ArticleCategoriesController < AdminController
 
   def authorization
     authorize(@permissions['article_categories'], "Article Categories")
+    redirect_to admin_events_path if !current_user.has_role(["Admin"])
   end
 
   def add_crumbs
