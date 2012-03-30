@@ -7,8 +7,8 @@
     %h2== #{@cms_config["site_settings"]["article_title"].titlecase} Categories
     %ul.article_categories.list_of_links
       %li.sidebar_link
-        = link_to(icon("Rss 1"), "/#{path_safe(@cms_config['site_settings']['article_title'])}.rss", :class => "rss-icon", :title => "Subscribe to RSS Feed")
-        = link_to("All Categories", "/#{path_safe(@cms_config['site_settings']['blog_title'])}")
+        = link_to(icon("Rss 1"), "/#{path_safe(CMS_CONFIG['site_settings']['article_title'])}.rss", :class => "rss-icon", :title => "Subscribe to RSS Feed")
+        = link_to("All Categories", "/#{path_safe(CMS_CONFIG['site_settings']['blog_title'])}")
       - unless article_categories.empty?
         - article_categories.sort_by{|ac| ac.sort_order}.each do |accs|
           - category = accs.article_category
