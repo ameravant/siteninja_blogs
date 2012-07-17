@@ -2,7 +2,7 @@ class ArticlesController < ApplicationController
   unloadable # http://dev.rubyonrails.org/ticket/6001
   before_filter :find_page
   before_filter :find_article, :only => [ :show, :comment ]
-  before_filter :find_articles_for_sidebar
+  #before_filter :find_articles_for_sidebar
   add_breadcrumb "Home", "root_path"
 
   def index
