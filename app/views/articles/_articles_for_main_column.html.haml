@@ -13,7 +13,7 @@
   - else
     - articles = @page.article_category.articles.published.find(:all, :conditions => ops, :limit => count)
 
-  .articles-for-main-column
+  .slice.articles-for-main-column{:id => "section-#{section.id}"}
     - unless section.title.blank?
       %h2= section.title
     %ul.recent_articles.list_of_links
@@ -46,7 +46,8 @@
     - articles = found_articles.paginate(:page => params[:page], :per_page => section.count, :include => :article_categories)
   
     - template = Liquid::Template.parse(@tmplate.articles_index)
-    = template.render( 'articles' => articles, 'tag' => params[:tag], 'author' => (@author ? @author.name : nil), 'month' => (params[:month] ? "#{month_name(params[:month].to_i)} #{params[:year]}" : nil), 'blog_title' => section.title, 'articles_list' => (render :partial => "articles/article_for_list", :collection => articles) )
+    .slice{:id => "section-#{section.id}"}
+      = template.render( 'articles' => articles, 'tag' => params[:tag], 'author' => (@author ? @author.name : nil), 'month' => (params[:month] ? "#{month_name(params[:month].to_i)} #{params[:year]}" : nil), 'blog_title' => section.title, 'articles_list' => (render :partial => "articles/article_for_list", :collection => articles) )
 
 
     - content_for :head do

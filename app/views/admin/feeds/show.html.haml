@@ -27,7 +27,7 @@
               - fields_for @article do |f|
                 = f.hidden_field :title, :value => item.title
                 = f.hidden_field :blurb, :value => (item.description ? truncate(strip_tags(item.description), 255).strip : "")
-                = f.hidden_field :body, :value => item.description
+                = f.hidden_field :body, :value => "#{item.description} &nbsp;"
                 = f.hidden_field :source_url, :value => item.link
                 = f.hidden_field :feed_id, :value => @feed.id
                 = f.hidden_field :author_name, :value => item.author.blank? ? (item.dc_creator.blank? ? @feed.title : item.dc_creator) : item.author

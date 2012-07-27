@@ -62,6 +62,7 @@ class Admin::FeedsController < AdminController
     @article = Article.new(params[:article])
     params[:article][:article_category_ids] ||= []
     params[:article][:article_category_ids] = params[:article][:article_category_ids] << @article.article_category_id unless @article.article_category_id.blank?
+    @article.body = "<div>&nbsp;</div>" if @article.body.blank?
     if @article.save
       flash[:notice] = "Article \"#{@article.title}\" created."
     end

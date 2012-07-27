@@ -3,7 +3,7 @@
 -article_categories = section.article_category_column_sections
 -already_feat = []
 -# Roll through them grabbing the ones that contain features and outputting the newest
-#blog-cats
+.slice.blog-cats{:id => "section-#{section.id}"}
   %ul
     -article_categories.sort_by{|ac| ac.sort_order}.each do |accs|
       - ac = accs.article_category

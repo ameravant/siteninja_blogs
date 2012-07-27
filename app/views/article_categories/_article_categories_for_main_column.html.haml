@@ -1,8 +1,7 @@
 - article_categories = section.article_category_column_sections
 - unless article_categories.empty?
-  .main-column-section.article-categories
-    - unless section.title.blank?
-      %h2== #{@cms_config["site_settings"]["article_title"].titlecase} Categories
+  .slice.main-column-section.article-categories{:id => "section-#{section.id}"}
+    %h2== #{section.title.blank? ? "#{@cms_config["site_settings"]["article_title"].titlecase} Categories" : section.title}
     %ul.article_categories.list_of_links
       - article_categories.sort_by{|ac| ac.sort_order}.each do |accs|
         - category = accs.article_category
@@ -14,5 +13,22 @@
                 = link_to(image_tag(category.images.first.thumbnail, :alt => category.title), category)
           - else
             .placeholder
-        = cycle("","","<li class='clear-article-category-row'></li>")
+        =# cycle("","","<li class='clear-article-category-row'></li>")
+- else
+  - article_categories = ArticleCategory.all
+  - unless article_categories.empty?
+    .slice.main-column-section.article-categories{:id => "section-#{section.id}"}
+      %h2== #{section.title.blank? ? "#{@cms_config["site_settings"]["article_title"].titlecase} Categories" : section.title}
+      %ul.article_categories.list_of_links
+        - article_categories.each do |category|
+          %li
+            = link_to h(category.name), category, :class => "article-category-link"
+            - if section.section_format == "show_thumbs" || section.section_format == "show_thumbs_limited" 
+              - unless category.images.empty?
+                .thumbnail-wrapper
+                  = link_to(image_tag(category.images.first.thumbnail, :alt => category.title), category)
+            - else
+              .placeholder
+          = #cycle("","","<li class='clear-article-category-row'></li>")
+  
 = clear

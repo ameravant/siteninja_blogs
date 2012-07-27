@@ -1,7 +1,7 @@
 - @article_archive = Article.published.group_by { |a| [a.published_at.month, a.published_at.year] }
 - unless @article_archive.empty?
 
-  .side-column-section
+  .slice.side-column-section{:id => "section-#{section.id}"}
     %h2 Archives
     %ul.article_months.list_of_links
       - @article_archive.each do |month_year, articles|

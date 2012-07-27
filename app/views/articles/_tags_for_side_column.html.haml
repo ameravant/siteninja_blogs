@@ -1,13 +1,13 @@
 - count = ColumnSectionType.find_by_partial_name("tags_for_side_column").default_count if count.blank?
 - #@article_tags = Article.published.tag_counts.reject{|tag| tag.taggings.reject{|tagging| tagging.taggable_type != "Article"}.empty?}.sort_by(&:name)[0..(count - 1)]
-- @article_tags = Article.published.tag_counts.sort_by(&:name)[0..(count - 1)]
-- unless @article_tags.empty?
-  .side-column-section{:id => "section-#{section.id}"}
-    %h2 Tags
-    %ul.article_tags.list_of_links
-      - tag_cloud @article_tags, %w(tag-size-1 tag-size-2 tag-size-3 tag-size-4) do |tag, css_class|
-        - if params[:tag] == tag.name
-          %li{:class => "sidebar_link_active #{css_class}"}= h(tag.name)
-        - else
-          %li{:class => "#{css_class}"}[tag]= link_to h(tag.name), articles_path(:tag => tag.name)
-    = clear
+/ - @article_tags = Article.published.tag_counts.sort_by(&:name)[0..(count - 1)]
+/ - unless @article_tags.empty?
+/   .slice.side-column-section{:id => "section-#{section.id}"}
+/     %h2 Tags
+/     %ul.article_tags.list_of_links
+/       - tag_cloud @article_tags, %w(tag-size-1 tag-size-2 tag-size-3 tag-size-4) do |tag, css_class|
+/         - if params[:tag] == tag.name
+/           %li{:class => "sidebar_link_active #{css_class}"}= h(tag.name)
+/         - else
+/           %li{:class => "#{css_class}"}[tag]= link_to h(tag.name), articles_path(:tag => tag.name)
+/     = clear

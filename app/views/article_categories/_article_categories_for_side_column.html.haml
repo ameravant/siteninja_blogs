@@ -3,7 +3,7 @@
 
 - @article_categories = ArticleCategory.all
 - unless @article_categories.empty?
-  .side-column-section
+  .slice.side-column-section{:id => "section-#{section.id}"}
     %h2== #{@cms_config["site_settings"]["article_title"].titlecase} Categories
     %ul.article_categories.list_of_links
       %li.sidebar_link

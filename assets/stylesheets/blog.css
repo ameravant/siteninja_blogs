@@ -103,9 +103,9 @@ div#content-inner tr.odd.from-feed { background: #FFE5AF; }
 
 /* Article Categories Homepage Default Formatting */
 .main-column-section.article-categories ul { list-style: none; margin: 0; padding: 0; }
-.main-column-section.article-categories ul li { display: block; float: left; width: 160px; margin-bottom: 10px; }
-  .main-column-section.article-categories ul li img { width: 160px; }
-  .main-column-section.article-categories ul li { margin-right: 20px; }
+.main-column-section.article-categories ul li { display: block; }
+  .main-column-section.article-categories ul li img { }
+  .main-column-section.article-categories ul li { }
   .main-column-section.article-categories ul li.clear-article-category-row { clear: both; width:0; height:0; margin: 0;}
   
   

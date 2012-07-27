@@ -1,6 +1,6 @@
 - @article_authors = Person.active.find(:all, :conditions => "articles_count > 0")
 - unless @article_authors.empty?
-  .side-column-section
+  .slice.side-column-section{:id => "section-#{section.id}"}
     %h2 Authors
     %ul.list_of_links
       - for author in @article_authors
