@@ -10,7 +10,7 @@
     - if section.show_all_categories == true
       - articles = @articles_for_main_column.uniq[0..count-1]
     - else
-      - articles = @articles_for_main_column.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)} or categories.include?(a.article_category_id))}[0..count-1]
+      - articles = @articles_for_main_column.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)})}[0..count-1]# or categories.include?(a.article_category_id)
   - else
     - articles = @page.article_category.articles.published.find(:all, :conditions => ops, :limit => count)
 
@@ -35,16 +35,21 @@
     - categories << category.id
   - count = ColumnSectionType.find_by_partial_name("articles_for_side_column").default_count if count.blank?
   - ops = "person_id = #{@page.author_id}" if @page.author_id
-  - found_articles = []
   - if @page.article_category_id.nil?
     - if section.show_all_categories == true
       - found_articles = @articles_for_main_column
     - else
-      - found_articles = @articles_for_main_column.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)} or categories.include?(a.article_category_id))}
+      / - for category in categories
+      /   - ac = ArticleCategory.find(category)
+      /   - if found_articles
+      /     - found_articles << ac.articles[0..count-1]
+      /   - else
+      /     - found_articles = ac.articles[0..count-1]
+      - found_articles = @articles_for_main_column.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)})}
   - else
     - articles = @page.article_category.articles.published.find(:all, :conditions => ops).uniq
   - unless found_articles.empty?
-    - articles = found_articles.paginate(:page => params[:page], :per_page => section.count, :include => :article_categories)
+    - articles = found_articles.uniq[0..count-1]
   
     - template = Liquid::Template.parse(@tmplate.articles_index)
     .slice{:id => "section-#{section.id}"}
