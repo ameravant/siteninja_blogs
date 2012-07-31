@@ -13,7 +13,7 @@ class Article < ActiveRecord::Base
   validates_presence_of :title, :body
   accepts_nested_attributes_for :images
   validates_datetime :published_at
-  named_scope :published, { :conditions => ["(published_at <= ? and published = ?) or publish_immediately = ?", (Time.now + 59.seconds), true, true] }
+  named_scope :published, { :conditions => ["(published_at <= ? and published = ?) or publish_immediately = ?", Time.now, true, true] }
   named_scope :published_in_month, lambda { |month, year| {
     :conditions => { :published_at => Date.civil(year, month, 1).to_time..(Date.civil(year, month, 1) >> 1).to_time, :published => true }
     }
