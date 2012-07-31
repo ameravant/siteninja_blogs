@@ -58,5 +58,3 @@
       = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"#{@cms_config['website']['name']}\" href=\"/#{path_safe(@cms_config['site_settings']['article_title'])}.rss\" />"
 
 
-    - unless articles.total_pages == 1
-      = (will_paginate(articles)).gsub("/pages/", "/")
