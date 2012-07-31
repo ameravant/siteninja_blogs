@@ -10,7 +10,7 @@
     - if section.show_all_categories == true
       - articles = @articles_for_main_column.uniq[0..count-1]
     - else
-      - articles = @articles_for_main_column.reject{|a| (a.article_category_ids & categories).empty?}#.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)})}[0..count-1]# or categories.include?(a.article_category_id)
+      - articles = @articles_for_main_column.reject{|a| (a.article_category_ids & categories).empty?}.uniq[0..count-1]#.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)})}[0..count-1]# or categories.include?(a.article_category_id)
   - else
     - articles = @page.article_category.articles.published.find(:all, :conditions => ops, :limit => count)
 
