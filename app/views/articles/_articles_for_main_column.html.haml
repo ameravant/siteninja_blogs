@@ -1,4 +1,4 @@
-- @articles_for_main_column = Article.all(:all, :limit => 40, :conditions => ["(published_at <= ? and published = ?) or publish_immediately = ?", Time.now, true, true]) unless @articles_for_main_column
+- @articles_for_main_column = Article.all(:all, :limit => 30, :conditions => ["(published_at <= ? and published = ?) or publish_immediately = ?", Time.now, true, true]) unless @articles_for_main_column
 - if section.section_format != "full"
   - accs = section.article_categories
   - categories = []
