@@ -2,12 +2,8 @@
   == #{@cms_config['site_settings']['article_title'].pluralize} by category:
   = h @article_category.name
 
-%h1= yield(:meta_title).strip
-
 = render :partial => "/shared/side_column"
-
-= render :partial => "/articles/article_for_list", :collection => @articles
-
+= render :partial => "shared/slice", :locals => {:column_section_id => nil, :controller => "article_categories", :action => "show"}, :collection => @main_column_sections
 - unless @articles.total_pages == 1
   = will_paginate @articles
 

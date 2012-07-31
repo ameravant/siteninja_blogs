@@ -1,1 +1,13 @@
-= render :partial => "articles/show"
+- content_for(:meta_title) { concat h(@article.title) }
+- content_for(:meta_description) { concat h(@article.description) }
+- content_for :head do
+  :javascript
+    $(document).ready(function() {
+    if ($(".newcomment").is(":visible")){
+    $(".newcomment").animate({opacity: 1},2000).slideUp("slow");
+    };
+    });
+= render :partial => "shared/side_column"
+= error_messages_for "comment", :header_message => "Your comment could not be posted!", :message => nil
+
+= render :partial => "shared/slice", :locals => {:column_section_id => nil, :controller => "articles", :action => "show"}, :collection => @main_column_sections

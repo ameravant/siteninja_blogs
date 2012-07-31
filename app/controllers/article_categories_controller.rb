@@ -10,6 +10,8 @@ class ArticleCategoriesController < ApplicationController
     begin
       @article_category = ArticleCategory.active.find(params[:id])
       @page = Page.find_by_permalink!('blog')# if @article_category.menus.empty?
+      @main_column = ((@page.main_column_id.blank? or Column.find_by_id(@page.main_column_id).blank?) ? Column.first(:conditions => {:title => "Default", :column_location => "main_column"}) : Column.find(@page.main_column_id))
+      @main_column_sections = ColumnSection.all(:conditions => {:column_id => @main_column.id, :visible => true, :column_section_id => nil})
       @tmplate = @page.template unless @page.template.blank?
       @tmplate.layout_top = @global_template.layout_top if @tmplate.layout_top.blank?
       @tmplate.layout_bottom = @global_template.layout_bottom if @tmplate.layout_bottom.blank?
