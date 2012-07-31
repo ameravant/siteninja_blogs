@@ -11,6 +11,3 @@
 = error_messages_for "comment", :header_message => "Your comment could not be posted!", :message => nil
 
 = render :partial => "shared/slice", :locals => {:column_section_id => nil, :controller => "articles", :action => "show"}, :collection => @main_column_sections
-
-- if @force_body_content == true
-  = render :partial => "show"

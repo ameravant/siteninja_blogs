@@ -1,0 +1,5 @@
+- template = Liquid::Template.parse(@tmplate.articles_index)
+= template.render( 'articles' => @articles, 'tag' => params[:tag], 'author' => (@author ? @author.name : nil), 'month' => (params[:month] ? "#{month_name(params[:month].to_i)} #{params[:year]}" : nil), 'blog_title' => @cms_config['site_settings']['blog_title'], 'articles_list' => (render :partial => "article_for_list", :collection => @articles) )
+
+- unless @articles.total_pages == 1
+  = will_paginate @articles

@@ -14,8 +14,6 @@
 
 = render :partial => "shared/slice", :locals => {:column_section_id => nil, :controller => "articles", :action => "index"}, :collection => @main_column_sections
 
-- if @force_body_content == true
-  = render :partial => "index"
 = render :partial => "shared/side_column"
 
 - content_for :head do
