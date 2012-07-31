@@ -1,3 +1,4 @@
+- @articles_for_main_column = Article.published unless @articles_for_main_column
 - if section.section_format != "full"
   - accs = section.article_categories
   - categories = []
@@ -37,9 +38,9 @@
   - found_articles = []
   - if @page.article_category_id.nil?
     - if section.show_all_categories == true
-      - found_articles = Article.published.uniq
+      - found_articles = @articles_for_main_column
     - else
-      - found_articles = Article.published.uniq.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)} or categories.include?(a.article_category_id))}
+      - found_articles = @articles_for_main_column.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)} or categories.include?(a.article_category_id))}
   - else
     - articles = @page.article_category.articles.published.find(:all, :conditions => ops).uniq
   - unless found_articles.empty?
