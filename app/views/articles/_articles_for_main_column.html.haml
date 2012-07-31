@@ -45,11 +45,11 @@
       /     - found_articles << ac.articles[0..count-1]
       /   - else
       /     - found_articles = ac.articles[0..count-1]
-      - found_articles = @articles_for_main_column.reject{|a| (a.article_category_ids & categories).empty?}#{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)})}
+      - found_articles = @articles_for_main_column.reject{|a| (a.article_category_ids & categories).empty?}.uniq[0..count-1]#{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)})}
   - else
     - articles = @page.article_category.articles.published.find(:all, :conditions => ops).uniq
   - unless found_articles.empty?
-    - articles = found_articles.uniq[0..count-1]
+    - articles = found_articles
   
     - template = Liquid::Template.parse(@tmplate.articles_index)
     .slice{:id => "section-#{section.id}"}
