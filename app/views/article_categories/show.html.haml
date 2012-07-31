@@ -4,6 +4,9 @@
 
 = render :partial => "/shared/side_column"
 = render :partial => "shared/slice", :locals => {:column_section_id => nil, :controller => "article_categories", :action => "show"}, :collection => @main_column_sections
+
+- if @force_body_content == true
+  = render :partial => "show"
 - unless @articles.total_pages == 1
   = will_paginate @articles
 
