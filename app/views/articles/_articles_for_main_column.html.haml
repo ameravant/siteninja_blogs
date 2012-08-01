@@ -1,5 +1,5 @@
 - @articles_for_main_column = Article.all(:all, :limit => 30, :conditions => ["(published_at <= ? and published = ?) or publish_immediately = ?", Time.now, true, true]) unless @articles_for_main_column
-- if section.section_format != "full"
+- if section.section_format != "full" and section.section_format != "ajax" 
   - accs = section.article_categories
   - categories = []
   - for category in accs
@@ -28,7 +28,7 @@
             %p= article.description.blank? ? article.blurb : truncate(h(article.description), :length => 100)
           = clear
           
-- else
+- elsif section.section_format == "full"
   - accs = section.article_categories
   - categories = []
   - for category in accs
@@ -54,9 +54,16 @@
     - template = Liquid::Template.parse(@tmplate.articles_index)
     .slice{:id => "section-#{section.id}"}
       = template.render( 'articles' => articles, 'tag' => params[:tag], 'author' => (@author ? @author.name : nil), 'month' => (params[:month] ? "#{month_name(params[:month].to_i)} #{params[:year]}" : nil), 'blog_title' => section.title, 'articles_list' => (render :partial => "articles/article_for_list", :collection => articles) )
-
-
     - content_for :head do
       = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"#{@cms_config['website']['name']}\" href=\"/#{path_safe(@cms_config['site_settings']['article_title'])}.rss\" />"
-
+      
+      
+- elsif section.section_format == "ajax"
+  .ajax-articles{:id => "ajax-articles-#{section.id}"}Loading...
+  - content_for :head do
+    %script{:type => "text/javascript"}
+      == $(document).ready(function() {
+      == $('#ajax-articles-#{section.id}').load('article/articles_for_ajax?section_id=#{section.id}');
+      ==});
+    
 

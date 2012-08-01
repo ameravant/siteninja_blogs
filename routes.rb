@@ -1,5 +1,5 @@
 resources :article_categories, :as => article_categories_path
-resources :articles, :as => article_path, :member => { :comment => :post }, :has_many => :images
+resources :articles, :as => article_path, :member => { :comment => :post }, :has_many => :images, :collection => { :articles_for_ajax => :get }
 
 namespace :admin do |admin|
   admin.resources :feeds, :collection => { :create_article => :put }

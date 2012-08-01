@@ -53,6 +53,10 @@ class ArticlesController < ApplicationController
     add_breadcrumb '@article.title'
   end
 
+  def articles_for_ajax
+    render :layout => false
+  end
+
   private
 
   def find_article
