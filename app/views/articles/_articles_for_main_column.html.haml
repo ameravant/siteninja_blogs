@@ -60,6 +60,9 @@
       
 - elsif section.section_format == "ajax"
   .ajax-articles{:id => "ajax-articles-#{section.id}"}
+    %p
+      = image_tag("spinner.gif", :alt => "Loading")
+      Loading...
   - content_for :head do
     %script{:type => "text/javascript"}
       == $(document).ready(function() {
