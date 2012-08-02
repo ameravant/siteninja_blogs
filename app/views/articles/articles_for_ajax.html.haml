@@ -1,5 +1,6 @@
 - @articles_for_main_column = Article.all(:all, :conditions => ["(published_at <= ? and published = ?) or publish_immediately = ?", Time.now, true, true]) unless @articles_for_main_column
 - section = ColumnSection.find(params[:section_id])
+- count = section.count
 - accs = section.article_categories
 - categories = []
 - for category in accs

@@ -1,4 +1,5 @@
 - @articles_for_main_column = Article.all(:all, :limit => 50, :conditions => ["(published_at <= ? and published = ?) or publish_immediately = ?", Time.now, true, true]) unless @articles_for_main_column
+- count = section.count
 - if section.section_format != "full" and section.section_format != "ajax" 
   - accs = section.article_categories
   - categories = []
