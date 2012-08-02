@@ -37,7 +37,7 @@
   - ops = "person_id = #{@page.author_id}" if @page.author_id
   - if @page.article_category_id.nil?
     - if section.show_all_categories == true
-      - found_articles = @articles_for_main_column
+      - found_articles = @articles_for_main_column.find(:all, :limit => count)
     - else
       / - for category in categories
       /   - ac = ArticleCategory.find(category)
