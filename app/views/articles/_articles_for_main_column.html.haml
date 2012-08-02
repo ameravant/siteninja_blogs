@@ -40,7 +40,7 @@
     - if section.show_all_categories == true
       - found_articles = @articles_for_main_column[0..count-1]
     - elsif categories.size == 1
-      - found_articles = ArticleCategory.find(categories.first).articles.published[0..count-1]
+      - found_articles = ArticleCategory.find(categories.first).articles.published.uniq[0..count-1]
     - else
       / - for category in categories
       /   - ac = ArticleCategory.find(category)
