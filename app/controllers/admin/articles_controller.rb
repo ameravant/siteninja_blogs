@@ -79,6 +79,9 @@ class Admin::ArticlesController < AdminController
         @article.article_categories = []
         @article.save
       end
+      ac_ids = @article.article_category_ids.uniq
+      @article.article_category_ids = []
+      @article.article_category_ids = ac_ids
       flash[:notice] = "Article \"#{@article.title}\" updated."
       redirect_to admin_articles_path
     else
