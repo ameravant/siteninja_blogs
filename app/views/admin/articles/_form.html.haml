@@ -67,7 +67,7 @@
     - unless current_user.is_contributor_only?
       %h2.form-label= f.label :blurb
       .note Displayed on Blog Summary page, under Title. This frequently includes the first paragraph of the Body.
-      = f.text_area :blurb, :class => "big-area blurb", :disabled => @disabled
+      = f.text_area :blurb, :class => "big-area blurb #{"mceEditor" if @cms_config['site_settings']['wysiwyg_blurb']}", :disabled => @disabled
   =link_to("Show Article Details", "javascript:void(0)", :class => "advanced-options mobile-only")
   #main-details.details.options
     %h3 Article Details
