@@ -24,7 +24,7 @@ class ArticleCategoriesController < ApplicationController
       @article_category.menus.empty? ? @menu = @page.menus.first : @menu = @article_category.menus.first
       
       articles = @article_category.articles
-      articles << Article.all(:conditions => {:article_category_id => @article_category.id})
+      #articles << Article.all(:conditions => {:article_category_id => @article_category.id})
       @articles = articles.published.uniq.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
       
       add_breadcrumb @article_category.name
@@ -48,10 +48,10 @@ class ArticleCategoriesController < ApplicationController
   end
 
   def find_articles_for_sidebar
-    @article_categories = ArticleCategory.active
-    @article_archive = Article.published.group_by { |a| [a.published_at.month, a.published_at.year] }
-    @article_authors = Person.active.find(:all, :conditions => "articles_count > 0")
-    @article_tags = Article.published.tag_counts.sort_by(&:name)
+    # @article_categories = ArticleCategory.active
+    # @article_archive = Article.published.group_by { |a| [a.published_at.month, a.published_at.year] }
+    # @article_authors = Person.active.find(:all, :conditions => "articles_count > 0")
+    # @article_tags = Article.published.tag_counts.sort_by(&:name)
   end
   def get_article_category_or_404
     render_404 unless @article_category = ArticleCategory.active.find(params[:id])
