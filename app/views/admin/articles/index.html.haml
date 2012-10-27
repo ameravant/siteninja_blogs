@@ -11,17 +11,17 @@
       %span.hmenu
         = icon "Plus", new_admin_article_path(@article)
         = link_to "Write a new #{@cms_config['site_settings']['article_title']}", new_admin_article_path(@article)
-      %span.desktop-only== as #{current_user.name}
-  - if current_user.has_role(["Admin", "Editor"])
-    %li
-      %span.hmenu
-        = icon "Folder2", admin_article_categories_path
-        = link_to "Manage categories", admin_article_categories_path
-  - if current_user.has_role(["Admin", "Editor"])
-    %li
-      %span.hmenu
-        = icon "Rss 1", admin_feeds_path
-        = link_to "Manage RSS Feeds", admin_feeds_path
+        - #%span.desktop-only== as #{current_user.name}
+    - if current_user.has_role(["Admin", "Editor"])
+      %li
+        %span.hmenu
+          = icon "Folder2", admin_article_categories_path
+          = link_to "Manage categories", admin_article_categories_path
+    - if current_user.has_role(["Admin", "Editor"])
+      %li
+        %span.hmenu
+          = icon "Rss 1", admin_feeds_path
+          = link_to "Manage RSS Feeds", admin_feeds_path
   = clear
 %br
 

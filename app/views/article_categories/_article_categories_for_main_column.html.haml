@@ -3,9 +3,13 @@
   .slice.main-column-section.article-categories{:id => "section-#{section.id}"}
     %h2== #{section.title.blank? ? "#{@cms_config["site_settings"]["article_title"].titlecase} Categories" : section.title}
     %ul.article_categories.list_of_links
+      %li.sidebar_link
+        = link_to(icon("Rss 1"), "/#{path_safe(CMS_CONFIG['site_settings']['article_title'])}.rss", :class => "rss-icon", :title => "Subscribe to RSS Feed")
+        = link_to("All Categories", "/#{path_safe(CMS_CONFIG['site_settings']['blog_title'])}")
       - article_categories.sort_by{|ac| ac.sort_order}.each do |accs|
         - category = accs.article_category
         %li
+          = link_to(icon("Rss 1"), article_category_url(category, :format => :rss), :class => "rss-icon", :title => "Subscribe to RSS Feed")
           = link_to h(category.name), category, :class => "article-category-link"
           - if section.section_format == "show_thumbs" || section.section_format == "show_thumbs_limited" 
             - unless category.images.empty?
@@ -20,8 +24,12 @@
     .slice.main-column-section.article-categories{:id => "section-#{section.id}"}
       %h2== #{section.title.blank? ? "#{@cms_config["site_settings"]["article_title"].titlecase} Categories" : section.title}
       %ul.article_categories.list_of_links
+        %li.sidebar_link
+          = link_to(icon("Rss 1"), "/#{path_safe(CMS_CONFIG['site_settings']['article_title'])}.rss", :class => "rss-icon", :title => "Subscribe to RSS Feed")
+          = link_to("All Categories", "/#{path_safe(CMS_CONFIG['site_settings']['blog_title'])}")
         - article_categories.each do |category|
           %li
+            = link_to(icon("Rss 1"), article_category_url(category, :format => :rss), :class => "rss-icon", :title => "Subscribe to RSS Feed")
             = link_to h(category.name), category, :class => "article-category-link"
             - if section.section_format == "show_thumbs" || section.section_format == "show_thumbs_limited" 
               - unless category.images.empty?
