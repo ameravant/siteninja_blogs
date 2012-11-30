@@ -1,6 +1,6 @@
 - if article.assets_count > 0
   .article_attachments
-    %h3 Attachment(s)
+    %h3= @cms_config['site_settings']['blog_attachments_title'] ? @cms_config['site_settings']['blog_attachments_title'] : (article.assets_count == 1 ? "Attachment" : "Attachments")
     %ul
     -for asset in article.assets
       %li 
