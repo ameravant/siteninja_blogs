@@ -1,6 +1,7 @@
 class ArticleCategory < ActiveRecord::Base
   has_permalink :name
   belongs_to :column
+  belongs_to :layout, :class_name => "Column", :foreign_key => :main_column_id
   has_many :articles
   has_and_belongs_to_many :articles
   has_many :pages
