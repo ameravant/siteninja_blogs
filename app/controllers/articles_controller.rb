@@ -26,7 +26,7 @@ class ArticlesController < ApplicationController
       else
         add_breadcrumb "#{@cms_config['site_settings']['blog_title']}"
         if MULTI_TENANT
-          found_articles = Article.published(:conditions => {:account_id => $CURRENT_ACCOUNT.id})
+          found_articles = Account.find($CURRENT_ACCOUNT.id).articles.published
         else
           found_articles = Article.published
         end
