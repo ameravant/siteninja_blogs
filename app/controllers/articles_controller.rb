@@ -43,8 +43,8 @@ class ArticlesController < ApplicationController
         wants.rss { render :layout => false } # uses index.rss.builder
       end
     rescue Exception => e
-      redirect_to articles_path
-      flash[:error] = "Not a valid request."
+      redirect_to "/"
+      flash[:error] = e
     end
   end
 
