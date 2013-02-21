@@ -50,7 +50,10 @@
     - if @article.person.blank? and !@article.title.blank?
       document.getElementById('preview_article_author_name').value = document.getElementById('article_author_name').value
     - else
-      document.getElementById('preview_article_person_id').value = document.getElementById('article_person_id').value
+      - if @possible_authors.empty?
+        document.getElementById('preview_article_author_name').value = document.getElementById('article_author_name').value      
+      - else
+        document.getElementById('preview_article_person_id').value = document.getElementById('article_person_id').value
     document.getElementById('preview_article_description').value = document.getElementById('article_description').value
     document.getElementById('preview_article_show_description').checked = document.getElementById('article_show_description').checked
     document.getElementById('preview_article_tag_list').value = document.getElementById('article_tag_list').value
@@ -226,6 +229,7 @@
         = text_area :preview_article, :body
         = text_area :preview_article, :title
         = text_area :preview_article, :blurb
+        = text_area :preview_article, :author_name
         = text_field :preview_article, :article_category_id
         = text_field :preview_article, :person_id
         = text_field :preview_article, :published_at

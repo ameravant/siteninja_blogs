@@ -103,7 +103,7 @@ class Admin::ArticlesController < AdminController
       @hide_admin_menu = true
       
       
-      @article = Article.new(JSON.parse(@cms_config['site_settings']['preview_article']))
+      @article = Article.new(JSON.parse(@settings.blog_preview))
       @images = @article.permalink.blank? ? [] : Article.find_by_permalink(@article.permalink).images
       params[:article_article_category_id].blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => ArticleCategory.find(params[:article_article_category_id]).column_id, :visible => true})
       @owner = @article
@@ -118,7 +118,7 @@ class Admin::ArticlesController < AdminController
   end
   
   def post_preview
-    @cms_config['site_settings']['preview_article'] = ActiveSupport::JSON.encode(params[:preview_article])
+    @settings.update_attributes(:blog_preview => ActiveSupport::JSON.encode(params[:preview_article]))
     File.open(@cms_path, 'w') { |f| YAML.dump(@cms_config, f) }
   end
   
@@ -130,7 +130,7 @@ class Admin::ArticlesController < AdminController
     @hide_admin_menu = true
     
     
-    @article = Article.new(JSON.parse(@cms_config['site_settings']['preview_article']))
+    @article = Article.new(JSON.parse(@settings.blog_preview))
     @images = @article.permalink.blank? ? [] : Article.find_by_permalink(@article.permalink).images
     params[:article_article_category_id].blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => ArticleCategory.find(params[:article_article_category_id]).column_id, :visible => true})
     @owner = @article
