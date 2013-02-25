@@ -24,12 +24,16 @@ class ArticlesController < ApplicationController
           add_breadcrumb "#{Date::MONTHNAMES[params[:month].to_i]} #{params[:year]}"
       else
         add_breadcrumb "#{@cms_config['site_settings']['blog_title']}"
-        found_articles = Article.published
+        if MULTI_TENANT
+          found_articles = Account.find($CURRENT_ACCOUNT.id).articles.published
+        else
+          found_articles = Article.published
+        end
       end
       # if ActiveRecord::Base.connection.tables.include?("accounts")
       #         @articles = found_articles.reject{|a| a.account_id != $CURRENT_ACCOUNT.id}.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
       #       else
-        @articles = found_articles.paginate(:page => params[:page], :per_page => 10)#, :include => :article_categories)
+        @articles = found_articles.paginate(:page => params[:page], :per_page => 10), :include => :article_categories)
       # end
       @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
       respond_to do |wants|
