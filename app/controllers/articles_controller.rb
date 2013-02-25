@@ -6,7 +6,6 @@ class ArticlesController < ApplicationController
   add_breadcrumb "Home", "root_path"
 
   def index
-    begin
       if !params[:tag].blank?
         # Filter articles by tag
         found_articles = Article.published.find_tagged_with(params[:tag])
@@ -30,7 +29,7 @@ class ArticlesController < ApplicationController
       # if ActiveRecord::Base.connection.tables.include?("accounts")
       #         @articles = found_articles.reject{|a| a.account_id != $CURRENT_ACCOUNT.id}.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
       #       else
-        @articles = found_articles.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
+        @articles = found_articles.paginate(:page => params[:page], :per_page => 10)#, :include => :article_categories)
       # end
       @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
       respond_to do |wants|
@@ -38,10 +37,7 @@ class ArticlesController < ApplicationController
         wants.xml { render :xml => @articles.to_xml }
         wants.rss { render :layout => false } # uses index.rss.builder
       end
-    rescue Exception => e
-      redirect_to articles_path
-      flash[:error] = "Not a valid request."
-    end
+
   end
 
   def show
