@@ -1,10 +1,13 @@
 = f.error_messages
-
-%table{:cellspacing => "0"}
-  %tr
-    %td= f.label :name
-    %td= f.text_field :name
-  %tr
-    %td= collection_select(:article_category, :column_id, Column.all, :id, :title, :style => "width: 200px; margin: 0 0 0 0;")
+.responsive-form
+  .main-fields
+    %h2.form-label= f.label :name
+    = f.text_field :name, :class => "big-input", :disabled => @disabled, :placeholder => "Generates the permalink."
+  #main-details.details.options
+    = f.label :column_id, "Side Column"
+    = collection_select(:article_category, :column_id, Column.all(:conditions => {:column_location => "side_column"}), :id, :title, :style => "width: 200px; margin: 0 0 0 0;")
+= clear
+%br
+%br
 - fancy_submit admin_article_categories_path do
   = f.submit "Save category"

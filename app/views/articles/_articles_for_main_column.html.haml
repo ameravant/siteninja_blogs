@@ -49,8 +49,7 @@
     - articles = found_articles
   
     - template = Liquid::Template.parse(@tmplate.articles_index)
-    .slice{:id => "section-#{section.id}"}
-      = template.render( 'articles' => articles, 'tag' => params[:tag], 'author' => (@author ? @author.name : nil), 'month' => (params[:month] ? "#{month_name(params[:month].to_i)} #{params[:year]}" : nil), 'blog_title' => section.title, 'articles_list' => (render :partial => "articles/article_for_list", :collection => articles) )
+    = template.render( 'articles' => articles, 'tag' => params[:tag], 'author' => (@author ? @author.name : nil), 'month' => (params[:month] ? "#{month_name(params[:month].to_i)} #{params[:year]}" : nil), 'blog_title' => section.title, 'articles_list' => (render :partial => "articles/article_for_list", :collection => articles) )
     - content_for :head do
       = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"#{@cms_config['website']['name']}\" href=\"/#{path_safe(@cms_config['site_settings']['article_title'])}.rss\" />"
       
