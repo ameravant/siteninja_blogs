@@ -15,7 +15,7 @@
   - else
     - articles = @page.article_category.articles.published.find(:all, :conditions => ops, :limit => count)
 
-  .slice.articles-for-main-column{:id => "section-#{section.id}"}
+  .slice.articles-for-main-column
     - unless section.title.blank?
       %h2= section.title
     %ul.recent_articles.list_of_links
