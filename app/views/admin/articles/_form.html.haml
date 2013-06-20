@@ -182,7 +182,7 @@
         }); 
         });
         function addtext(text) {
-        tinyMCE.execInstanceCommand("article_body","mceInsertContent",false,text);
+        tinymce.get("article_body").insertContent(text);
         }
         jQuery(document).ready(function() {
         jQuery(".fancy-inline").fancybox({ 
