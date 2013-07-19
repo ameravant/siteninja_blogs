@@ -1,6 +1,6 @@
 - article_categories = section.article_category_column_sections
 - unless article_categories.empty?
-  .slice.main-column-section.article-categories{:id => "section-#{section.id}"}
+  .main-column-section.article-categories
     %h2== #{section.title.blank? ? "#{@cms_config["site_settings"]["article_title"].titlecase} Categories" : section.title}
     %ul.article_categories.list_of_links
       %li.sidebar_link
@@ -21,7 +21,7 @@
 - else
   - article_categories = ArticleCategory.active
   - unless article_categories.empty?
-    .slice.main-column-section.article-categories{:id => "section-#{section.id}"}
+    .main-column-section.article-categories
       %h2== #{section.title.blank? ? "#{@cms_config["site_settings"]["article_title"].titlecase} Categories" : section.title}
       %ul.article_categories.list_of_links
         %li.sidebar_link
