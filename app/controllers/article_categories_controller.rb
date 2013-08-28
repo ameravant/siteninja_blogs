@@ -5,6 +5,7 @@ class ArticleCategoriesController < ApplicationController
   before_filter :find_page
   before_filter :find_articles_for_sidebar
   before_filter :get_article_category_or_404
+  before_filter :authenticate, :only => :show
 
   def show
     begin
@@ -56,5 +57,13 @@ class ArticleCategoriesController < ApplicationController
   def get_article_category_or_404
     render_404 unless @article_category = ArticleCategory.active.find(params[:id])
   end
+  
+  def authenticate
+    if @cms_config['modules']['members'] && @article_category.permission_level != "everyone"
+      session[:redirect] = request.request_uri
+      authorize(@article_category.person_groups.collect{|p| p.title}, @article_category.title)
+    end
+  end
+  
 end
 

@@ -18,6 +18,7 @@ class Admin::ArticleCategoriesController < AdminController
   def create
     @article_category = ArticleCategory.new(params[:article_category])
     if @article_category.save
+      add_person_groups
       flash[:notice] = "Category \"#{@article_category.name}\" created."
       redirect_to admin_article_categories_path
     else
@@ -32,6 +33,7 @@ class Admin::ArticleCategoriesController < AdminController
   def update
     add_breadcrumb @article_category.name
     if @article_category.update_attributes(params[:article_category])
+      add_person_groups
       flash[:notice] = "Category \"#{@article_category.name}\" updated."
       redirect_to admin_article_categories_path
     else
@@ -64,5 +66,18 @@ class Admin::ArticleCategoriesController < AdminController
   def add_crumbs
     add_breadcrumb @cms_config['site_settings']['blog_title'], "admin_articles_path"
   end
-end
+  
+  def add_person_groups
+    if @cms_config['modules']['members']
+      if params[:article_category][:permission_level] == "except those checked"
+        params[:article_category][:person_group_ids] = PersonGroup.is_role.collect(&:id).delete_if{|c| params[:article_category][:person_group_ids].include?(c.to_s)}
+      elsif params[:article_category][:permission_level] == "administrators"
+        params[:article_category][:person_group_ids] = [1]
+      elsif params[:article_category][:permission_level] == "everyone"
+        params[:article_category][:person_group_ids] = PersonGroup.is_role.collect(&:id)
+      end        
+    end
+  end
+  
 
+end

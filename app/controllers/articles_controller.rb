@@ -2,6 +2,7 @@ class ArticlesController < ApplicationController
   unloadable # http://dev.rubyonrails.org/ticket/6001
   before_filter :find_page
   before_filter :find_article, :only => [ :show, :comment ]
+  before_filter :authenticate, :only => :show
   #before_filter :find_articles_for_sidebar
   add_breadcrumb "Home", "root_path"
 
@@ -62,6 +63,7 @@ class ArticlesController < ApplicationController
   def find_article
     begin
       @article = Article.published.find(params[:id])
+      @article_category = ArticleCategory.find(@article.article_category_id)
       @owner = @article
     rescue ActiveRecord::RecordNotFound
       redirect_to articles_path
@@ -88,6 +90,15 @@ class ArticlesController < ApplicationController
     @article_archive = Article.published.group_by { |a| [a.published_at.month, a.published_at.year] }
     @article_authors = Person.active.find(:all, :conditions => "articles_count > 0")
     @article_tags = Article.published.tag_counts.sort_by(&:name)
+  end
+
+  def authenticate
+    if @cms_config['modules']['members'] && @article_category.permission_level != "everyone"
+      session[:redirect] = request.request_uri
+      unless @article_category.blank?
+        authorize(@article_category.person_groups.collect{|p| p.title}, @article_category.title)
+      end
+    end
   end
 
 end

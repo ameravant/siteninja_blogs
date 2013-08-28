@@ -4,6 +4,9 @@
     %h2.form-label= f.label :name
     = f.text_field :name, :class => "big-input", :disabled => @disabled, :placeholder => "Generates the permalink."
   #main-details.details.options
+    - if @cms_config["modules"]["members"]
+      = link_to("#{icon("Lock")} Permissions", "#permissions-box", :class => "fancy-inline", :id => "permissions-link") 
+    %br
     = f.label :column_id, "Side Column"
     = collection_select(:article_category, :column_id, Column.all(:conditions => {:column_location => "side_column"}), :id, :title, :style => "width: 200px; margin: 0 0 0 0;")
 = clear
@@ -11,3 +14,42 @@
 %br
 - fancy_submit admin_article_categories_path do
   = f.submit "Save category"
+%div{:style => "display: none"}
+  - if @cms_config['modules']['members']
+    #permissions-box
+      %img{:src =>"#{css_icon("Cancel","","16x16","red")}", :title =>"close", :alt=> "close box icon", :class => "close-icon", :onclick => "jQuery.fancybox.close()"}
+      %h2 Permissions
+      .note Who can access this page?
+      %ul
+        %li
+          =f.radio_button :permission_level, "everyone"
+          =f.label :permission_level_everyone, "Everyone"
+        %li
+          =f.radio_button :permission_level, "administrators"
+          =f.label :permission_level_administrators, "Administrators Only"
+        %li
+          =f.radio_button :permission_level, "those checked"
+          =f.label :permission_level_those_checked, "All those checked below"
+        %li
+          =f.radio_button :permission_level, "except those checked"
+          =f.label :permission_level_except_those_checked, "Except for those checked below"
+      #permissions-groups
+        Select Groups
+        %ul
+          -for group in PersonGroup.is_role
+            %li
+              -if @article_category.permission_level == "except those checked"
+                = check_box_tag "article_category[person_group_ids][]", group.id, !@article_category.person_groups.include?(group), :id => "group_checkbox_#{group.id}"
+              -else 
+                = check_box_tag "article_category[person_group_ids][]", group.id, @article_category.person_groups.include?(group), :id => "group_checkbox_#{group.id}"
+              = label_tag "group_checkbox_#{group.id}", group.title
+      %div
+        %input{:type => "button", :onclick => "jQuery.fancybox.close()", :value => "Done"}
+- content_for :head do
+  %style{:type => "text/css"}
+    ==#permissions-box { text-align: left; }
+    ==#permissions-box ul { margin: 0; padding: 0; list-style: none; }
+    ==#permissions-groups { padding: 4px 10px; border: 1px solid #ccc; background: #eee; margin: 5px; font-size: .8em; }
+    ==#permissions-groups ul { padding-left: 10px; }
+    ==#permissions-link { font-weight: bold; }
+
