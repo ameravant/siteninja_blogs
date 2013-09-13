@@ -63,7 +63,7 @@ class ArticlesController < ApplicationController
   def find_article
     begin
       @article = Article.find(params[:id])
-      @article_category = ArticleCategory.find(@article.article_category_id)
+      @article_category = ArticleCategory.find(@article.article_category_id) unless @article.article_category_id.blank?
       @owner = @article
     rescue ActiveRecord::RecordNotFound
       redirect_to articles_path
