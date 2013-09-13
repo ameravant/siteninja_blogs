@@ -61,13 +61,13 @@ class ArticlesController < ApplicationController
   private
 
   def find_article
-    #begin
-      @article = Article.published.find(params[:id])
+    begin
+      @article = Article.find(params[:id])
       @article_category = ArticleCategory.find(@article.article_category_id)
       @owner = @article
-    #rescue ActiveRecord::RecordNotFound
-    #  redirect_to articles_path
-    #end
+    rescue ActiveRecord::RecordNotFound
+      redirect_to articles_path
+    end
   end
 
   def find_page
