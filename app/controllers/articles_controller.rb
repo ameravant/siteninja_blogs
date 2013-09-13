@@ -28,7 +28,7 @@ class ArticlesController < ApplicationController
         #if MULTI_TENANT
         #  found_articles = Account.find($CURRENT_ACCOUNT.id).articles.published
         #else
-          found_articles = Article.published
+          found_articles = Article.published.reject{|x| x.published != true}
         #end
       end
       # if ActiveRecord::Base.connection.tables.include?("accounts")
