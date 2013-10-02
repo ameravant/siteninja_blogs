@@ -28,4 +28,8 @@ class ArticleCategory < ActiveRecord::Base
     self.name
   end
   
+  def description
+    ""
+  end
+  
 end
