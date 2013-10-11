@@ -93,7 +93,7 @@ class ArticlesController < ApplicationController
   end
 
   def authenticate
-    if @cms_config['modules']['members'] && @article_category.permission_level != "everyone"
+    if @cms_config['modules']['members'] && @article_category && @article_category.permission_level != "everyone"
       session[:redirect] = request.request_uri
       unless @article_category.blank?
         authorize(@article_category.person_groups.collect{|p| p.title}, @article_category.title)
