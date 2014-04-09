@@ -1,3 +1,4 @@
+- @tmplate.template_html.articles_index = @global_template.articles_index if @tmplate.articles_index.blank?
 - @articles_for_main_column = Article.all(:all, :conditions => ["(published_at <= ? and published = ?) or publish_immediately = ?", Time.now, true, true]) unless @articles_for_main_column
 - count = section.count
 - if section.section_format != "full" and section.section_format != "ajax" 
