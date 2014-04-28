@@ -77,11 +77,11 @@ class ArticlesController < ApplicationController
     @tmplate = @page.template unless @page.template.blank?
     @tmplate.layout_top = @global_template.layout_top if @tmplate.layout_top.blank?
     @tmplate.layout_bottom = @global_template.layout_bottom if @tmplate.layout_bottom.blank?
-    @tmplate.article_show = @global_template.article_show if @tmplate.article_show.blank?
-    @tmplate.articles_index = @global_template.articles_index if @tmplate.articles_index.blank?
-    @tmplate.small_article_for_index = @global_template.small_article_for_index if @tmplate.small_article_for_index.blank?
-    @tmplate.medium_article_for_index = @global_template.medium_article_for_index if @tmplate.medium_article_for_index.blank?
-    @tmplate.large_article_for_index = @global_template.large_article_for_index if @tmplate.large_article_for_index.blank?
+    @tmplate.template_html.articles_index = @global_template.template_html.articles_index if @tmplate.template_html.articles_index.blank?
+    @tmplate.template_html.article_show = @global_template.template_html.article_show if @tmplate.template_html.article_show.blank?
+    @tmplate.template_html.small_article_for_index = @global_template.template_html.small_article_for_index if @tmplate.template_html.small_article_for_index.blank?
+    @tmplate.template_html.medium_article_for_index = @global_template.template_html.medium_article_for_index if @tmplate.template_html.medium_article_for_index.blank?
+    @tmplate.template_html.large_article_for_index = @global_template.template_html.large_article_for_index if @tmplate.template_html.large_article_for_index.blank?
     @menu = @page.menus.first
   end
 
