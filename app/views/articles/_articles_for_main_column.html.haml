@@ -24,8 +24,8 @@
         %li
           %h3= link_to article.title, article_path(article)
           %span.date
-            = "by #{article.person.name} - " if section.show_author
-            = article.published_at.strftime("%a, %b %d, %Y")
+            = "<span class=\"by-author\">by </span><span class=\"article-author\">#{article.person.name}</span><span class=\"info-dash\"> - </span>" if section.show_author
+            %span.date-time= article.published_at.strftime("%a, %b %d, %Y")
           - if section.show_blurb
             %p= article.description.blank? ? article.blurb : truncate(h(article.description), :length => 100)
           = clear
