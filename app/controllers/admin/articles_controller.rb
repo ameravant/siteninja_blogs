@@ -52,6 +52,7 @@ class Admin::ArticlesController < AdminController
     params[:article][:article_category_ids] << @article.article_category_id unless @article.article_category_id.blank?
     if @article.save
       flash[:notice] = "Article \"#{@article.title}\" created."
+      log_activity("Created \"#{@article.title}\"")
       redirect_to admin_articles_path
     else
       render :action => "new"
@@ -83,6 +84,7 @@ class Admin::ArticlesController < AdminController
       @article.article_category_ids = []
       @article.article_category_ids = ac_ids
       flash[:notice] = "Article \"#{@article.title}\" updated."
+      log_activity("Updated \"#{@article.title}\"")
       redirect_to admin_articles_path
     else
       render :action => "edit"
@@ -160,6 +162,11 @@ class Admin::ArticlesController < AdminController
   def authorization
     authorize(@permissions['articles'], "Articles")
   end
+  
+  def log_activity(description)
+    add_activity(controller_name.classify, @article.id, description)
+  end
+  
   def authorize_to_update
     authorize(@permissions['comments'], "Published Articles") if @article.published 
   end

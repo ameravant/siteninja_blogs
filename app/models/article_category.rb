@@ -7,6 +7,7 @@ class ArticleCategory < ActiveRecord::Base
   has_many :pages
   has_many :features, :as => :featurable, :dependent => :destroy
   has_many :images, :as => :viewable, :dependent => :destroy
+  has_many :activities, :as => :loggable, :dependent => :destroy
   has_many :menus, :as => :navigatable, :dependent => :destroy
   has_many :article_category_column_sections
   has_many :column_sections, :through => :article_category_column_sections

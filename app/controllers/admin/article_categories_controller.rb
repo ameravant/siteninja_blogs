@@ -20,6 +20,7 @@ class Admin::ArticleCategoriesController < AdminController
     if @article_category.save
       add_person_groups
       flash[:notice] = "Category \"#{@article_category.name}\" created."
+      log_activity("Created \"#{@article_category.name}\"")
       redirect_to admin_article_categories_path
     else
       render :action => "new"
@@ -35,6 +36,7 @@ class Admin::ArticleCategoriesController < AdminController
     if @article_category.update_attributes(params[:article_category])
       add_person_groups
       flash[:notice] = "Category \"#{@article_category.name}\" updated."
+      log_activity("Updated \"#{@article_category.name}\"")
       redirect_to admin_article_categories_path
     else
       render :action => "edit"
@@ -61,6 +63,10 @@ class Admin::ArticleCategoriesController < AdminController
   def authorization
     authorize(@permissions['article_categories'], "Article Categories")
     redirect_to admin_events_path if !current_user.has_role(["Admin"])
+  end
+
+  def log_activity(description)
+    add_activity(controller_name.classify, @article_category.id, description)
   end
 
   def add_crumbs

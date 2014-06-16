@@ -8,6 +8,7 @@ class Article < ActiveRecord::Base
   belongs_to :column
   has_many :comments, :as => :commentable
   has_many :images, :as => :viewable, :dependent => :destroy
+  has_many :activities, :as => :loggable, :dependent => :destroy
   has_many :features, :as => :featurable, :dependent => :destroy
   has_many :assets, :as => :attachable, :dependent => :destroy
   validates_presence_of :title, :body
