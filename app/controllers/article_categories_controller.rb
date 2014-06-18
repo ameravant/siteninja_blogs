@@ -9,7 +9,9 @@ class ArticleCategoriesController < ApplicationController
 
   def show
     begin
+      
       @article_category = ArticleCategory.active.find(params[:id])
+      @body_id = "article-category-#{path_safe(@article_category.title)}-body"
       @page = Page.find_by_permalink!('blog')# if @article_category.menus.empty?
       @main_column = ((@page.main_column_id.blank? or Column.find_by_id(@page.main_column_id).blank?) ? Column.first(:conditions => {:title => "Default", :column_location => "main_column"}) : Column.find(@page.main_column_id))
       @main_column_sections = ColumnSection.all(:conditions => {:column_id => @main_column.id, :visible => true, :column_section_id => nil})
