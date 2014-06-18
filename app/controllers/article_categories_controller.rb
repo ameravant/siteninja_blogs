@@ -9,7 +9,7 @@ class ArticleCategoriesController < ApplicationController
 
   def show
     begin
-      
+      @body_class = "blog-body"
       @article_category = ArticleCategory.active.find(params[:id])
       @body_id = "article-category-#{path_safe(@article_category.title)}-body"
       @page = Page.find_by_permalink!('blog')# if @article_category.menus.empty?
