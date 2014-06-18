@@ -220,7 +220,7 @@
     = f.submit "Save #{@cms_config['site_settings']['article_title']}"
     
   
-  = render :partial => 'admin/shared/responsive_preview', :locals => {:controller => "articles", :ajax => true, :extended => false}
+  = render :partial => 'admin/pages/responsive_preview', :locals => {:controller => "articles", :ajax => true, :extended => false}
       
   - content_for :pre_footer do
     %div{:style => "display: none;"}
