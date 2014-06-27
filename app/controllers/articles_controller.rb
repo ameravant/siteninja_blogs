@@ -1,7 +1,7 @@
 class ArticlesController < ApplicationController
   unloadable # http://dev.rubyonrails.org/ticket/6001
-  before_filter :find_page
   before_filter :find_article, :only => [ :show, :comment ]
+  before_filter :find_page
   before_filter :authenticate, :only => :show
   #before_filter :find_articles_for_sidebar
   add_breadcrumb "Home", "root_path"
@@ -75,8 +75,6 @@ class ArticlesController < ApplicationController
   def find_page
     @page = Page.find_by_permalink!('blog')
     @body_class = "blog-body"
-    @main_column = ((@page.main_column_id.blank? or Column.find_by_id(@page.main_column_id).blank?) ? Column.first(:conditions => {:title => "Default", :column_location => "main_column"}) : Column.find(@page.main_column_id))
-    @main_column_sections = ColumnSection.all(:conditions => {:column_id => @main_column.id, :visible => true, :column_section_id => nil})
     @tmplate = @page.template unless @page.template.blank?
     @tmplate.layout_top = @global_template.layout_top if @tmplate.layout_top.blank?
     @tmplate.layout_bottom = @global_template.layout_bottom if @tmplate.layout_bottom.blank?
@@ -86,6 +84,9 @@ class ArticlesController < ApplicationController
     @tmplate.template_html.medium_article_for_index = @global_template.template_html.medium_article_for_index if @tmplate.template_html.medium_article_for_index.blank?
     @tmplate.template_html.large_article_for_index = @global_template.template_html.large_article_for_index if @tmplate.template_html.large_article_for_index.blank?
     @menu = @page.menus.first
+    @main_column = ((@page.main_column_id.blank? or Column.find_by_id(@page.main_column_id).blank?) ? Column.first(:conditions => {:title => "Default", :column_location => "main_column"}) : Column.find(@page.main_column_id))
+    @main_column = Column.find(@tmplate.article_layout_id) if @article and !@tmplate.article_layout_id.blank?
+    @main_column_sections = ColumnSection.all(:conditions => {:column_id => @main_column.id, :visible => true, :column_section_id => nil})
   end
 
   def find_articles_for_sidebar

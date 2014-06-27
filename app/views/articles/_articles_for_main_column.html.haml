@@ -1,70 +1,75 @@
 - @page = Page.find_by_permalink("blog") if !@page
 - @tmplate.template_html.articles_index = @global_template.articles_index if @tmplate.articles_index.blank?
-- @articles_for_main_column = Article.all(:all, :conditions => ["(published_at <= ? and published = ?) or publish_immediately = ?", Time.now, true, true]) unless @articles_for_main_column
-- count = section.count
-- if section.section_format != "full" and section.section_format != "ajax" 
-  - accs = section.article_categories
-  - categories = []
-  - for category in accs
-    - categories << category.id
-  - count = ColumnSectionType.find_by_partial_name("articles_for_side_column").default_count if count.blank?
-  - ops = "person_id = #{@page.author_id}" if @page.author_id
-  - if @page.article_category_id.nil?
-    - if section.show_all_categories == true
-      - articles = @articles_for_main_column.uniq[0..count-1]
+- if !section.primary_category? or @article
+  - @articles_for_main_column = Article.all(:all, :conditions => ["(published_at <= ? and published = ?) or publish_immediately = ?", Time.now, true, true]) unless @articles_for_main_column
+  - count = section.count
+  - if section.section_format != "full" and section.section_format != "ajax" 
+    - accs = section.article_categories
+    - categories = []
+    - for category in accs
+      - categories << category.id
+    - count = ColumnSectionType.find_by_partial_name("articles_for_side_column").default_count if count.blank?
+    - ops = "person_id = #{@page.author_id}" if @page.author_id
+    - if @page.article_category_id.nil?
+      - if section.show_all_categories == true
+        - articles = @articles_for_main_column.uniq[0..count-1]
+      - elsif section.primary_category == true and @article
+        - articles = Article.published.reject{|a| (a.article_category_id != @article.article_category_id)}.reject{|a| (a.permalink == @article.permalink)}[0..count-1]
+      - else
+        - articles = @articles_for_main_column.reject{|a| (a.article_category_ids & categories).empty?}.uniq[0..count-1]#.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)})}[0..count-1]# or categories.include?(a.article_category_id)
     - else
-      - articles = @articles_for_main_column.reject{|a| (a.article_category_ids & categories).empty?}.uniq[0..count-1]#.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)})}[0..count-1]# or categories.include?(a.article_category_id)
-  - else
-    - articles = @page.article_category.articles.published.find(:all, :conditions => ops, :limit => count)
+      - articles = @page.article_category.articles.published.find(:all, :conditions => ops, :limit => count)
 
-  .articles-for-main-column
-    - unless section.title.blank?
-      %h2= section.title
-    %ul.recent_articles.list_of_links
-      - for article in articles
-        %li
-          %h3= link_to article.title, article_path(article)
-          %span.date
-            = "<span class=\"by-author\">by </span><span class=\"article-author\">#{article.person.name}</span><span class=\"info-dash\"> - </span>" if section.show_author
-            %span.date-time= article.published_at.strftime("%a, %b %d, %Y")
-          - if section.show_blurb
-            %p= article.description.blank? ? article.blurb : truncate(h(article.description), :length => 100)
-          = clear
+    .articles-for-main-column
+      - unless section.title.blank?
+        %h2= section.title
+      %ul.recent_articles.list_of_links
+        - for article in articles
+          %li
+            %h3= link_to article.title, article_path(article)
+            %span.date
+              = "<span class=\"by-author\">by </span><span class=\"article-author\">#{article.person.name}</span><span class=\"info-dash\"> - </span>" if section.show_author
+              %span.date-time= article.published_at.strftime("%a, %b %d, %Y")
+            - if section.show_blurb
+              %p= article.description.blank? ? article.blurb : truncate(h(article.description), :length => 100)
+            = clear
           
-- elsif section.section_format == "full"
-  - accs = section.article_categories
-  - categories = []
-  - for category in accs
-    - categories << category.id
-  - count = ColumnSectionType.find_by_partial_name("articles_for_side_column").default_count if count.blank?
-  - ops = "person_id = #{@page.author_id}" if @page.author_id
-  - if @page.article_category_id.nil?
-    - if section.show_all_categories == true
-      - found_articles = @articles_for_main_column[0..count-1]
-    - elsif categories.size == 1
-      - found_articles = ArticleCategory.find(categories.first).articles.published.uniq[0..count-1]
+  - elsif section.section_format == "full"
+    - accs = section.article_categories
+    - categories = []
+    - for category in accs
+      - categories << category.id
+    - count = ColumnSectionType.find_by_partial_name("articles_for_side_column").default_count if count.blank?
+    - ops = "person_id = #{@page.author_id}" if @page.author_id
+    - if @page.article_category_id.nil?
+      - if section.show_all_categories == true
+        - found_articles = @articles_for_main_column[0..count-1]
+      - elsif section.primary_category == true and @article
+        - articles = Article.published.reject{|a| (a.article_category_id != @article.article_category_id)}.reject{|a| (a.permalink == @article.permalink)}[0..count-1]
+      - elsif categories.size == 1
+        - found_articles = ArticleCategory.find(categories.first).articles.published.uniq[0..count-1]
+      - else
+        - found_articles = @articles_for_main_column.reject{|a| (a.article_category_ids & categories).empty?}.uniq[0..count-1]#{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)})}
     - else
-      - found_articles = @articles_for_main_column.reject{|a| (a.article_category_ids & categories).empty?}.uniq[0..count-1]#{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)})}
-  - else
-    - articles = @page.article_category.articles.published.find(:all, :conditions => ops).uniq
-  - unless found_articles.empty?
-    - articles = found_articles
+      - articles = @page.article_category.articles.published.find(:all, :conditions => ops).uniq
+    - unless found_articles.empty?
+      - articles = found_articles
   
-    - template = Liquid::Template.parse(@tmplate.articles_index)
-    = template.render( 'articles' => articles, 'tag' => params[:tag], 'author' => (@author ? @author.name : nil), 'month' => (params[:month] ? "#{month_name(params[:month].to_i)} #{params[:year]}" : nil), 'blog_title' => section.title, 'articles_list' => (render :partial => "articles/article_for_list", :collection => articles) )
+      - template = Liquid::Template.parse(@tmplate.articles_index)
+      = template.render( 'articles' => articles, 'tag' => params[:tag], 'author' => (@author ? @author.name : nil), 'month' => (params[:month] ? "#{month_name(params[:month].to_i)} #{params[:year]}" : nil), 'blog_title' => section.title, 'articles_list' => (render :partial => "articles/article_for_list", :collection => articles) )
+      - content_for :head do
+        = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"#{@cms_config['website']['name']}\" href=\"/#{path_safe(@cms_config['site_settings']['article_title'])}.rss\" />"
+      
+      
+  - elsif section.section_format == "ajax"
+    .ajax-articles{:id => "ajax-articles-#{section.id}"}
+      %p
+        = image_tag("spinner.gif", :alt => "Loading")
+        Loading...
     - content_for :head do
-      = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"#{@cms_config['website']['name']}\" href=\"/#{path_safe(@cms_config['site_settings']['article_title'])}.rss\" />"
-      
-      
-- elsif section.section_format == "ajax"
-  .ajax-articles{:id => "ajax-articles-#{section.id}"}
-    %p
-      = image_tag("spinner.gif", :alt => "Loading")
-      Loading...
-  - content_for :head do
-    %script{:type => "text/javascript"}
-      == $(document).ready(function() {
-      == $('#ajax-articles-#{section.id}').load('article/articles_for_ajax?section_id=#{section.id}');
-      ==});
+      %script{:type => "text/javascript"}
+        == $(document).ready(function() {
+        == $('#ajax-articles-#{section.id}').load('article/articles_for_ajax?section_id=#{section.id}');
+        ==});
     
 
