@@ -91,3 +91,5 @@
             = feature_icon_select(article, article.title)
           = icon "Write", edit_admin_article_path(article) if current_user.has_role(["Admin", "Editor", "Author"]) or !article.published?
           = trash_icon(article, admin_article_path(article), "#{article.title}") if current_user.has_role(["Admin", "Editor", "Author"])
+- if session[:cache] == true
+  %iframe{:src => "/admin/columns?cache=true", :style => "height: 1px; border: 0; width: 1px"}

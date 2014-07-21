@@ -53,6 +53,7 @@ class Admin::ArticlesController < AdminController
     if @article.save
       flash[:notice] = "Article \"#{@article.title}\" created."
       log_activity("Created \"#{@article.title}\"")
+      session[:cache] = true
       redirect_to admin_articles_path
     else
       render :action => "new"
@@ -85,6 +86,7 @@ class Admin::ArticlesController < AdminController
       @article.article_category_ids = ac_ids
       flash[:notice] = "Article \"#{@article.title}\" updated."
       log_activity("Updated \"#{@article.title}\"")
+      session[:cache] = true
       redirect_to admin_articles_path
     else
       render :action => "edit"
