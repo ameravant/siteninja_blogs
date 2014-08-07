@@ -8,11 +8,12 @@ class Article < ActiveRecord::Base
   belongs_to :column
   has_many :comments, :as => :commentable
   has_many :images, :as => :viewable, :dependent => :destroy
+  accepts_nested_attributes_for :images, :allow_destroy => true
+  attr_accessible :title, :description, :attached_assets_attributes
   has_many :activities, :as => :loggable, :dependent => :destroy
   has_many :features, :as => :featurable, :dependent => :destroy
   has_many :assets, :as => :attachable, :dependent => :destroy
   validates_presence_of :title, :body
-  accepts_nested_attributes_for :images
   validates_datetime :published_at
   named_scope :published, { :conditions => ["(published_at <= ? and published = ?) or publish_immediately = ?", Time.current, true, true] }
   named_scope :published_in_month, lambda { |month, year| {
