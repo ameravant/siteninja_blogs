@@ -1,2 +1,2 @@
-%h1= yield(:meta_title).strip
+%h1= h @article_category.name
 = render :partial => "/articles/article_for_list", :collection => @articles
