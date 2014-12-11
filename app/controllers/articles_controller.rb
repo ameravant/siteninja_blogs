@@ -7,6 +7,7 @@ class ArticlesController < ApplicationController
   add_breadcrumb "Home", "root_path"
 
   def index
+    expires_in 5.minutes, :public => true
       @body_id = "articles-index-body"
       if !params[:tag].blank?
         # Filter articles by tag
@@ -47,6 +48,7 @@ class ArticlesController < ApplicationController
   end
 
   def show
+    expires_in 5.minutes, :public => true
     @body_id = "article-#{path_safe(@article.title)}-body"
     @article_category = @article.article_category || @article.article_categories.first
     @article.article_category.blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => @article.article_category.column_id, :visible => true})
