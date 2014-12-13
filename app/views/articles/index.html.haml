@@ -14,7 +14,7 @@
 
 = render :partial => "shared/slice", :locals => {:column_section_id => nil, :controller => "articles", :action => "index"}, :collection => @main_column_sections
 
-= render :partial => "shared/side_column"
+= render :partial => "shared/side_column" if @tmplate.layout_top.include?("{{side_column}}") or @tmplate.layout_bottom.include?("{{side_column}}")
 
 - content_for :head do
   = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"#{@cms_config['website']['name']}\" href=\"/#{path_safe(@cms_config['site_settings']['article_title'])}.rss\" />"
