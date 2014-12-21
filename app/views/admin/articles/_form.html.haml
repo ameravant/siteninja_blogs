@@ -2,12 +2,12 @@
 - @body_class = "responsive-form-body"
 = f.error_messages
 - @calendar_select = true
-- content_for :footer do
+- content_for :head do
+  
   %script{:type => "text/javascript"}
     function addtext(text) {
     = "document.getElementById('article_body').value += ' ' + text + ' ';"
     }
-- content_for :head do
   %style{:type => "text/css"}
     ==#article_description { margin: 0; }
     ==#secondary-categories { padding: 5px; border: 1px solid #ccc; background: #fff; color: #333; position: absolute; width: 200px; font-size: .9em; height: 200px; overflow: auto; -moz-box-shadow: 0 4px 10px rgba(0,0,0,.6); -webkit-box-shadow: 0 4px 10px rgba(0,0,0,.6); box-shadow: 0 4px 10px rgba(0,0,0,.6); }
@@ -16,49 +16,48 @@
     ==.notes { margin: 0 0 20px; }
     ==.notes h2 { margin: 0; padding: 0; }
     == #article_notes_ifr { height: 400px !important; }
-  - content_for :footer do
-    %script{:type => "text/javascript"}
-      jQuery(document).ready(function() {
-      setLink();
-      jQuery("a#preview-link").fancybox({ 
-      'zoomSpeedIn': 300,
-      'zoomSpeedOut': 300,
-      'overlayShow': true,
-      'hideOnContentClick': false,
-      'easingOut': 'easeOutQuad',
-      'easingIn': 'easeInQuad',
-      'type': 'iframe',
-      'width': '90%',
-      'height': '90%'
-      }); 
-      jQuery('.advanced-options').click(function(){
-      jQuery('#main-details').toggle();
-      });
-      }); 
-      function setLink(){
-      try {
-      document.getElementById('preview_article_body').value = tinyMCE.get('article_body').getContent();
-      }
-      catch(err) {
-      document.getElementById('preview_article_body').value = document.getElementById('article_body').value;
-      }
-      document.getElementById('preview_article_title').value = document.getElementById('article_title').value
-      document.getElementById('preview_article_blurb').value = document.getElementById('article_blurb').value
-      document.getElementById('preview_article_article_category_id').value = document.getElementById('article_article_category_id').value
-      document.getElementById('preview_article_published_at').value = document.getElementById('article_published_at').value
-      document.getElementById('preview_article_social_share').checked = document.getElementById('article_social_share').checked
-      - if @article.person.blank? and !@article.title.blank?
-        document.getElementById('preview_article_author_name').value = document.getElementById('article_author_name').value
+  %script{:type => "text/javascript"}
+    jQuery(document).ready(function() {
+    setLink();
+    jQuery("a#preview-link").fancybox({ 
+    'zoomSpeedIn': 300,
+    'zoomSpeedOut': 300,
+    'overlayShow': true,
+    'hideOnContentClick': false,
+    'easingOut': 'easeOutQuad',
+    'easingIn': 'easeInQuad',
+    'type': 'iframe',
+    'width': '90%',
+    'height': '90%'
+    }); 
+    jQuery('.advanced-options').click(function(){
+    jQuery('#main-details').toggle();
+    });
+    }); 
+    function setLink(){
+    try {
+    document.getElementById('preview_article_body').value = tinyMCE.get('article_body').getContent();
+    }
+    catch(err) {
+    document.getElementById('preview_article_body').value = document.getElementById('article_body').value;
+    }
+    document.getElementById('preview_article_title').value = document.getElementById('article_title').value
+    document.getElementById('preview_article_blurb').value = document.getElementById('article_blurb').value
+    document.getElementById('preview_article_article_category_id').value = document.getElementById('article_article_category_id').value
+    document.getElementById('preview_article_published_at').value = document.getElementById('article_published_at').value
+    document.getElementById('preview_article_social_share').checked = document.getElementById('article_social_share').checked
+    - if @article.person.blank? and !@article.title.blank?
+      document.getElementById('preview_article_author_name').value = document.getElementById('article_author_name').value
+    - else
+      - if @possible_authors.empty?
+        document.getElementById('preview_article_author_name').value = document.getElementById('article_author_name').value      
       - else
-        - if @possible_authors.empty?
-          document.getElementById('preview_article_author_name').value = document.getElementById('article_author_name').value      
-        - else
-          document.getElementById('preview_article_person_id').value = document.getElementById('article_person_id').value
-      document.getElementById('preview_article_description').value = document.getElementById('article_description').value
-      document.getElementById('preview_article_show_description').checked = document.getElementById('article_show_description').checked
-      document.getElementById('preview_article_tag_list').value = document.getElementById('article_tag_list').value
-      document.getElementById('submit-preview').click();
-      }
+        document.getElementById('preview_article_person_id').value = document.getElementById('article_person_id').value
+    document.getElementById('preview_article_description').value = document.getElementById('article_description').value
+    document.getElementById('preview_article_show_description').checked = document.getElementById('article_show_description').checked
+    document.getElementById('preview_article_tag_list').value = document.getElementById('article_tag_list').value
+    document.getElementById('submit-preview').click();
+    }
 
 
 .responsive-form
@@ -147,7 +146,7 @@
       %h2= f.label :notes
       %span.note Will not be shown publicly. Use to save page content while editing.
       = f.text_area :notes, :size => "85x40", :class => "mceEditor"
-    - content_for :footer do
+    - content_for :head do
       %script{:type => "text/javascript"}
         jQuery(document).ready(function() {
         - if @article.publish_immediately
