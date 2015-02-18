@@ -9,7 +9,7 @@ class ArticleCategoriesController < ApplicationController
 
   def show
     begin
-      expires_in 60.minutes, :public => true
+      #expires_in 60.minutes, :public => true
       @body_class = "blog-body"
       @article_category = ArticleCategory.active.find(params[:id])
       @body_id = "article-category-#{path_safe(@article_category.title)}-body"
