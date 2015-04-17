@@ -49,8 +49,8 @@ class Admin::ArticlesController < AdminController
     @article.published_at = Time.now if @article.publish_immediately == true
     #this makes sure the main article category is also in the habtm relationship so it will scope correctly
     params[:article][:article_category_ids] ||= []
-    params[:article][:article_category_ids] << @article.article_category_id unless @article.article_category_id.blank?
     if @article.save
+      @article.article_category_ids << @article.article_category_id unless @article.article_category_id.blank?
       flash[:notice] = "Article \"#{@article.title}\" created."
       log_activity("Created \"#{@article.title}\"")
       session[:cache] = true
