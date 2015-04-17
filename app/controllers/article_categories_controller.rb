@@ -29,7 +29,7 @@ class ArticleCategoriesController < ApplicationController
       
       articles = @article_category.articles
       #articles << Article.all(:conditions => {:article_category_id => @article_category.id})
-      @articles = articles.published.uniq.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
+      @articles = articles.published.reject{|x| x.published != true}.uniq.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
       
       add_breadcrumb @article_category.name
     end
