@@ -50,9 +50,11 @@ class Admin::ArticlesController < AdminController
     #this makes sure the main article category is also in the habtm relationship so it will scope correctly
     @article.article_category_ids << @article.article_category_id unless @article.article_category_id.blank?
     if @article.save
-      #ac_ids = @article.article_category_ids.uniq
+      ac_ids = @article.article_category_ids.uniq
+      ac_ids << params[:article][:article_category_id]
+      ac_ids = ac_ids.uniq
       #@article.article_category_ids = []
-      #@article.article_category_ids = ac_ids
+      @article.article_category_ids = ac_ids
       flash[:notice] = "Article \"#{@article.title}\" created."
       log_activity("Created \"#{@article.title}\"")
       session[:cache] = true
