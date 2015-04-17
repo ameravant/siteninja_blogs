@@ -48,8 +48,7 @@ class Admin::ArticlesController < AdminController
     @article.published = false unless current_user.has_role(["Admin", "Editor", "Author"])
     @article.published_at = Time.now if @article.publish_immediately == true
     #this makes sure the main article category is also in the habtm relationship so it will scope correctly
-    params[:article][:article_category_ids] ||= []
-    params[:article][:article_category_ids] << @article.article_category_id unless @article.article_category_id.blank?
+    @article.article_category_ids << @article.article_category_id unless @article.article_category_id.blank?
     if @article.save
       ac_ids = @article.article_category_ids.uniq
       @article.article_category_ids = []
