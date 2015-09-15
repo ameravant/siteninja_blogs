@@ -181,6 +181,11 @@ class Admin::ArticlesController < AdminController
     if !current_user.has_role('Author')
       @possible_authors << current_user.person
     end
+    possible_authors_2 = PersonGroup.find_by_title('Admin').people.reject{|p| !p.user}
+    for pa in possible_authors_2
+      @possible_authors << pa
+    end 
+    @possible_authors = @possible_authors.uniq
   end
 end
 

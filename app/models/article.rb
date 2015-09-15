@@ -85,14 +85,14 @@ class Article < ActiveRecord::Base
   end
   
   def author
-    if CMS_CONFIG['modules']['profiles']
+    if self.person.blank?
+      self.author_name
+    elsif CMS_CONFIG['modules']['profiles']
       if self.person.profile.blank?
         "<a href=\"/#{path_safe(CMS_CONFIG['site_settings']['article_title'])}?author=#{self.person.id}\">#{self.person.name}</a>"
       else
         "<a href=\"/profiles/#{self.person.profile.permalink}\">#{self.person.name}</a>"
       end
-    elsif self.person.blank?
-      self.author_name
     else
       "<a href=\"/#{path_safe(CMS_CONFIG['site_settings']['article_title'])}?author=#{self.person.id}\">#{self.person.name}</a>"
     end

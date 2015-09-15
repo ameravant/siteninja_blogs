@@ -46,7 +46,7 @@
     document.getElementById('preview_article_article_category_id').value = document.getElementById('article_article_category_id').value
     document.getElementById('preview_article_published_at').value = document.getElementById('article_published_at').value
     document.getElementById('preview_article_social_share').checked = document.getElementById('article_social_share').checked
-    - if @article.person.blank? and !@article.title.blank?
+    - if @article.person.blank? and !@article.title.blank? and @possible_authors.empty?
       document.getElementById('preview_article_author_name').value = document.getElementById('article_author_name').value
     - else
       - if @possible_authors.empty?
@@ -76,7 +76,7 @@
     %ul
       %li
         - if @editor && !current_user.is_contributor_only?
-          - if @article.person.blank? and !@article.title.blank? and !@possible_authors.empty?
+          - if @article.person.blank? and !@article.title.blank? and @possible_authors.empty?
             = f.label :author_name, "Author"
             %br
             = f.text_field :author_name, :disabled => true
