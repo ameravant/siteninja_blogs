@@ -11,6 +11,9 @@
   - else
     =@cms_config['site_settings']['blog_title']
   = " - Page #{params[:page]}" if params[:page]
+- content_for :meta_description do
+  = "A listing of #{@cms_config['site_settings']['article_title'].pluralize}"
+  = " - Page #{params[:page]}" if params[:page]
 
 
 = render :partial => "shared/slice", :locals => {:column_section_id => nil, :controller => "articles", :action => "index"}, :collection => @main_column_sections
