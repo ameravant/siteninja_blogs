@@ -4,6 +4,6 @@
     %ul
     -for asset in article.assets
       %li 
-        = link_to asset.name, asset.file.url
-        &mdash;
+        = link_to(asset.name, asset.file.url, :target => "_blank")
+        &ndash;
         = asset.file_file_name
