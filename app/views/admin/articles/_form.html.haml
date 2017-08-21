@@ -70,7 +70,7 @@
       %h2.form-label= f.label :blurb
       .note Displayed on Blog Summary page, under Title. This frequently includes the first paragraph of the Body.
       = f.text_area :blurb, :class => "big-area blurb #{"mceEditor" if @cms_config['site_settings']['wysiwyg_blurb']}", :disabled => @disabled
-    - if current_user.is_super_user and !f.permalink.blank?
+    - if current_user.is_super_user and !@article.permalink.blank?
       %h2.title.form-label= f.label :permalink, "Permalink"
       = f.text_field :permalink, :class => "big-input", :disabled => @no_edit
       .note Modifies permalink.
