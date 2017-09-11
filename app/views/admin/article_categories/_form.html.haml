@@ -3,6 +3,10 @@
   .main-fields
     %h2.form-label= f.label :name
     = f.text_field :name, :class => "big-input", :disabled => @disabled, :placeholder => "Generates the permalink."
+    - if current_user.is_super_user and !@article_category.permalink.blank?
+      %h2.title.form-label= f.label :permalink, "Permalink"
+      = f.text_field :permalink, :class => "big-input", :disabled => @no_edit
+      .note Modifies permalink.
   #main-details.details.options
     - if @cms_config["modules"]["members"]
       = link_to("#{icon("Lock")} Permissions", "#permissions-box", :class => "fancy-inline", :id => "permissions-link") 
