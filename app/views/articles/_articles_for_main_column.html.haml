@@ -69,7 +69,7 @@
     - content_for :head do
       %script{:type => "text/javascript"}
         == $(document).ready(function() {
-        == $('#ajax-articles-#{section.id}').load('article/articles_for_ajax?section_id=#{section.id}');
+        == $('#ajax-articles-#{section.id}').load('/article/articles_for_ajax?section_id=#{section.id}');
         ==});
     
 
