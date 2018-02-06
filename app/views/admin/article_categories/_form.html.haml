@@ -12,7 +12,7 @@
       = link_to("#{icon("Lock")} Permissions", "#permissions-box", :class => "fancy-inline", :id => "permissions-link") 
     %br
     = f.label :main_column_id, "Layout"
-    = collection_select(:article_category, :main_column_id, Column.all(:conditions => {:column_location => "main_column"}), :id, :title, :style => "width: 200px; margin: 0 0 0 0;")
+    = collection_select(:article_category, :main_column_id, Column.all(:conditions => {:column_location => "main_column"}), :id, :title, {:include_blank => "Default Blog Layout"}, :style => "width: 200px; margin: 0 0 0 0;")
 = clear
 %br
 %br

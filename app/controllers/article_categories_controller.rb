@@ -14,7 +14,7 @@ class ArticleCategoriesController < ApplicationController
       @article_category = ArticleCategory.active.find(params[:id])
       @body_id = "article-category-#{path_safe(@article_category.title)}-body"
       @page = Page.find_by_permalink!('blog')# if @article_category.menus.empty?
-      if @article_category.main_column.blank?
+      if @article_category.main_column_id.blank?
         @main_column = ((@page.main_column_id.blank? or Column.find_by_id(@page.main_column_id).blank?) ? Column.first(:conditions => {:title => "Default", :column_location => "main_column"}) : Column.find(@page.main_column_id))
       else
         @main_column = Column.find_by_id(@article_category.main_column_id)
