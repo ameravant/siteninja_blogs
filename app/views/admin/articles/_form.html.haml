@@ -209,7 +209,7 @@
     = f.label :published, "Publish this #{@cms_config['site_settings']['article_title']}"
     = f.label :published_at, "on"
 
-    = f.text_field(:published_at, :value => (@article.published_at.blank? ? Time.now.strftime("%m/%d/%Y %I:%M %p") : @article.published_at.strftime("%m/%d/%Y %I:%M %p")), :class => "datetimepicker")
+    = f.text_field(:published_at, :value => (@article.published_at.blank? ? Time.zone.now.strftime("%m/%d/%Y %I:%M %p %z") : @article.published_at.strftime("%m/%d/%Y %I:%M %p")), :class => "datetimepicker")
 
   - unless current_user.is_contributor_only?
     = f.check_box :social_share
