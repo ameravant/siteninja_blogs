@@ -3,7 +3,7 @@
   =@cms_config['site_settings']['article_title'] ? @cms_config['site_settings']['article_title'].pluralize : "Articles"
 %style
   tr.article-title .notes { display: none; position: absolute; }
-  tr.article-title:hover .notes { display: block; padding: 5px 10px; background: rgba(255,255,255,.9); border-radius: 5px; border: 1px solid white; font-size: .8em; line-height: 1.2em; margin-left: 20px; width: 90%; box-shadow: 0 10px 10px rgba(0,0,0,.5); } 
+  tr.article-title:hover .notes { display: block; padding: 5px 10px; background: rgba(255,255,255,.9); border-radius: 5px; border: 1px solid white; font-size: .8em; line-height: 1.2em; margin-left: 20px; width: 90%; box-shadow: 0 10px 10px rgba(0,0,0,.5); z-index: 2; } 
 %h1= large_icon('Write') + ' ' + yield(:meta_title).strip
 
 %div.box
