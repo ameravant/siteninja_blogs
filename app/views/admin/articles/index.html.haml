@@ -1,7 +1,9 @@
 - @responsive = true
 - content_for :meta_title do
   =@cms_config['site_settings']['article_title'] ? @cms_config['site_settings']['article_title'].pluralize : "Articles"
-
+%style
+  tr.article-title .notes { display: none; position: absolute; }
+  tr.article-title:hover .notes { display: block; padding: 10px; background: rgba(255,255,255,.8); border-radius: 5px; border: 1px solid white; font-size: .9em; margin-left: 20px; width: 90%; } 
 %h1= large_icon('Write') + ' ' + yield(:meta_title).strip
 
 %div.box
@@ -54,6 +56,8 @@
               = link_to h(article.title), article_path(article)
           - if article.article_categories.active.count == 0 and article.article_category.blank?
             %span.small.red= link_to("no category", edit_admin_article_path(article), :class => "red")
+          - if !article.notes.blank?
+            .notes= article.notes
         %td.article-author.detail
           == #{article.person.blank? ? article.author_name : article.person.name}
         %td.article-status.detail
