@@ -2,28 +2,27 @@
 - content_for :meta_title do
   =@cms_config['site_settings']['article_title'] ? @cms_config['site_settings']['article_title'].pluralize : "Articles"
 %style
+  td.article-title { font-size: 1em; }
   tr.article-title .notes { display: none; position: absolute; }
   tr.article-title:hover .notes { display: block; padding: 5px 10px; background: rgba(255,255,255,.9); border-radius: 5px; border: 1px solid white; font-size: .8em; line-height: 1.2em; margin-left: 20px; width: 90%; box-shadow: 0 10px 10px rgba(0,0,0,.5); z-index: 2; } 
-%h1= large_icon('Write') + ' ' + yield(:meta_title).strip
+  ==.article-status.detail a { margin-right: 10px; }
+%h1= '<i class="fas fa-newspaper"></i> ' + yield(:meta_title).strip
 
 %div.box
   .float-right= render :partial => "/shared/search"
   %ul
     %li
       %span.hmenu
-        = icon "Plus", new_admin_article_path(@article)
-        = link_to "Write a new #{@cms_config['site_settings']['article_title']}", new_admin_article_path(@article)
+        = link_to "<i class=\"fas fa-plus-circle\"></i> Write a new #{@cms_config['site_settings']['article_title']}", new_admin_article_path(@article)
         - #%span.desktop-only== as #{current_user.name}
     - if current_user.has_role(["Admin", "Editor"])
       %li
         %span.hmenu
-          = icon "Folder2", admin_article_categories_path
-          = link_to "Manage categories", admin_article_categories_path
+          = link_to("<i class=\"far fa-folder\"></i> Manage categories", admin_article_categories_path)
     - if current_user.has_role(["Admin", "Editor"])
       %li
         %span.hmenu
-          = icon "Rss 1", admin_feeds_path
-          = link_to "Manage RSS Feeds", admin_feeds_path
+          = link_to("<i class=\"fas fa-rss\"></i> Manage RSS Feeds", admin_feeds_path)
   = clear
 %br
 
@@ -35,11 +34,11 @@
     %tr
       %th
       %th.author-header Author
-      %th.status-header Status
-      %th.images-header Images
-      %th.files-header Files
-      %th.comments-header Comments
-      %th.options-header.center{ :style => "width: 65px;" } Options
+      %th.status-header{ :style => "width: 140px;" } Status
+      %th.images-header{ :style => "width: 60px;" } Images
+      %th.files-header{ :style => "width: 60px;" } Files
+      %th.comments-header{ :style => "width: 80px;" } Comments
+      %th.options-header.center{ :style => "width: 100px;" } Options
   - if @articles.total_pages > 1
     %tfoot
       %tr
@@ -62,11 +61,11 @@
           == #{article.person.blank? ? article.author_name : article.person.name}
         %td.article-status.detail
           - if article.published_date_in_past? and article.published?
-            .publish= link_to "Published", article, :class => "green"
-            %div== #{article.published_at.strftime('%b %d, %Y')}
+            %span.publish= link_to "Published", article, :class => "green"
+            == #{article.published_at.strftime('%b %d, %Y')}
           - elsif article.to_be_published?
-            .to-publish Published
-            %div== for #{article.published_at.strftime('%a, %b %d')}
+            %span.to-publish Published
+            == for #{article.published_at.strftime('%a, %b %d')}
           - elsif article.deactivated?
             .pending Pending
           - else
@@ -78,22 +77,18 @@
             = "%d files" % article.assets_count
         -else
           %td
-            = icon "Picture", [:admin, article, :images]
-            = link_to article.images_count, [:admin, article, :images]
+            = link_to("<i class='fas fa-images'></i> #{article.images_count}", [:admin, article, :images])
           %td
             - if article.assets_count < 1
-              = icon "Document", [:new, :admin, article, :asset]
-              = link_to article.assets_count, [:new, :admin, article, :asset]
+              = link_to("<i class=\"far fa-file-alt\"></i> #{article.assets_count}", [:new, :admin, article, :asset])
             - else
-              = icon "Document", [:admin, article, :assets]
-              = link_to article.assets_count, [:admin, article, :assets]
+              = link_to("<i class=\"far fa-file-alt\"></i> #{article.assets_count}", [:admin, article, :assets])
         %td
-          = icon("Discuss", [:admin, article, :comments])
-          = link_to article.comments_count, [:admin, article, :comments]
+          = link_to("<i class='far fa-comments'></i> #{article.comments_count}", [:admin, article, :comments])
         %td.article-options.right
           - if current_user.has_role(["Admin", "Editor"]) and !article.deactivated?
             = feature_icon_select(article, article.title)
-          = icon "Write", edit_admin_article_path(article) if current_user.has_role(["Admin", "Editor", "Author"]) or !article.published?
+          = link_to("<i class='far fa-edit'></i>", edit_admin_article_path(article)) if current_user.has_role(["Admin", "Editor", "Author"]) or !article.published?
           = trash_icon(article, admin_article_path(article), "#{article.title}") if current_user.has_role(["Admin", "Editor", "Author"])
 - if session[:cache] == true
   %iframe{:src => "/admin/columns?cache=true", :style => "height: 1px; border: 0; width: 1px"}
