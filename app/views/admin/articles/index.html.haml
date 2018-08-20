@@ -32,7 +32,7 @@
 %table.article-list.full_width{ :cellspacing => "0" }
   %thead
     %tr
-      %th
+      %th.title-header Title
       %th.author-header Author
       %th.status-header{ :style => "width: 140px;" } Status
       %th.images-header{ :style => "width: 60px;" } Images
@@ -46,7 +46,7 @@
   %tbody
     - for article in @articles do
 
-      %tr[article]{ :class => "#{cycle('odd','even')} #{'from-feed' if !article.source_url.blank?} article-title" }
+      %tr[article]{ :class => "#{'from-feed' if !article.source_url.blank?} article-title" }
         %td.article-title
           %span.hmenu
             - if current_user.has_role(["Admin", "Editor", "Author"]) or !article.published?
