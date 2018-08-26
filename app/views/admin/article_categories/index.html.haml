@@ -19,7 +19,7 @@
       %th{:style => "width:100px;"} Options
   %tbody
     - for article_category in @article_categories do
-      %tr[article_category]{ :class => cycle('odd','even') }
+      %tr[article_category]
         %td= link_to h(article_category.name), edit_admin_article_category_path(article_category)
         %td= number_with_delimiter(article_category.articles.count)
         %td
