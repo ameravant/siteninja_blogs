@@ -56,6 +56,9 @@ class ArticlesController < ApplicationController
     add_breadcrumb @cms_config['site_settings']['blog_title'], 'blog_path'
     add_breadcrumb @article.article_category.title, @article.article_category unless @article.article_category.blank?
     add_breadcrumb '@article.title'
+    if !@article.article_category.blank? && !@article.article_category.meta_robots.blank?
+      @meta_robots = @article.article_category.meta_robots
+    end
   end
 
   def articles_for_ajax

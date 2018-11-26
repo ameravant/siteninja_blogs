@@ -13,6 +13,10 @@
     %br
     = f.label :main_column_id, "Layout"
     = collection_select(:article_category, :main_column_id, Column.all(:conditions => {:column_location => "main_column"}), :id, :title, {:include_blank => "Default Blog Layout"}, :style => "width: 200px; margin: 0 0 0 0;")
+    %br
+    = f.label :meta_robots, "Meta Robots"
+    %br
+    = f.text_field :meta_robots
 = clear
 %br
 %br
