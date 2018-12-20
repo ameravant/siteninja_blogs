@@ -36,6 +36,10 @@ class ArticleCategoriesController < ApplicationController
       @articles = articles.published.uniq.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
       
       add_breadcrumb @article_category.name
+
+      if !@article_category.meta_robots.blank?
+        @meta_robots = @article_category.meta_robots
+      end
     end
     respond_to do |wants|
       wants.html # index.html.erb
