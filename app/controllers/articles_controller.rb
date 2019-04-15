@@ -36,7 +36,12 @@ class ArticlesController < ApplicationController
       # if ActiveRecord::Base.connection.tables.include?("accounts")
       #         @articles = found_articles.reject{|a| a.account_id != $CURRENT_ACCOUNT.id}.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
       #       else
-        @articles = found_articles.paginate(:page => params[:page], :per_page => 10)#, :include => :article_categories)
+      if @cms_config['site_settings']['articles_per_page']
+        per_page = @cms_config['site_settings']['articles_per_page'].to_i
+      else
+        per_page = 10
+      end
+        @articles = found_articles.paginate(:page => params[:page], :per_page => per_page)#, :include => :article_categories)
       # end
       @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
       respond_to do |wants|
