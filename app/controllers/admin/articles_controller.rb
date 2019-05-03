@@ -7,6 +7,7 @@ class Admin::ArticlesController < AdminController
   before_filter :authorize_to_update, :only => [:edit, :update, :destroy]
   def index
     add_breadcrumb @cms_config['site_settings']['blog_title']
+    session[:redirect_path] = admin_articles_path
     if current_user.has_role(["Admin", "Editor", "Moderator"]) # Show all articles regardless of author
       params[:q].blank? ? @all_articles = Article.all : @all_articles = Article.find(:all, :conditions => ["title like ?", "%#{params[:q]}%"])
     else
@@ -91,7 +92,7 @@ class Admin::ArticlesController < AdminController
       flash[:notice] = "Article \"#{@article.title}\" updated."
       log_activity("Updated \"#{@article.title}\"")
       session[:cache] = true
-      redirect_to admin_articles_path
+      redirect_to session[:redirect_path] ? session[:redirect_path] : admin_articles_path
     else
       render :action => "edit"
     end

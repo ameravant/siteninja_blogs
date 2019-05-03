@@ -53,6 +53,11 @@ class ArticlesController < ApplicationController
   end
 
   def show
+
+    @edit_path = [:edit, :admin, @article]
+    @edit_type = "Article"
+    session[:redirect_path] = article_path(@article)
+
     #expires_in 60.minutes, :public => true
     @body_id = "article-#{path_safe(@article.title)}-body"
     @article_category = @article.article_category || @article.article_categories.first
