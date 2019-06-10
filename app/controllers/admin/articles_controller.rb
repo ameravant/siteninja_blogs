@@ -92,7 +92,7 @@ class Admin::ArticlesController < AdminController
       flash[:notice] = "Article \"#{@article.title}\" updated."
       log_activity("Updated \"#{@article.title}\"")
       session[:cache] = true
-      redirect_to session[:redirect_path] ? session[:redirect_path] : admin_articles_path
+      redirect_to params[:redirect_path] ? params[:redirect_path] : admin_articles_path
     else
       render :action => "edit"
     end
