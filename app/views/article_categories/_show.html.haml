@@ -1,2 +1,3 @@
 %h1= h @article_category.name
-= render :partial => "/articles/article_for_list", :collection => @articles
+.list-of-articles
+  = render :partial => "/articles/article_for_list", :collection => @articles
