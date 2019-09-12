@@ -16,12 +16,12 @@
   =="@id": "#{request.url}"
   },
   =="headline": "#{@article.title}",
+  "image": [
   - if @article.images.size > 0
-    "image": [
     == "#{@article.images.first.image.url}"
-    ],
-  =="datePublished": "#{@article.published_at.strftime("%Y-%m-%d")}T#{@article.published_at.strftime("%H:%M:00+08:00")}"
-  =="dateModified": "#{@article.updated_at.strftime("%Y-%m-%d")}T#{@article.updated_at.strftime("%H:%M:00+08:00")}"
+  ],
+  =="datePublished": "#{@article.published_at.strftime("%Y-%m-%d")}T#{@article.published_at.strftime("%H:%M:00+08:00")}",
+  =="dateModified": "#{@article.updated_at.strftime("%Y-%m-%d")}T#{@article.updated_at.strftime("%H:%M:00+08:00")}",
   "author": {
   "@type": "Person",
   =="name": "#{@article.person.blank? ? @article.author_name : @article.person.name}"
@@ -36,6 +36,8 @@
       =="url": "#{@tmplate.logo(:original)}"
     - elsif !@global_template.logo_file_name.blank?
       =="url": "#{@global_template.logo(:original)}"
+    - else
+      =="url": ""
     }
   },
   =="description": "#{@article.blurb}"
