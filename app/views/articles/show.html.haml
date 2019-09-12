@@ -7,6 +7,40 @@
     $(".newcomment").animate({opacity: 1},2000).slideUp("slow");
     };
     });
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "mainEntityOfPage": {
+  "@type": "WebPage",
+  =="@id": "#{request.url}"
+  },
+  =="headline": "#{@article.title}",
+  - if @article.images.size > 0
+    "image": [
+    == "#{@article.images.first.image.url}"
+    ],
+  =="datePublished": "#{@article.published_at.strftime("%Y-%m-%d")}T#{@article.published_at.strftime("%H:%M:00+08:00")}"
+  =="dateModified": "#{@article.updated_at.strftime("%Y-%m-%d")}T#{@article.updated_at.strftime("%H:%M:00+08:00")}"
+  "author": {
+  "@type": "Person",
+  =="name": "#{@article.person.blank? ? @article.author_name : @article.person.name}"
+  },
+  "publisher": {
+  "@type": "Organization",
+  =="name": "#{@cms_config['website']['name']}",
+  - if @tmplate and (!@tmplate.logo_file_name.blank? or !@global_template.logo_file_name.blank?)
+    "logo": {
+    "@type": "ImageObject",
+    - if !@tmplate.logo_file_name.blank?
+      =="url": "#{@tmplate.logo(:original)}"
+    - elsif !@global_template.logo_file_name.blank?
+      =="url": "#{@global_template.logo(:original)}"
+    }
+  },
+  =="description": "#{@article.blurb}"
+  }
+  </script>
 = render :partial => "shared/side_column"
 = error_messages_for "comment", :header_message => "Your comment could not be posted!", :message => nil
 
