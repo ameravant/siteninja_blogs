@@ -108,7 +108,7 @@ class ArticlesController < ApplicationController
     @article_categories = ArticleCategory.active
     @article_archive = Article.published.group_by { |a| [a.published_at.month, a.published_at.year] }
     @article_authors = Person.active.find(:all, :conditions => "articles_count > 0")
-    @article_tags = Article.published.tag_counts.sort_by(&:name)
+    #@article_tags = Article.published.tag_counts.sort_by(&:name)
   end
 
   def authenticate
