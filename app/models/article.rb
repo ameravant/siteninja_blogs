@@ -1,6 +1,6 @@
 class Article < ActiveRecord::Base
   has_permalink :title
-  acts_as_taggable
+  #acts_as_taggable
   belongs_to :article_category
   belongs_to :feed
   has_and_belongs_to_many :article_categories

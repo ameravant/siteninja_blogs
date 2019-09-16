@@ -57,7 +57,7 @@
         document.getElementById('preview_article_person_id').value = document.getElementById('article_person_id').value
     document.getElementById('preview_article_description').value = document.getElementById('article_description').value
     document.getElementById('preview_article_show_description').checked = document.getElementById('article_show_description').checked
-    document.getElementById('preview_article_tag_list').value = document.getElementById('article_tag_list').value
+    -#document.getElementById('preview_article_tag_list').value = document.getElementById('article_tag_list').value
     document.getElementById('submit-preview').click();
     }
 
@@ -124,9 +124,9 @@
         %br
         = f.check_box :show_description
         = f.label :show_description, "Show as byline under Title on Article.", :class => "note"
-      %li
-        = f.label :tag_list, "Tags"
-        = f.text_field :tag_list, :size => 39, :class => "small-input", :placeholder => "Tag 1, Tag 2, etc..."
+      -#%li
+      -#  = f.label :tag_list, "Tags"
+      -#  = f.text_field :tag_list, :size => 39, :class => "small-input", :placeholder => "Tag 1, Tag 2, etc..."
 
   .clear
   #body-wrapper
