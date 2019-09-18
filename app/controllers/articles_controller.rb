@@ -9,20 +9,25 @@ class ArticlesController < ApplicationController
   def index
     #expires_in 60.minutes, :public => true
       @body_id = "articles-index-body"
+      if @cms_config['site_settings']['articles_per_page'] and @cms_config['site_settings']['articles_per_page'] != ""
+        per_page = @cms_config['site_settings']['articles_per_page'].to_i
+      else
+        per_page = 10
+      end
       if !params[:tag].blank?
         # Filter articles by tag
-        found_articles = Article.published.find_tagged_with(params[:tag])
+        @articles = Article.published.find_tagged_with(params[:tag]).paginate(:page => params[:page], :per_page => per_page)
         add_breadcrumb "#{@cms_config['site_settings']['blog_title']}", articles_path
         add_breadcrumb params[:tag]
       elsif !params[:author].blank?
         # Filter articles by user
         @author = Person.find(params[:author])
-        found_articles = @author.articles.published
+        @articles = @author.articles.published.paginate(:page => params[:page], :per_page => per_page)
         add_breadcrumb @cms_config['site_settings']['blog_title'], articles_path
         add_breadcrumb @author.name
       elsif !params[:month].blank? and !params[:year].blank?
           # Filter articles by month published
-          found_articles = Article.published_in_month(params[:month].to_i, params[:year].to_i)
+          @articles = Article.published_in_month(params[:month].to_i, params[:year].to_i).paginate(:page => params[:page], :per_page => per_page)
           add_breadcrumb "#{@cms_config['site_settings']['blog_title']}", articles_path
           add_breadcrumb "#{Date::MONTHNAMES[params[:month].to_i]} #{params[:year]}"
       else
@@ -30,26 +35,21 @@ class ArticlesController < ApplicationController
         #if MULTI_TENANT
         #  found_articles = Account.find($CURRENT_ACCOUNT.id).articles.published
         #else
-          found_articles = Article.published.reject{|x| x.published != true}
+          @articles = Article.published.reject{|x| x.published != true}.paginate(:page => params[:page], :per_page => per_page)
         #end
       end
       # if ActiveRecord::Base.connection.tables.include?("accounts")
       #         @articles = found_articles.reject{|a| a.account_id != $CURRENT_ACCOUNT.id}.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
       #       else
-      if @cms_config['site_settings']['articles_per_page'] and @cms_config['site_settings']['articles_per_page'] != ""
-        per_page = @cms_config['site_settings']['articles_per_page'].to_i
-      else
-        per_page = 10
-      end
-        @articles = found_articles.paginate(:page => params[:page], :per_page => per_page)#, :include => :article_categories)
+      
+        #@articles = found_articles.paginate(:page => params[:page], :per_page => per_page)#, :include => :article_categories)
       # end
-      @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
+      #@side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true})
       respond_to do |wants|
         wants.html # index.html.erb
         wants.xml { render :xml => @articles.to_xml }
         wants.rss { render :layout => false } # uses index.rss.builder
       end
-
   end
 
   def show
@@ -61,7 +61,7 @@ class ArticlesController < ApplicationController
     #expires_in 60.minutes, :public => true
     @body_id = "article-#{path_safe(@article.title)}-body"
     @article_category = @article.article_category || @article.article_categories.first
-    @article.article_category.blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => @article.article_category.column_id, :visible => true})
+    #@article.article_category.blank? ? @side_column_sections = ColumnSection.all(:conditions => {:column_id => @page.column_id, :visible => true}) : @side_column_sections = ColumnSection.all(:conditions => {:column_id => @article.article_category.column_id, :visible => true})
     @images = @article.images
     add_breadcrumb @cms_config['site_settings']['blog_title'], 'blog_path'
     add_breadcrumb @article.article_category.title, @article.article_category unless @article.article_category.blank?
