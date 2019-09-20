@@ -44,7 +44,7 @@ class Admin::ArticlesController < AdminController
   end
 
   def create
-    expire_fragment(/article\S*/)
+    #expire_fragment(/article\S*/)
     #expire_fragment(/cache_articles_for_main_column_\S*/)
     # The following line allows an Editor or Administrator to save an article as a different person
     @editor ? (@article = Article.new(params[:article])) : (@article = current_user.person.articles.build(params[:article]))
@@ -75,7 +75,7 @@ class Admin::ArticlesController < AdminController
   end
 
   def update
-    expire_fragment(/article\S*/)
+    #expire_fragment(/article\S*/)
     #expire_fragment(/cache_articles_for_main_column_\S*/)
     unless @article.person.blank?
       if !@article.person.user.has_role('Author')
@@ -103,7 +103,7 @@ class Admin::ArticlesController < AdminController
   end
 
   def destroy
-    expire_fragment(/article\S*/)
+    #expire_fragment(/article\S*/)
     #expire_fragment(/cache_articles_for_main_column_\S*/)
     @article.destroy
     respond_to :js
