@@ -77,6 +77,7 @@ class Admin::ArticlesController < AdminController
   def update
     #expire_fragment(/article\S*/)
     #expire_fragment(/cache_articles_for_main_column_\S*/)
+    expire_fragment(:controller => "articles", :action => "index", :action_suffix => @article)
     unless @article.person.blank?
       if !@article.person.user.has_role('Author')
        @possible_authors << @article.person
@@ -85,7 +86,7 @@ class Admin::ArticlesController < AdminController
     params[:article][:article_category_ids] ||= []
     params[:article][:article_category_ids] << @article.article_category_id unless @article.article_category_id.blank?
     if @article.update_attributes(params[:article])
-      #This is to remove product from categories if there are none selected
+      #This is to remove article from categories if there are none selected
       if !params[:article].has_key?("article_category_ids")
         @article.article_categories = []
         @article.save
@@ -105,6 +106,7 @@ class Admin::ArticlesController < AdminController
   def destroy
     #expire_fragment(/article\S*/)
     #expire_fragment(/cache_articles_for_main_column_\S*/)
+    expire_fragment(:controller => "articles", :action => "index", :action_suffix => @article)
     @article.destroy
     respond_to :js
   end
@@ -195,4 +197,6 @@ class Admin::ArticlesController < AdminController
     @possible_authors = @possible_authors.uniq
   end
 end
+
+
 
