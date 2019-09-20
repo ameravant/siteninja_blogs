@@ -76,7 +76,7 @@ class Admin::ArticlesController < AdminController
 
   def update
     expire_fragment(/article\S*/)
-    expire_fragment(/cache_articles_for_main_column_\S*/)
+    #expire_fragment(/cache_articles_for_main_column_\S*/)
     unless @article.person.blank?
       if !@article.person.user.has_role('Author')
        @possible_authors << @article.person
