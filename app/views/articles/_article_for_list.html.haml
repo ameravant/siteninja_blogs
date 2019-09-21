@@ -1,4 +1,4 @@
-- cache(:action => "index", :action_suffix => "article-#{article_for_list.id}") do
+- cache(:controller => "articles", :action => "index", :action_suffix => "article-#{article_for_list.id}") do
   - if article_for_list.importance == "Small"
     - template = Liquid::Template.parse(@tmplate.small_article_for_index.gsub('article.author', 'author'))
   - elsif article_for_list.importance == "Medium"
