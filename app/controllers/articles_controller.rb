@@ -88,6 +88,7 @@ class ArticlesController < ApplicationController
   end
 
   def find_page
+    render_404 if params[:page] == "../"
     @page = Page.find_by_permalink!('blog')
     @body_class = "blog-body"
     @tmplate = @page.template unless @page.template.blank?

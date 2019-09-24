@@ -55,6 +55,7 @@ class ArticleCategoriesController < ApplicationController
   end
 
   def find_page
+    render_404 if params[:page] == "../"
     @footer_pages = Page.find(:all, :conditions => {:show_in_footer => true}, :order => :footer_pos )
     #@page = Page.find_by_permalink!('blog')
   end
