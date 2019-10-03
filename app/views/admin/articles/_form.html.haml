@@ -143,6 +143,7 @@
           - unless @article.id.blank?
             = link_to("#{icon('Picture')} Insert Attached Image", admin_article_images_path(@article, :fancy => "true"), :class => "fancy-iframe")
           = render :partial => "admin/shared/asset_options"
+          = render :partial => "admin/shared/insert_link"
           = render :partial => "admin/shared/insert_map"
           = render :partial => "admin/shared/insert_youtube"
       .body-wrapper-inner
