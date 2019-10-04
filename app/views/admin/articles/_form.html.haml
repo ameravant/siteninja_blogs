@@ -156,6 +156,12 @@
       %h2= f.label :notes
       %span.note Will not be shown publicly. Use to save page content while editing.
       = f.text_area :notes, :size => "85x40", :class => "mceEditor"
+    - content_for :post_footer do
+      %script{:type => "text/javascript"}
+        jQuery("#add-links").click(function() {
+        setupLinkFields("article_body");
+        })
+        
     - content_for :head do
       %script{:type => "text/javascript"}
         jQuery(document).ready(function() {
