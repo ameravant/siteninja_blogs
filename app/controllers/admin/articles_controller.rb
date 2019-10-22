@@ -9,7 +9,7 @@ class Admin::ArticlesController < AdminController
     if params[:clear_cache]
       for article in Article.all
         begin
-          expire_fragment("article-for-list-#{@article.id}")
+          expire_fragment("article-for-list-#{article.id}")
         rescue
           # Do Nothing
         end
