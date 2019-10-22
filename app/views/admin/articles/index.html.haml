@@ -23,6 +23,9 @@
       %li
         %span.hmenu
           = link_to("<i class=\"fas fa-rss\"></i> Manage RSS Feeds", admin_feeds_path)
+    %li
+      %span.hmenu
+        = link_to("<i class=\"fas fa-save\"></i> Clear Article Cache", admin_articles_path(:params => {:clear_cache => true}))
   = clear
 %br
 

@@ -6,6 +6,17 @@ class Admin::ArticlesController < AdminController
   before_filter :find_article_categories_and_check_roles, :only => [ :new, :create, :edit, :update ]
   before_filter :authorize_to_update, :only => [:edit, :update, :destroy]
   def index
+    if params[:clear_cache]
+      for article in Article.all
+        begin
+          expire_fragment("article-for-list-#{@article.id}")
+        rescue
+          # Do Nothing
+        end
+      end
+      flash[:notice] = "Article fragment caches cleared."
+      redirect_to admin_articles_path
+    end
     add_breadcrumb @cms_config['site_settings']['blog_title']
     session[:redirect_path] = admin_articles_path
     if current_user.has_role(["Admin", "Editor", "Moderator"]) # Show all articles regardless of author
