@@ -86,11 +86,10 @@
             = f.label :author_name, "Author"
             %br
             = f.text_field :author_name, :disabled => true
-          - elsif @possible_authors.empty?
-            = f.label :author_name, "Author"
+          - else @possible_authors.empty?
+            = f.label :author_name, "Author (Write-in)"
             %br
             = f.text_field :author_name
-          - else
             = f.label :person_id, "Author"
             %br
             = f.select :person_id, @possible_authors.collect {|p| [p.name, p.id]}, :selected => (@article.new_record? ? current_user.person_id : @article.person_id)

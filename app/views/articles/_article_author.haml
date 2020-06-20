@@ -1,4 +1,4 @@
-- if article.person.blank?
+- if !article.author_name.blank?
   = article.author_name
 - else
   - if CMS_CONFIG['modules']['profiles']
