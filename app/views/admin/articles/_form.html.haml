@@ -110,13 +110,6 @@
                 = label_tag dom_id(article_category), "#{article_category.name}"
         = clear
       %li
-        = f.label :importance, "Importance"
-        = f.select :importance, options_for_select(["Small", "Medium", "Large"], :selected => @article.importance)
-        = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "Importance determines how large the article summary is. An article with \"Small\" importance will not display an image on the summary page, while an article with \"Large\" importance will display a large image."}
-        %br
-        = f.check_box :display_cover_image
-        = f.label :display_cover_image, "Display Cover Image.", :class => "note"
-      %li
         = f.label :description, "Short Description"
         = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "The Short Description is used for the Meta Description, the side column short description under the title, and the feature box description of the article. In addition, the checkbox beneath this field enables the description to be displayed as a byline underneath the Title on the article's page."}
         = f.text_area :description, :class => "small-area"
@@ -126,6 +119,27 @@
       -#%li
       -#  = f.label :tag_list, "Tags"
       -#  = f.text_field :tag_list, :size => 39, :class => "small-input", :placeholder => "Tag 1, Tag 2, etc..."
+      %li
+        
+        = f.check_box :display_author
+        = f.label :display_author, "Display Author", :class => "note"
+        %br
+        = f.check_box :display_date
+        = f.label :display_date, "Display Date", :class => "note"
+        %br
+        = f.check_box :display_time
+        = f.label :display_time, "Display Time", :class => "note"
+        %br
+        = f.check_box :display_categories
+        = f.label :display_categories, "Display Categories", :class => "note"
+        %br
+        = f.check_box :display_cover_image
+        = f.label :display_cover_image, "Display Cover Image.", :class => "note"
+        %br
+        = f.label :importance, "Importance"
+        = f.select :importance, options_for_select(["Small", "Medium", "Large"], :selected => @article.importance)
+        = render :partial => 'admin/shared/help_tip', :locals =>{:tip_headline => "", :tip_text => "Importance determines how large the article summary is. An article with \"Small\" importance will not display an image on the summary page, while an article with \"Large\" importance will display a large image."}
+        %br
 
   .clear
   #body-wrapper
