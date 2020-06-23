@@ -121,7 +121,7 @@ class Article < ActiveRecord::Base
   
   if RAILS_ENV == "production"
     def to_liquid
-      {'title' => self.title, 'comments_count' => self.comments_count, 'description' => self.description, 'blurb' => self.blurb, 'body' => self.body, 'show_description' => self.show_description, 'path' => self.path, 'list_of_article_categories' => self.list_of_article_categories, 'date' => self.date, 'time' => self.time, 'article_categories' => self.article_categories, 'author' => self.author, 'image_path' => self.image_path, 'large_image_path' => self.large_image_path, 'original_image_path' => self.original_image_path }
+      {'title' => self.title, 'comments_count' => self.comments_count, 'description' => self.description, 'blurb' => self.blurb, 'body' => self.body, 'show_description' => self.show_description, 'path' => self.path, 'list_of_article_categories' => self.list_of_article_categories, 'date' => self.date, 'time' => self.time, 'article_categories' => self.article_categories, 'author' => self.author, 'image_path' => self.image_path, 'image_title' => self.image_title, 'large_image_path' => self.large_image_path, 'original_image_path' => self.original_image_path }
     end
   end
 end
