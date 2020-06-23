@@ -58,6 +58,13 @@ class Article < ActiveRecord::Base
     end
   end
   
+  
+  def image_title
+    if self.images_count > 0
+      output = self.images.first.image.title
+    end
+  end
+
   def large_image_path
     if self.images_count > 0
       output = self.images.first.image.url(:slide)
