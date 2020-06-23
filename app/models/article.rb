@@ -61,7 +61,7 @@ class Article < ActiveRecord::Base
   
   def image_title
     if self.images_count > 0
-      output = self.images.first.image.title
+      output = self.images.first.title
     end
   end
 
