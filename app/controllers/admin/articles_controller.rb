@@ -118,6 +118,7 @@ class Admin::ArticlesController < AdminController
     #expire_fragment(/article\S*/)
     #expire_fragment(/cache_articles_for_main_column_\S*/)
     expire_fragment(:controller => "articles", :action => "index", :action_suffix => @article)
+    log_activity("Deleted \"#{@article.title}\"")
     @article.destroy
     respond_to :js
   end

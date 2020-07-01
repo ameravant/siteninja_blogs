@@ -44,6 +44,7 @@ class Admin::ArticleCategoriesController < AdminController
   end
 
   def destroy
+    log_activity("Deleted \"#{@article_category.title}\"")
     @article_category.update_attribute(:active, false)
     respond_to :js
   end
