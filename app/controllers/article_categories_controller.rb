@@ -12,6 +12,11 @@ class ArticleCategoriesController < ApplicationController
       #expires_in 60.minutes, :public => true
       @body_class = "blog-body"
       @article_category = ArticleCategory.active.find(params[:id])
+      if @cms_config['site_settings']['articles_per_page'] and @cms_config['site_settings']['articles_per_page'] != ""
+        per_page = @cms_config['site_settings']['articles_per_page'].to_i
+      else
+        per_page = 10
+      end
       @body_id = "article-category-#{path_safe(@article_category.title)}-body"
       @page = Page.find_by_permalink!('blog')# if @article_category.menus.empty?
       if @article_category.main_column_id.blank?
@@ -33,7 +38,7 @@ class ArticleCategoriesController < ApplicationController
       
       articles = @article_category.articles
       #articles << Article.all(:conditions => {:article_category_id => @article_category.id})
-      @articles = articles.published.uniq.paginate(:page => params[:page], :per_page => 10, :include => :article_categories)
+      @articles = articles.published.uniq.paginate(:page => params[:page], :per_page => per_page, :include => :article_categories)
       
       add_breadcrumb @article_category.name
 
