@@ -16,7 +16,7 @@
     - form_tag(request.path, :method => "get", :id => "search_form") do
       - fields_for :search do |f|
         = tag(:input, :id => "search", :name => "q", :type => "search", :size => "25", :value => (params[:q] ? params[:q] : nil), :autosave => "site-ninja.com", :results => 10, :placeholder => "Search Articles")
-        = f.select(:article_category_id, ([['- Filter by Category -','']] + ArticleCategory.all.collect {|p| [p.title, p.id] }), :selected => params[:search][:article_category_id].to_i)
+        = f.select(:article_category_id, ([['- Filter by Category -','']] + ArticleCategory.all.collect {|p| [p.title, p.id] }), :selected => params[:search] ? params[:search][:article_category_id].to_i : nil)
         = hidden_field_tag :fancy, params[:fancy]
         = submit_tag "Search"
         - unless params[:q].blank?
@@ -48,7 +48,7 @@
 
 - if !params[:q].blank?
   %h2== Found #{pluralize @all_articles.size, "article"}.
-- elsif !params[:search][:article_category_id].blank?
+- elsif params[:search] and !params[:search][:article_category_id].blank?
   %h2==#{ArticleCategory.find(params[:search][:article_category_id].to_i).title} Articles
 
 
