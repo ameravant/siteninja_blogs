@@ -1,3 +1,4 @@
+
 - @responsive = true
 - content_for :meta_title do
   =@cms_config['site_settings']['article_title'] ? @cms_config['site_settings']['article_title'].pluralize : "Articles"
@@ -5,11 +6,27 @@
   td.article-title { font-size: 1em; }
   tr.article-title .notes { display: none; position: absolute; }
   tr.article-title:hover .notes { display: block; padding: 5px 10px; background: rgba(255,255,255,.9); border-radius: 5px; border: 1px solid white; font-size: .8em; line-height: 1.2em; margin-left: 20px; width: 90%; box-shadow: 0 10px 10px rgba(0,0,0,.5); z-index: 2; } 
+  ==#search_article_category_id { height: 33px; border: 1px solid rgba(0,0,0,.2); border-radius: 100px; text-align: center; padding: 0 5px; }
+  ==.box #search { width: 172px; }
   ==.article-status.detail a { margin-right: 10px; }
 %h1= '<i class="fas fa-newspaper"></i> ' + yield(:meta_title).strip
 
 %div.box
-  .float-right= render :partial => "/shared/search"
+  .float-right
+    - form_tag(request.path, :method => "get", :id => "search_form") do
+      - fields_for :search do |f|
+        = tag(:input, :id => "search", :name => "q", :type => "search", :size => "25", :value => (params[:q] ? params[:q] : nil), :autosave => "site-ninja.com", :results => 10, :placeholder => "Search Articles")
+        = f.select(:article_category_id, ([['- Filter by Category -','']] + ArticleCategory.all.collect {|p| [p.title, p.id] }), :selected => params[:search][:article_category_id].to_i)
+        = hidden_field_tag :fancy, params[:fancy]
+        = submit_tag "Search"
+        - unless params[:q].blank?
+          = link_to "clear search", request.path + "?fancy=" + params[:fancy]
+
+    - content_for :head do
+      %script
+        Event.observe(window, 'load', function() {
+        $('search').select();
+        })
   %ul
     %li
       %span.hmenu
@@ -29,8 +46,11 @@
   = clear
 %br
 
-- unless params[:q].blank?
+- if !params[:q].blank?
   %h2== Found #{pluralize @all_articles.size, "article"}.
+- elsif !params[:search][:article_category_id].blank?
+  %h2==#{ArticleCategory.find(params[:search][:article_category_id].to_i).title} Articles
+
 
 %table.article-list.full_width{ :cellspacing => "0" }
   %thead

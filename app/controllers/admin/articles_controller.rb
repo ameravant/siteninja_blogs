@@ -20,7 +20,11 @@ class Admin::ArticlesController < AdminController
     add_breadcrumb @cms_config['site_settings']['blog_title']
     session[:redirect_path] = admin_articles_path
     if current_user.has_role(["Admin", "Editor", "Moderator"]) # Show all articles regardless of author
-      params[:q].blank? ? @all_articles = Article.all : @all_articles = Article.find(:all, :conditions => ["title like ?", "%#{params[:q]}%"])
+      if params[:search][:article_category_id]
+        params[:q].blank? ? @all_articles = Article.all.reject{|x| !x.article_category_ids.include?(params[:search][:article_category_id].to_i)} : @all_articles = Article.find(:all, :conditions => ["title like ?", "%#{params[:q]}%"]).reject{|x| !x.article_category_ids.include?(params[:search][:article_category_id].to_i)}
+      else
+        params[:q].blank? ? @all_articles = Article.all : @all_articles = Article.find(:all, :conditions => ["title like ?", "%#{params[:q]}%"])
+      end
     else
       params[:q].blank? ? @all_articles = Article.all(:conditions => {:person_id => current_user.person.id}) : @all_articles = Article.find(:all, :conditions => ["title like ?", "%#{params[:q]}%"])
     end
