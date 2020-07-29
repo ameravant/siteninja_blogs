@@ -54,7 +54,7 @@ class ArticlesController < ApplicationController
 
   def show
 
-    @edit_path = [:edit, :admin, @article]
+    @edit_path = edit_admin_article_path(@article, :params => {:redirect_path => request.request_uri})#[:edit, :admin, @article]
     @edit_type = "Article"
     session[:redirect_path] = article_path(@article)
 
