@@ -15,6 +15,8 @@
         - articles = @articles_for_main_column.uniq[0..count-1]
       - elsif section.primary_category == true and @article
         - articles = Article.published.reject{|a| (a.article_category_id != @article.article_category_id)}.reject{|a| (a.permalink == @article.permalink)}[0..count-1]
+      - elsif section.article_categories.size == 1
+        - articles = ArticleCategory.find(section.article_categories.first.id).articles.published.find(:all, :limit => count)
       - else
         - articles = @articles_for_main_column.reject{|a| (a.article_category_ids & categories).empty?}.uniq[0..count-1]#.reject{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)})}[0..count-1]# or categories.include?(a.article_category_id)
     - else
@@ -48,6 +50,8 @@
         - found_articles = Article.published.reject{|a| (a.article_category_id != @article.article_category_id)}.reject{|a| (a.permalink == @article.permalink)}[0..count-1]
       - elsif categories.size == 1
         - found_articles = ArticleCategory.find(categories.first).articles.published.uniq[0..count-1]
+      - elsif section.article_categories.size == 1
+        - found_articles = ArticleCategory.find(section.article_categories.first.id).articles.published.find(:all, :limit => count)
       - else
         - found_articles = @articles_for_main_column.reject{|a| (a.article_category_ids & categories).empty?}.uniq[0..count-1]#{|a| !(a.article_category_ids.any? {|ac| categories.include?(ac)})}
     - else
