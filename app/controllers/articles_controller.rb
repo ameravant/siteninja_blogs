@@ -14,12 +14,13 @@ class ArticlesController < ApplicationController
       else
         per_page = 10
       end
-      if !params[:tag].blank?
-        # Filter articles by tag
-        @articles = Article.published.find_tagged_with(params[:tag]).paginate(:page => params[:page], :per_page => per_page)
-        add_breadcrumb "#{@cms_config['site_settings']['blog_title']}", articles_path
-        add_breadcrumb params[:tag]
-      elsif !params[:author].blank?
+      # if !params[:tag].blank?
+      #   # Filter articles by tag
+      #   @articles = Article.published.find_tagged_with(params[:tag]).paginate(:page => params[:page], :per_page => per_page)
+      #   add_breadcrumb "#{@cms_config['site_settings']['blog_title']}", articles_path
+      #   add_breadcrumb params[:tag]
+      # els
+      if !params[:author].blank?
         # Filter articles by user
         @author = Person.find(params[:author])
         @articles = @author.articles.published.paginate(:page => params[:page], :per_page => per_page)
