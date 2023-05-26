@@ -35,14 +35,18 @@
     - if current_user.has_role(["Admin", "Editor"])
       %li
         %span.hmenu
-          = link_to("<i class=\"far fa-folder\"></i> Manage categories", admin_article_categories_path)
+          = link_to("<i class=\"far fa-folder\"></i> Categories", admin_article_categories_path)
     - if current_user.has_role(["Admin", "Editor"])
       %li
         %span.hmenu
-          = link_to("<i class=\"fas fa-rss\"></i> Manage RSS Feeds", admin_feeds_path)
+          = link_to("<i class=\"fas fa-rss\"></i> RSS Feeds", admin_feeds_path)
     %li
       %span.hmenu
-        = link_to("<i class=\"fas fa-save\"></i> Clear Article Cache", admin_articles_path(:params => {:clear_cache => true}))
+        = link_to("<i class=\"fas fa-save\"></i> Clear Cache", admin_articles_path(:params => {:clear_cache => true}))
+    %li
+      %span.hmenu
+        = link_to("<i class=\"fas fa-save\"></i> Export CSV", admin_article_path(Article.first, :params => {:render => true}))
+    %li
   = clear
 %br
 

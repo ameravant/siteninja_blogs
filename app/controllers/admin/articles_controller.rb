@@ -5,30 +5,94 @@ class Admin::ArticlesController < AdminController
   before_filter :find_article, :only => [ :edit, :update, :destroy, :reorder, :show ]
   before_filter :find_article_categories_and_check_roles, :only => [ :new, :create, :edit, :update ]
   before_filter :authorize_to_update, :only => [:edit, :update, :destroy]
+  require 'fastercsv'
+  require 'csv'
+
+  def save_render
+    article = Article.find(params[:article][:id])
+    article.update_attributes(:rendered_body => params[:article][:rendered_body])
+    if article == Article.last
+      redirect_to ("/admin/articles?csv=true")
+    else
+      next_article = Article.first(:conditions => ['created_at < ?', article.created_at])
+      redirect_to("/admin/articles/#{next_article.id}-#{next_article.permalink}?render=true")
+    end
+  end
+
   def index
-    if params[:clear_cache]
-      for article in Article.all
-        begin
-          expire_fragment("article-for-list-#{article.id}")
-        rescue
-          # Do Nothing
+    if params[:csv]
+      redirect_to("/admin/articles.csv")
+    else
+      if params[:clear_cache]
+        for article in Article.all
+          begin
+            expire_fragment("article-for-list-#{article.id}")
+          rescue
+            # Do Nothing
+          end
+        end
+        flash[:notice] = "Article fragment caches cleared."
+        redirect_to admin_articles_path
+      end
+      add_breadcrumb @cms_config['site_settings']['blog_title']
+      session[:redirect_path] = admin_articles_path
+      if current_user.has_role(["Admin", "Editor", "Moderator"]) # Show all articles regardless of author
+        if params[:search] and !params[:search][:article_category_id].blank?
+          params[:q].blank? ? @all_articles = Article.all.reject{|x| !x.article_category_ids.include?(params[:search][:article_category_id].to_i)} : @all_articles = Article.find(:all, :conditions => ["title like ?", "%#{params[:q]}%"]).reject{|x| !x.article_category_ids.include?(params[:search][:article_category_id].to_i)}
+        else
+          params[:q].blank? ? @all_articles = Article.all : @all_articles = Article.find(:all, :conditions => ["title like ?", "%#{params[:q]}%"])
+        end
+      else
+        params[:q].blank? ? @all_articles = Article.all(:conditions => {:person_id => current_user.person.id}) : @all_articles = Article.find(:all, :conditions => ["title like ?", "%#{params[:q]}%"])
+      end
+      @articles = @all_articles.paginate(:page => params[:page], :per_page => 50)
+
+
+      # Export CSV
+      respond_to do |wants|
+        require 'fastercsv'
+        wants.html
+        wants.csv do
+          @outfile = "articles_" + Time.now.strftime("%Y-%m-%d-%H-%M-%S") + ".csv"
+          csv_data = FasterCSV.generate do |csv|
+            csv << ["ID", "Title", "Content", "Excerpt", "Date", "Post Type", "Permalink", "Image URL", "Image Title", "Image Caption", "Image Description", "Image Alt Text", "Image Featured", "Attachment URL", "Categories", "Status", "Author ID", "Author Username", "Author Email", "Author First Name", "Author Last Name", "Slug", "Comment Status", "Ping Status", "Post Modified Date"]#, "images_count", "assets_count", "features_count"]
+            @all_articles.each do |article|
+              i = Image.first(:conditions => {:viewable_id => article.id, :viewable_type => "Article", :show_as_cover_image => true})
+              if !i.blank?
+                image_url = i.image(:original)
+                image_title = i.title
+                image_caption = i.caption
+                image_description = i.description
+              else
+                image_url = ""
+                image_title = ""
+                image_caption = ""
+                image_description = ""
+              end
+              status = article.published ? "publish" : "draft"
+              if !article.person.blank?
+                author_id = article.person.id
+                author_username = article.person.user.login
+                author_email = article.person.email
+                author_first_name = article.person.first_name
+                author_last_name = article.person.last_name
+              else
+                author_id = ""
+                author_username = ""
+                author_email = ""
+                author_first_name = article.author_name
+              end
+              csv << [article.id, article.title, article.rendered_body.gsub('data-src', 'src'), article.blurb, article.published_at.strftime("%Y-%m-%d %H:%M:%S"), "post", article_url(article), image_url, image_title, image_caption, image_description, image_title, image_url, "", article.article_categories.collect{|ac| ac.title}.join('|'), status, author_id, author_username, author_email, author_first_name, author_last_name, article.permalink, "closed", "closed", article.updated_at.strftime("%Y-%m-%d %H:%M:%S")]
+            end
+          end
+          send_data csv_data,
+          :type => 'text/csv; charset=iso-8859-1; header=present',
+          :disposition => "attachment; filename=#{@outfile}"
+          flash[:notice] = "Export complete!"
         end
       end
-      flash[:notice] = "Article fragment caches cleared."
-      redirect_to admin_articles_path
-    end
-    add_breadcrumb @cms_config['site_settings']['blog_title']
-    session[:redirect_path] = admin_articles_path
-    if current_user.has_role(["Admin", "Editor", "Moderator"]) # Show all articles regardless of author
-      if params[:search] and !params[:search][:article_category_id].blank?
-        params[:q].blank? ? @all_articles = Article.all.reject{|x| !x.article_category_ids.include?(params[:search][:article_category_id].to_i)} : @all_articles = Article.find(:all, :conditions => ["title like ?", "%#{params[:q]}%"]).reject{|x| !x.article_category_ids.include?(params[:search][:article_category_id].to_i)}
-      else
-        params[:q].blank? ? @all_articles = Article.all : @all_articles = Article.find(:all, :conditions => ["title like ?", "%#{params[:q]}%"])
-      end
-    else
-      params[:q].blank? ? @all_articles = Article.all(:conditions => {:person_id => current_user.person.id}) : @all_articles = Article.find(:all, :conditions => ["title like ?", "%#{params[:q]}%"])
-    end
-    @articles = @all_articles.paginate(:page => params[:page], :per_page => 50)
+  end
+
   end
 
   def show

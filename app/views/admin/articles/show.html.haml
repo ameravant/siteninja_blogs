@@ -1,7 +1,14 @@
-- content_for :head do
-  = stylesheet_link_tag "http://trentrichardson.com/examples/timepicker/css/ui-lightness/jquery-ui-1.8.6.custom.css"
-  = javascript_include_tag "http://trentrichardson.com/examples/timepicker/js/jquery-ui-timepicker-addon.js"
-  :javascript
-    jQuery(document).ready(function($) {
-    $('#test').datetimepicker();  
-    });
+
+- if params[:render]
+  %h2 Preparing Articles...
+  = form_tag("/admin/articles/save_render", :method => "put", :id => "update_render", :style => "display: none;")
+  = render :partial => "render"
+  </form>
+- else
+  - content_for :head do
+    = stylesheet_link_tag "http://trentrichardson.com/examples/timepicker/css/ui-lightness/jquery-ui-1.8.6.custom.css"
+    = javascript_include_tag "http://trentrichardson.com/examples/timepicker/js/jquery-ui-timepicker-addon.js"
+    :javascript
+      jQuery(document).ready(function($) {
+      $('#test').datetimepicker();  
+      });
