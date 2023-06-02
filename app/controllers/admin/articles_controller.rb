@@ -59,6 +59,8 @@ class Admin::ArticlesController < AdminController
             @all_articles.each do |article|
               article_body = article.rendered_body.blank? ? article.body : article.rendered_body.gsub('data-src', 'src')
               i = Image.first(:conditions => {:viewable_id => article.id, :viewable_type => "Article", :show_as_cover_image => true})
+              i = Image.first(:conditions => {:viewable_id => article.id, :viewable_type => "Article", :show_in_image_box => true}) if i.blank?
+              i = Image.first(:conditions => {:viewable_id => article.id, :viewable_type => "Article", :show_in_slideshow => true}) if i.blank?
               if !i.blank?
                 image_url = i.image(:original)
                 image_title = i.title
