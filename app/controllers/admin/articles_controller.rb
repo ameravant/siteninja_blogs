@@ -86,7 +86,7 @@ class Admin::ArticlesController < AdminController
                 author_email = ""
                 author_first_name = article.author_name
               end
-              csv << [article.id, article.title, article_body, article.blurb, article.published_at.strftime("%Y-%m-%d %H:%M:%S"), "post", article_url(article), image_url, image_title, image_caption, image_description, image_title, image_url, "", article.article_categories.collect{|ac| ac.title}.join(','), status, author_id, author_username, author_email, author_first_name, author_last_name, {article.permalink}, "closed", "closed", article.updated_at.strftime("%Y-%m-%d %H:%M:%S")]
+              csv << [article.id, article.title, article_body, article.blurb, article.published_at.strftime("%Y-%m-%d %H:%M:%S"), "post", article_url(article), images.collect{|i| i.image(:original)}.join(','), images.collect{|i| i.title}.join(','), images.collect{|i| i.caption}.join(','), images.collect{|i| i.description}.join(','), images.collect{|i| i.title}.join(','), image_url, "", article.article_categories.collect{|ac| ac.title}.join(','), status, author_id, author_username, author_email, author_first_name, author_last_name, article.permalink, "closed", "closed", article.updated_at.strftime("%Y-%m-%d %H:%M:%S")]
             end
           end
           send_data csv_data,
