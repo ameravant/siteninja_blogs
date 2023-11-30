@@ -14,8 +14,12 @@ class Admin::ArticlesController < AdminController
     if article == Article.last
       redirect_to ("/admin/articles?csv=true")
     else
-      next_article = Article.first(:conditions => ['created_at < ?', article.created_at])
-      redirect_to("/admin/articles/#{next_article.id}-#{next_article.permalink}?render=true")
+      begin
+        next_article = Article.first(:conditions => ['created_at < ?', article.created_at])
+        redirect_to("/admin/articles/#{next_article.id}-#{next_article.permalink}?render=true")
+      rescue
+        redirect_to ("/admin/articles?csv=true")
+      end
     end
   end
 
